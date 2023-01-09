@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: e49e3c93c586b42e99e3544275291be0
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 804e1ce4c496647cfa3f1a1134187c71, type: 3}
+  _removeEmptyRootObjects: 1
+  _scaleFactor: 20
+  _maximumLod: 300
+  _readWriteEnabled: 1
+  _generateColliders: 1
+  _swapUvs: 0
+  _importNormals: 0
+  _importMaterials: 1
+  _useJpgTextures: 0

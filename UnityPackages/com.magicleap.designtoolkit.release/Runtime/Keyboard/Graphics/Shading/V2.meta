@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Runtime/Keyboard/Graphics/Shading/V2.meta
+guid: d7ecd66c703213c49a4e7b574df96a06
+========
+guid: 036aa1542075ab14b81316feb74b7b6c
+>>>>>>>> 358fe519 (support for Android haptics and ML Haptics):Runtime/Haptics/Android Haptics (legacy).meta
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

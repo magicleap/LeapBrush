@@ -1,0 +1,53 @@
+{
+  "name": "com.magicleap.designtoolkit",
+  "displayName": "Magic Leap Design Toolkit",
+  "version": "0.0.1",
+  "unity": "2022.1",
+  "description": "Magic Leap Design Toolkit Package",
+  "author": "Magic Leap",
+  "keywords": [
+    "magicleap",
+    "unity"
+  ],
+  "category": "Unity",
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.6",
+    "com.magicleap.unityaudiotools": "0.1.7-050-5c2c49a1",
+    "com.unity.xr.magicleap": "4.1.3",
+    "com.unity.xr.management": "3.2.10",
+    "com.unity.render-pipelines.universal": "10.3.2",
+    "com.nosuchstudio.rtltmpro": "3.4.5"
+  },
+  "samples": [
+    {
+      "displayName": "Controller",
+      "description": "Example scene for listening to controller button events.",
+      "path": "Samples~/Controller/Scenes/Controller"
+    },
+    {
+      "displayName": "Controller-UIKit",
+      "description": "Use the controller to interact with UI elements.",
+      "path": "Samples~/Controller/Scenes/Controller-UIKit"
+    },
+    {
+      "displayName": "Controller-Manipulation",
+      "description": "Use the controller to move, scale, and rotate 3D objects.",
+      "path": "Samples~/Controller/Scenes/Controller-Manipulation"
+    },
+    {
+      "displayName": "Keyboard",
+      "description": "Test the ML2 Keyboard example.",
+      "path": "Samples~/Keyboard/Scenes/Keyboard"
+    },
+    {
+      "displayName": "KeyboardLayoutGeneration",
+      "description": "Generate new layout for Keyboard.",
+      "path": "Samples~/Keyboard/Scenes/KeyboardLayoutGeneration"
+    },
+    {
+      "displayName": "SolverPlayground",
+      "description": "Learn about solver and utilize them in your project",
+      "path": "Samples~/Solvers/Scenes/SolversPlayground"
+    }
+  ]
+}

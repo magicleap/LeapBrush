@@ -1,0 +1,468 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5410251275261270333
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5410251275261270334}
+  - component: {fileID: 5410251275261270335}
+  - component: {fileID: 2716966104317345302}
+  m_Layer: 0
+  m_Name: PooledAudioSource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5410251275261270334
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5410251275261270333}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &5410251275261270335
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5410251275261270333}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 1
+  SpatializePostEffects: 1
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &2716966104317345302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5410251275261270333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1962061511, guid: 853897668d49743fd89d8e7fb2ebea29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBillboarding:
+    _propertyName: isBillboarding
+    _value: 1
+    _propertyDefinition:
+      defaultValue: 0
+      min: 0
+      max: 1
+      tooltip: Render source as though facing listener regardless of source orientation.
+      label: Billboarding
+  distanceProperties:
+    override3DProperties:
+      _propertyName: override3DProperties
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Overrides Audio Source 3D properties and use Soundfield 3D properties
+          instead.
+        label: 
+    minDistance:
+      _propertyName: minDistance
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 3.4028235e+38
+        tooltip: Minimum Distance for this sound source. When a source is closer
+          than Min Distance, the gain offset is the                              
+          same as at Min Distance.
+        label: 
+    maxDistance:
+      _propertyName: maxDistance
+      _value: 250
+      _propertyDefinition:
+        defaultValue: 250
+        min: 0
+        max: 3.4028235e+38
+        tooltip: Maximum Distance for this sound source. Max Distance must be greater
+          than or equal to Min Distance. When a                                source
+          is farther away than Max Distance, the gain offset is the same as at Max
+          Distance.
+        label: 
+    rolloffFactor:
+      _propertyName: rolloffFactor
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 100
+        tooltip: 'Rolloff factor for sound. This determines how steeply the gain
+          rolls off from Min Distance to Max Distance.                                
+          The roll - off follows a ''Inverse Distance Rolloff'' Model:                                
+          If distance < Min Distance, the gain is unaffected.                                
+          If Min Distance <= distance <= Max Distance, the attenuation is specified
+          by the formula: Gain = MinD (MinD + Rolloff * (distance - MinD)).                                
+          If Rolloff Factor is set to 0.0, the gain is unaffected.'
+        label: 
+  radiationProperties:
+    omnidirectional:
+      _propertyName: omnidirectional
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 0
+        min: 0
+        max: 1
+        tooltip: Overrides Radiation Properties, equal radiation in all directions.
+        label: 
+    innerAngle:
+      _propertyName: innerAngle
+      _value: 50
+      _propertyDefinition:
+        defaultValue: 50
+        min: 0
+        max: 360
+        tooltip: 'Inner cone angle. Range: 0 to 360.'
+        label: 
+    outerAngle:
+      _propertyName: outerAngle
+      _value: 340
+      _propertyDefinition:
+        defaultValue: 340
+        min: 0
+        max: 360
+        tooltip: 'Outer cone angle. Range: 0 to 360.'
+        label: 
+    outerGain:
+      main:
+        _propertyName: main
+        _value: 1
+        _propertyDefinition:
+          defaultValue: 1
+          min: 0
+          max: 1
+          tooltip: 'Gain in dB outside the outer cone. Range: -96 to 0.'
+          label: Main
+      lf:
+        _propertyName: lf
+        _value: 0.65
+        _propertyDefinition:
+          defaultValue: 0.65
+          min: 0
+          max: 1
+          tooltip: Low Frequency gain offset outside the outer cone.
+          label: LF
+      mf:
+        _propertyName: mf
+        _value: 0.4
+        _propertyDefinition:
+          defaultValue: 0.4
+          min: 0
+          max: 1
+          tooltip: Mid Frequency gain offset outside the outer cone.
+          label: MF
+      hf:
+        _propertyName: hf
+        _value: 0.080000006
+        _propertyDefinition:
+          defaultValue: 0.08
+          min: 0
+          max: 1
+          tooltip: High Frequency gain offset outside the outer cone.
+          label: HF
+  gain:
+    _propertyName: gain
+    _value: 1
+    _propertyDefinition:
+      defaultValue: 1
+      min: 0
+      max: 8
+      tooltip: 'Set the overall gain for a source. This gain affects all paths: Direct,
+        Reflections, and Reverb.'
+      label: 
+  obstructionOverride:
+    main:
+      _propertyName: main
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 0
+        min: 0
+        max: 1
+        tooltip: Overrides obstruction for all frequencies
+        label: Main
+    lf:
+      _propertyName: lf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 0
+        min: 0
+        max: 1
+        tooltip: Overrides obstruction for low frequencies
+        label: LF
+    mf:
+      _propertyName: mf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 0
+        min: 0
+        max: 1
+        tooltip: Overrides obstruction for mid frequencies
+        label: MF
+    hf:
+      _propertyName: hf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 0
+        min: 0
+        max: 1
+        tooltip: Overrides obstruction for high frequencies
+        label: HF
+  directLevel:
+    main:
+      _propertyName: main
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Direct-path gain offset.
+        label: Main
+    lf:
+      _propertyName: lf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Direct-path relative gain offset for low frequencies.
+        label: LF
+    mf:
+      _propertyName: mf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Direct-path relative gain offset for mid frequencies.
+        label: MF
+    hf:
+      _propertyName: hf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Direct-path relative gain offset for high frequencies.
+        label: HF
+  indirectLevel:
+    main:
+      _propertyName: main
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Indirect-path gain offset (affects Dispersion and Reverb).
+        label: Main
+    lf:
+      _propertyName: lf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Indirect-path relative gain offset for low frequencies.
+        label: LF
+    mf:
+      _propertyName: mf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Indirect-path relative gain offset for mid frequencies.
+        label: MF
+    hf:
+      _propertyName: hf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Indirect-path relative gain offset for high frequencies.
+        label: HF
+  dispersionSendLevel:
+    main:
+      _propertyName: main
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Dispersion-path gain offset (also affected by Indirect Level).
+        label: Main
+    lf:
+      _propertyName: lf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Dispersion-path relative gain offset for low frequencies.
+        label: LF
+    mf:
+      _propertyName: mf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Dispersion-path relative gain offset for mid frequencies.
+        label: MF
+    hf:
+      _propertyName: hf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Dispersion-path relative gain offset for high frequencies.
+        label: HF
+  reverbSendLevel:
+    main:
+      _propertyName: main
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Reverb-path gain offset (also affected by Indirect Level).
+        label: Main
+    lf:
+      _propertyName: lf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Reverb-path relative gain offset for low frequencies.
+        label: LF
+    mf:
+      _propertyName: mf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Reverb-path relative gain offset for mid frequencies.
+        label: MF
+    hf:
+      _propertyName: hf
+      _value: 1
+      _propertyDefinition:
+        defaultValue: 1
+        min: 0
+        max: 1
+        tooltip: Reverb-path relative gain offset for high frequencies.
+        label: HF
+  enableObstructions: 0
+  cachedObstructionOverrides:
+    main: 0
+    lf: 0
+    mf: 0
+    hf: 0
+  obstructionOverridesAreCached: 1

@@ -1,0 +1,339 @@
+{
+  "LanguageID":"kJp_JP_Unity",
+  "OverrideRowCountForLayout" : true,
+  "IsRightToLeft":"false",
+  "IsUGUI":"true",
+  "PageLayouts":[
+    {
+      "PageLayoutID":"kHiragana",
+      "KeyRows":[
+        {"KeyRow":[
+          {"KeyTypeID":"kTab", "DefaultChar":"Tab"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"わ", "AlternateKeySelectorID":"hiraganaWaKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"ら"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"や", "AlternateKeySelectorID":"hiraganaYaKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"ま"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"は", "AlternateKeySelectorID":"hiraganaHaKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"な"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"た", "AlternateKeySelectorID":"hiraganaTaKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"さ", "AlternateKeySelectorID":"hiraganaSaKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"か", "AlternateKeySelectorID":"hiraganaKaKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"あ", "AlternateKeySelectorID":"hiraganaAKeys"},
+          {"KeyTypeID":"kBackspace", "DefaultChar":"Delete"}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kJPNumSym", "DefaultChar":"☆123", "HeightWeight":2.0},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"を"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"り"},
+          {"KeyTypeID":"kBlank", "DefaultChar":""},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"み"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"ひ", "AlternateKeySelectorID":"hiraganaHiKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"に"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"ち", "AlternateKeySelectorID":"hiraganaTiKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"し", "AlternateKeySelectorID":"hiraganaSiKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"き", "AlternateKeySelectorID":"hiraganaKiKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"い", "AlternateKeySelectorID":"hiraganaIKeys"},
+          {"KeyTypeID":"kJPEnter", "DefaultChar":"Return", "HeightWeight":2.0}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kHiragana", "DefaultChar":"ん", "GapOnLeft": 28},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"る"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"ゆ", "AlternateKeySelectorID":"hiraganaYuKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"む"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"ふ", "AlternateKeySelectorID":"hiraganaHuKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"ぬ"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"つ", "AlternateKeySelectorID":"hiraganaTuKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"す", "AlternateKeySelectorID":"hiraganaSuKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"く", "AlternateKeySelectorID":"hiraganaKuKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"う", "AlternateKeySelectorID":"hiraganaUKeys"}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kSubPanel", "DefaultChar":"、。", "HeightWeight":2.0, "SubPanelID":"JpAccents", "KeyButtonStyle":"kDark"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"ー"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"れ"},
+          {"KeyTypeID":"kBlank", "DefaultChar":""},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"め"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"へ", "AlternateKeySelectorID":"hiraganaHeKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"ね"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"て", "AlternateKeySelectorID":"hiraganaTeKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"せ", "AlternateKeySelectorID":"hiraganaSeKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"け", "AlternateKeySelectorID":"hiraganaKeKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"え", "AlternateKeySelectorID":"hiraganaEKeys"},
+          {"KeyTypeID":"kJPNewLine", "DefaultChar":"改行", "HeightWeight":2.0}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kAltCharToggle", "DefaultChar":"小゛゜", "GapOnLeft": 28},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"ろ"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"よ", "AlternateKeySelectorID":"hiraganaYoKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"も"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"ほ", "AlternateKeySelectorID":"hiraganaHoKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"の"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"と", "AlternateKeySelectorID":"hiraganaToKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"そ", "AlternateKeySelectorID":"hiraganaSoKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"こ", "AlternateKeySelectorID":"hiraganaKoKeys"},
+          {"KeyTypeID":"kHiragana", "DefaultChar":"お", "AlternateKeySelectorID":"hiraganaOKeys"}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kChangeLocale", "DefaultChar":"Lan", "SubPanelID":"LanguagePanel"},
+          {"KeyTypeID":"kPageHiragana", "DefaultChar":"ひ"},
+          {"KeyTypeID":"kPageKatakana", "DefaultChar":"カ"},
+          {"KeyTypeID":"kJPSpacebar", "DefaultChar":"Spacebar", "WidthWeight":7.0},
+          {"KeyTypeID":"kRayDrumstickSwitch", "DefaultChar":"Switch"},
+          {"KeyTypeID":"kHideKeyboard", "DefaultChar":"HideKeyboard"}
+        ]}
+      ],
+      "DefaultKeySizeX":25,
+      "DefaultKeySizeY":25,
+      "DefaultKeySizeZ":17.5,
+      "MotionRangeZStart":0,
+      "MotionRangeZEnd":2.33,
+      "FrontSideDetectThreshold":5.83,
+      "KeyboardWidth":485,
+      "KeyGap":3
+    },
+    {
+      "PageLayoutID":"kKatakana",
+      "KeyRows":[
+        {"KeyRow":[
+          {"KeyTypeID":"kTab", "DefaultChar":"Tab"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ワ", "AlternateKeySelectorID":"katakanaWaKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ラ"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ヤ", "AlternateKeySelectorID":"katakanaYaKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"マ"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ハ", "AlternateKeySelectorID":"katakanaHaKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ナ"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"タ", "AlternateKeySelectorID":"katakanaTaKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"サ", "AlternateKeySelectorID":"katakanaSaKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"カ", "AlternateKeySelectorID":"katakanaKaKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ア", "AlternateKeySelectorID":"katakanaAKeys"},
+          {"KeyTypeID":"kBackspace", "DefaultChar":"Delete"}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kJPNumSym", "DefaultChar":"☆123", "HeightWeight":2.0},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ヲ"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"リ"},
+          {"KeyTypeID":"kBlank", "DefaultChar":""},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ミ"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ヒ", "AlternateKeySelectorID":"katakanaHiKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ニ"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"チ", "AlternateKeySelectorID":"katakanaTiKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"シ", "AlternateKeySelectorID":"katakanaSiKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"キ", "AlternateKeySelectorID":"katakanaKiKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"イ", "AlternateKeySelectorID":"katakanaIKeys"},
+          {"KeyTypeID":"kJPEnter", "DefaultChar":"Return", "HeightWeight":2.0}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ン", "GapOnLeft": 28},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ル"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ユ", "AlternateKeySelectorID":"katakanaYuKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ム"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"フ", "AlternateKeySelectorID":"katakanaHuKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ヌ"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ツ", "AlternateKeySelectorID":"katakanaTuKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ス", "AlternateKeySelectorID":"katakanaSuKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ク", "AlternateKeySelectorID":"katakanaKuKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ウ", "AlternateKeySelectorID":"katakanaUKeys"}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kSubPanel", "DefaultChar":"、。", "HeightWeight":2.0, "SubPanelID":"JpAccents", "KeyButtonStyle":"kDark"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ー"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"レ"},
+          {"KeyTypeID":"kBlank", "DefaultChar":""},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"メ"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ヘ", "AlternateKeySelectorID":"katakanaHeKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ネ"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"テ", "AlternateKeySelectorID":"katakanaTeKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"セ", "AlternateKeySelectorID":"katakanaSeKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ケ", "AlternateKeySelectorID":"katakanaKeKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"エ", "AlternateKeySelectorID":"katakanaEKeys"},
+          {"KeyTypeID":"kJPNewLine", "DefaultChar":"改行", "HeightWeight":2.0}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kAltCharToggle", "DefaultChar":"小゛゜", "GapOnLeft": 28},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ロ"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ヨ", "AlternateKeySelectorID":"katakanaYoKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"モ"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ホ", "AlternateKeySelectorID":"katakanaHoKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ノ"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ト", "AlternateKeySelectorID":"katakanaToKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"ソ", "AlternateKeySelectorID":"katakanaSoKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"コ", "AlternateKeySelectorID":"katakanaKoKeys"},
+          {"KeyTypeID":"kKatakana", "DefaultChar":"オ", "AlternateKeySelectorID":"katakanaOKeys"}
+
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kChangeLocale", "DefaultChar":"Lan", "SubPanelID":"LanguagePanel"},
+          {"KeyTypeID":"kPageHiragana", "DefaultChar":"ひ"},
+          {"KeyTypeID":"kPageKatakana", "DefaultChar":"カ"},
+          {"KeyTypeID":"kJPSpacebar", "DefaultChar":"Spacebar", "WidthWeight":7.0},
+          {"KeyTypeID":"kRayDrumstickSwitch", "DefaultChar":"Switch"},
+          {"KeyTypeID":"kHideKeyboard", "DefaultChar":"HideKeyboard"}
+        ]}
+      ],
+      "DefaultKeySizeX":25,
+      "DefaultKeySizeY":25,
+      "DefaultKeySizeZ":17.5,
+      "MotionRangeZStart":0,
+      "MotionRangeZEnd":2.33,
+      "FrontSideDetectThreshold":5.83,
+      "KeyboardWidth":485,
+      "KeyGap":3
+    },
+    {
+      "PageLayoutID":"kNumericSymbols",
+      "KeyRows":[
+        {"KeyRow":[
+          {"KeyTypeID":"kTab", "DefaultChar":"Tab"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"1"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"2"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"3"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"4"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"5"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"6"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"7"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"8"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"9"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"0"},
+          {"KeyTypeID":"kBackspace", "DefaultChar":"Delete"}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kJPNumSym", "DefaultChar":"☆123", "HeightWeight":2.0},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"×"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"÷"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"+"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"-"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"="},
+          {"KeyTypeID":"kCharacter", "DefaultChar":","},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"."},
+          {"KeyTypeID":"kCharacter", "DefaultChar":":"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"¥"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"%"},
+          {"KeyTypeID":"kJPEnter", "DefaultChar":"Return", "HeightWeight":2.0}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kCharacter", "DefaultChar":"…", "GapOnLeft": 28},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"\\"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"〒"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"々"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"〆"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"<"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":">"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"£"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"$"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"€"}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kSubPanel", "DefaultChar":"、。", "HeightWeight":2.0, "SubPanelID":"JpAccents", "KeyButtonStyle":"kDark"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"☆"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"♪"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"→"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"°"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"◯"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"*"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"•"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"@"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"#"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"/"},
+          {"KeyTypeID":"kJPNewLine", "DefaultChar":"改行", "HeightWeight":2.0}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kCharacter", "DefaultChar":"&", "GapOnLeft": 28},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"ロ"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"'"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"”"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"("},
+          {"KeyTypeID":"kCharacter", "DefaultChar":")"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"^"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"["},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"]"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"~"}
+        ]},
+        {"KeyRow":[
+          {"KeyTypeID":"kChangeLocale", "DefaultChar":"Lan", "SubPanelID":"LanguagePanel"},
+          {"KeyTypeID":"kPageHiragana", "DefaultChar":"ひ"},
+          {"KeyTypeID":"kPageKatakana", "DefaultChar":"カ"},
+          {"KeyTypeID":"kJPSpacebar", "DefaultChar":"Spacebar", "WidthWeight":7.0},
+          {"KeyTypeID":"kRayDrumstickSwitch", "DefaultChar":"Switch"},
+          {"KeyTypeID":"kHideKeyboard", "DefaultChar":"HideKeyboard"}
+        ]}
+      ],
+      "DefaultKeySizeX":25,
+      "DefaultKeySizeY":25,
+      "DefaultKeySizeZ":17.5,
+      "MotionRangeZStart":0,
+      "MotionRangeZEnd":2.33,
+      "FrontSideDetectThreshold":5.83,
+      "KeyboardWidth":485,
+      "KeyGap":3
+    }
+  ],
+  "KeyboardPageSets":[
+    {
+      "KeyboardPageSetID":"kFull",
+      "KeyboardPageSetProperties":[
+        {
+          "PageLayoutID":"kHiragana",
+          "KeyPage":[
+            {"KeyTypeID":"kPageKatakana", "PageLayoutID":"kKatakana"},
+            {"KeyTypeID":"kJPNumSym", "PageLayoutID":"kNumericSymbols"}
+          ]
+        },
+        {
+          "PageLayoutID":"kKatakana",
+          "KeyPage":[
+            {"KeyTypeID":"kPageHiragana", "PageLayoutID":"kHiragana"},
+            {"KeyTypeID":"kJPNumSym", "PageLayoutID":"kNumericSymbols"}
+          ]
+        },
+        {
+          "PageLayoutID":"kNumericSymbols",
+          "KeyPage":[
+            {"KeyTypeID":"kJPNumSym", "PageLayoutID":"kHiragana"},
+            {"KeyTypeID":"kPageHiragana", "PageLayoutID":"kHiragana"},
+            {"KeyTypeID":"kPageKatakana", "PageLayoutID":"kKatakana"}
+          ]
+        }
+      ],
+      "PageLayoutID":"kHiragana"
+    }
+  ],
+  "KeyAudioAssets": [
+    {"KeyTypeID":"kCharacter2Labels", "AudioAssetType": "kKeyDown"},
+    {"KeyTypeID":"kCharacter", "AudioAssetType": "kKeyDown"},
+    {"KeyTypeID":"kBackspace", "AudioAssetType": "kDelete"},
+    {"KeyTypeID":"kShift", "AudioAssetType": "kShift"},
+    {"KeyTypeID":"kCapsLock", "AudioAssetType": "kSwitchLayout"},
+    {"KeyTypeID":"kSubmit", "AudioAssetType": "kSubmit"},
+    {"KeyTypeID":"kClear", "AudioAssetType": "kClear"},
+    {"KeyTypeID":"kEnter", "AudioAssetType": "kSubmit"},
+    {"KeyTypeID":"kClear", "AudioAssetType": "kClear"},
+    {"KeyTypeID":"kChangeLocale", "AudioAssetType": "kExpandOption"},
+    {"KeyTypeID":"kPageHiragana", "AudioAssetType": "kSwitchLayout"},
+    {"KeyTypeID":"kPageKatakana", "AudioAssetType": "kSwitchLayout"},
+    {"KeyTypeID":"kAltCharToggle", "AudioAssetType": "kAltChar"},
+    {"KeyTypeID":"kSpacebar", "AudioAssetType": "kSpace"},
+    {"KeyTypeID":"kJPSpacebar", "AudioAssetType": "kSpace"},
+    {"KeyTypeID":"kTab", "AudioAssetType": "kTab"},
+    {"KeyTypeID":"kCharacterSpecial", "AudioAssetType": "kKeyDown"},
+    {"KeyTypeID":"kSuggestion", "AudioAssetType": "kSelect"},
+    {"KeyTypeID":"kHiragana", "AudioAssetType": "kKeyDown"},
+    {"KeyTypeID":"kKatakana", "AudioAssetType": "kKeyDown"},
+    {"KeyTypeID":"kBlank", "AudioAssetType": "kKeyDown"},
+    {"KeyTypeID":"kJPNumSym", "AudioAssetType": "kSwitchLayout"},
+    {"KeyTypeID":"kJPEnter", "AudioAssetType": "kSubmit"},
+    {"KeyTypeID":"kJPNewLine", "AudioAssetType": "kSubmit"},
+    {"KeyTypeID":"kRayDrumstickSwitch", "AudioAssetType": "kKeyDown"},
+    {"KeyTypeID":"kJPNextSuggestion", "AudioAssetType": "kNav"},
+    {"KeyTypeID":"kAccent", "AudioAssetType": "kKeyDown"},
+    {"KeyTypeID":"kChangeLocaleEn", "AudioAssetType": "kSwitchLayout"},
+    {"KeyTypeID":"kChangeLocaleJP", "AudioAssetType": "kSwitchLayout"},
+    {"KeyTypeID":"kChangeLocaleAR", "AudioAssetType": "kSwitchLayout"},
+    {"KeyTypeID":"kPageDownExpanded", "AudioAssetType": "kNav"},
+    {"KeyTypeID":"kPageUpExpanded", "AudioAssetType": "kNav"},
+    {"KeyTypeID":"kPageUpCollapsed", "AudioAssetType": "kNav"},
+    {"KeyTypeID":"kExpandUp", "AudioAssetType": "kNav"},
+    {"KeyTypeID":"kCollapseDown", "AudioAssetType": "kNav"},
+    {"KeyTypeID":"kSubPanel", "AudioAssetType": "kExpandOption"},
+    {"KeyTypeID":"kTashkeel", "AudioAssetType": "kKeyDown"}
+  ]
+}

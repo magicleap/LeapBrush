@@ -1,0 +1,179 @@
+syntax = "proto3";
+
+option go_package = "gitlab.magicleap.io/ghazen/leap-brush/server/api";
+option csharp_namespace = "MagicLeap.LeapBrush";
+
+package leapbrush;
+
+service LeapBrushApi {
+  rpc RegisterAndListen (RegisterDeviceRequest) returns (stream ServerStateResponse) {}
+  rpc UpdateDevice (UpdateDeviceRequest) returns (UpdateDeviceResponse) {
+    // Deprecated: Last used 2022-08-01-v1
+    option deprecated = true;
+  }
+  rpc UpdateDeviceStream (stream UpdateDeviceRequest) returns (UpdateDeviceResponse) {}
+  rpc Rpc (RpcRequest) returns (RpcResponse) {}
+}
+
+message Vector3Proto {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
+
+message QuaternionProto {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+  float w = 4;
+}
+
+message PoseProto {
+  Vector3Proto position = 1;
+  QuaternionProto rotation = 2;
+}
+
+message TransformProto {
+  Vector3Proto position = 1;
+  QuaternionProto rotation = 2;
+  Vector3Proto scale = 3;
+}
+
+message UserStateProto {
+  enum ToolState {
+    MENU = 0;
+    LASER = 1;
+    ERASER = 2;
+    BRUSH_SCRIBBLE = 3;
+    BRUSH_POLY = 4;
+  }
+
+  string user_name = 1;
+  string anchor_id = 2;
+  PoseProto head_pose = 5;
+  PoseProto control_pose = 6;
+  ToolState tool_state = 7;
+  uint32 tool_color_rgb = 8;
+  float tool_length = 9;
+  string user_display_name = 10;
+}
+
+message AnchorProto {
+  string id = 1;
+  PoseProto pose = 2;
+}
+
+message SpaceInfoProto {
+  enum MappingMode {
+    ON_DEVICE = 0;
+    AR_CLOUD = 1;
+  }
+  repeated AnchorProto anchor = 3;
+  PoseProto target_space_origin = 4;
+  string space_name = 5;
+  string space_id = 6;
+  MappingMode mapping_mode = 7;
+}
+
+message BrushStrokeProto {
+  enum BrushType {
+    SCRIBBLE = 0;
+    POLY = 1;
+  }
+
+  string id = 1;
+  string user_name = 2;
+  string anchor_id = 3;
+  BrushType type = 7;
+  repeated PoseProto brush_pose = 4;
+  int32 start_index = 5;
+  uint32 stroke_color_rgb = 6;
+  uint32 fill_color_rgba = 8;
+  uint32 fill_dimmer_a = 9;
+}
+
+message ExternalModelProto {
+  string id = 1;
+  string file_name = 2;
+  string anchor_id = 3;
+  TransformProto transform = 6;
+  string modified_by_user_name = 5;
+}
+
+message RegisterDeviceRequest {
+  string user_name = 1;
+  string app_version = 2;
+}
+
+message BrushStrokeAddRequest {
+  BrushStrokeProto brush_stroke = 1;
+}
+
+message BrushStrokeRemoveRequest {
+  string id = 1;
+  string anchor_id = 2;
+}
+
+message ExternalModelAddRequest {
+  ExternalModelProto model = 1;
+}
+
+message ExternalModelRemoveRequest {
+  string id = 1;
+  string anchor_id = 2;
+}
+
+message QueryUsersRequest {
+}
+
+message QueryUsersResponse {
+  message Result {
+    string user_name = 1;
+    SpaceInfoProto space_info = 2;
+    string user_display_name = 3;
+  }
+
+  repeated Result results = 1;
+}
+
+message ServerInfoProto {
+  string server_version = 1;
+  string min_app_version = 2;
+}
+
+message ServerStateResponse {
+  repeated UserStateProto user_state = 1;
+  repeated BrushStrokeAddRequest brush_stroke_add = 2;
+  repeated BrushStrokeRemoveRequest brush_stroke_remove = 3;
+  repeated ExternalModelAddRequest external_model_add = 4;
+  repeated ExternalModelRemoveRequest external_model_remove = 5;
+  ServerInfoProto server_info = 6;
+}
+
+message UpdateDeviceRequest {
+  UserStateProto user_state = 1;
+  SpaceInfoProto space_info = 2;
+  bool echo = 3;
+  BrushStrokeAddRequest brush_stroke_add = 4;
+  BrushStrokeRemoveRequest brush_stroke_remove = 5;
+
+  // Deprecated: Last used 2022-08-01-v1
+  QueryUsersRequest query_users_request = 6 [deprecated = true];
+
+  ExternalModelAddRequest external_model_add = 7;
+  ExternalModelRemoveRequest external_model_remove = 8;
+}
+
+message UpdateDeviceResponse {
+  // Deprecated: Last used 2022-08-01-v1
+  QueryUsersResponse query_users_response = 1 [deprecated = true];
+}
+
+message RpcRequest {
+  string user_name = 1;
+  QueryUsersRequest query_users_request = 2;
+}
+
+message RpcResponse {
+  QueryUsersResponse query_users_response = 1;
+}

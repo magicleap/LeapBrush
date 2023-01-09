@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.unity3d.player" xmlns:tools="http://schemas.android.com/tools">
+  <uses-permission android:name="android.permission.VIBRATE" />
+  <uses-permission android:name="com.magicleap.permission.CONTROLLER_POSE" />
+  <uses-permission android:name="com.magicleap.permission.HEAD_POSE" />
+  <uses-permission android:name="com.magicleap.permission.PW_MAP" />
+  <uses-permission android:name="com.magicleap.permission.SPATIAL_ANCHOR" />
+  <uses-permission android:name="com.magicleap.permission.WORLD_RECONSTRUCTION" />
+  <application>
+    <activity android:name="com.unity3d.player.UnityPlayerActivity" android:theme="@style/UnityThemeSelector">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+      <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
+    </activity>
+  </application>
+</manifest>

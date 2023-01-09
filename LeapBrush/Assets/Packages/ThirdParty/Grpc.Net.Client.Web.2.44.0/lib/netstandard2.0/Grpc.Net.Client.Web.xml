@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Grpc.Net.Client.Web</name>
+    </assembly>
+    <members>
+        <member name="T:Grpc.Net.Client.Web.GrpcWebHandler">
+            <summary>
+            A <see cref="T:System.Net.Http.DelegatingHandler"/> implementation that executes gRPC-Web request processing.
+            </summary>
+            <remarks>
+            <para>
+            This message handler implementation should be used with the .NET client for gRPC to make gRPC-Web calls.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Grpc.Net.Client.Web.GrpcWebHandler.HttpVersion">
+            <summary>
+            Gets or sets the HTTP version to use when making gRPC-Web calls.
+            <para>
+            When a <see cref="T:System.Version"/> is specified the value will be set on <see cref="P:System.Net.Http.HttpRequestMessage.Version"/>
+            as gRPC-Web calls are made. Changing this property allows the HTTP version of gRPC-Web calls to
+            be overridden.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Grpc.Net.Client.Web.GrpcWebHandler.GrpcWebMode">
+            <summary>
+            Gets or sets the gRPC-Web mode to use when making gRPC-Web calls.
+            <para>
+            When <see cref="F:Grpc.Net.Client.Web.GrpcWebMode.GrpcWeb"/>, gRPC-Web calls are made with the <c>application/grpc-web</c> content type,
+            and binary gRPC messages are sent and received.
+            </para>
+            <para>
+            When <see cref="F:Grpc.Net.Client.Web.GrpcWebMode.GrpcWebText"/>, gRPC-Web calls are made with the <c>application/grpc-web-text</c> content type,
+            and base64 encoded gRPC messages are sent and received. Base64 encoding is required for gRPC-Web server streaming calls
+            to stream correctly in browser apps.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Grpc.Net.Client.Web.GrpcWebHandler.#ctor">
+            <summary>
+            Creates a new instance of <see cref="T:Grpc.Net.Client.Web.GrpcWebHandler"/>.
+            </summary>
+        </member>
+        <member name="M:Grpc.Net.Client.Web.GrpcWebHandler.#ctor(System.Net.Http.HttpMessageHandler)">
+            <summary>
+            Creates a new instance of <see cref="T:Grpc.Net.Client.Web.GrpcWebHandler"/>.
+            </summary>
+            <param name="innerHandler">The inner handler which is responsible for processing the HTTP response messages.</param>
+        </member>
+        <member name="M:Grpc.Net.Client.Web.GrpcWebHandler.#ctor(Grpc.Net.Client.Web.GrpcWebMode)">
+            <summary>
+            Creates a new instance of <see cref="T:Grpc.Net.Client.Web.GrpcWebHandler"/>.
+            </summary>
+            <param name="mode">The gRPC-Web mode to use when making gRPC-Web calls.</param>
+        </member>
+        <member name="M:Grpc.Net.Client.Web.GrpcWebHandler.#ctor(Grpc.Net.Client.Web.GrpcWebMode,System.Net.Http.HttpMessageHandler)">
+            <summary>
+            Creates a new instance of <see cref="T:Grpc.Net.Client.Web.GrpcWebHandler"/>.
+            </summary>
+            <param name="mode">The gRPC-Web mode to use when making gRPC-Web calls.</param>
+            <param name="innerHandler">The inner handler which is responsible for processing the HTTP response messages.</param>
+        </member>
+        <member name="M:Grpc.Net.Client.Web.GrpcWebHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            Sends an HTTP request to the inner handler to send to the server as an asynchronous operation.
+            </summary>
+            <param name="request">The HTTP request message to send to the server.</param>
+            <param name="cancellationToken">A cancellation token to cancel operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Grpc.Net.Client.Web.GrpcWebMode">
+            <summary>
+            The gRPC-Web mode.
+            </summary>
+        </member>
+        <member name="F:Grpc.Net.Client.Web.GrpcWebMode.GrpcWeb">
+            <summary>
+            Calls are made using the <c>application/grpc-web</c> content type. Request content is not translated to base64.
+            </summary>
+        </member>
+        <member name="F:Grpc.Net.Client.Web.GrpcWebMode.GrpcWebText">
+            <summary>
+            Calls are made using the <c>application/grpc-web-text</c> content type. Request content is translated to base64.
+            </summary>
+        </member>
+        <member name="T:Grpc.Net.Client.Web.Internal.GrpcWebResponseStream">
+            <summary>
+            This stream keeps track of messages in the response, and inspects the message header to see if it is
+            for trailers. When the trailers message is encountered then they are parsed as HTTP/1.1 trailers and
+            added to the HttpResponseMessage.TrailingHeaders.
+            </summary>
+        </member>
+        <member name="M:Grpc.Net.Client.Web.Internal.StreamHelpers.WriteAsync(System.IO.Stream,System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            WriteAsync uses the best overload for the platform.
+            </summary>
+        </member>
+        <member name="M:Grpc.Net.Client.Web.Internal.StreamHelpers.ReadAsync(System.IO.Stream,System.Memory{System.Byte},System.Threading.CancellationToken)">
+            <summary>
+            ReadAsync uses the best overload for the platform. The data must be backed by an array.
+            </summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.NotNullAttribute">
+            <summary>Specifies that an output will not be null even if the corresponding type allows it.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute">
+            <summary>Specifies that when a method returns <see cref="P:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.ReturnValue"/>, the parameter will not be null even if the corresponding type allows it.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.#ctor(System.Boolean)">
+            <summary>Initializes the attribute with the specified return value condition.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter will not be null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.ReturnValue">
+            <summary>Gets the return value condition.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MaybeNullAttribute">
+            <summary>Specifies that an output may be null even if the corresponding type disallows it.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.AllowNullAttribute">
+            <summary>Specifies that null is allowed as an input even if the corresponding type disallows it.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute">
+            <summary>
+            Specifies that the method will not return if the associated Boolean parameter is passed the specified value.
+            </summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute"/> class.
+            </summary>
+            <param name="parameterValue">
+            The condition parameter value. Code after the method will be considered unreachable by diagnostics if the argument to
+            the associated parameter matches this value.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute.ParameterValue">
+            <summary>Gets the condition parameter value.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute">
+            <summary>Specifies that when a method returns <see cref="P:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.ReturnValue"/>, the parameter may be null even if the corresponding type disallows it.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.#ctor(System.Boolean)">
+            <summary>Initializes the attribute with the specified return value condition.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter may be null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.ReturnValue">
+            <summary>Gets the return value condition.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute">
+            <summary>Specifies that the method or property will ensure that the listed field and property members have not-null values when returning with the specified return value condition.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+            <summary>Initializes the attribute with the specified return value condition and a field or property member.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter will not be null.
+            </param>
+            <param name="member">
+            The field or property member that is promised to be not-null.
+            </param>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String[])">
+            <summary>Initializes the attribute with the specified return value condition and list of field and property members.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter will not be null.
+            </param>
+            <param name="members">
+            The list of field and property members that are promised to be not-null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.ReturnValue">
+            <summary>Gets the return value condition.</summary>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.Members">
+            <summary>Gets field or property member names.</summary>
+        </member>
+    </members>
+</doc>

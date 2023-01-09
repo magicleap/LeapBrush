@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Samples/ControllerTooltips/Scenes/ControllerTooltips.unity.meta
+guid: 901fb0973b2cbbd4482a8da00e37db81
+========
+guid: 378a3e450d076f04f9871edb03b0279c
+folderAsset: yes
+>>>>>>>> 2109d400 (Ray Interactor UGUI Override Methods):Runtime/XRI.meta
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
