@@ -169,4 +169,4 @@ Leap Brush includes a handful of sample 3D Models (available from the Import but
 
 Copyright (c) 2022-present Magic Leap, Inc. All Rights Reserved.
 Use of this file is governed by the Developer Agreement, located
-here: https://id.magicleap.com/terms/developer
+here: https://www.magicleap.com/software-license-agreement-ml2
