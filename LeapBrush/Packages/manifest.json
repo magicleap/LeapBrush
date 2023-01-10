@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "com.magicleap.designtoolkit": "file:../../UnityPackages/com.magicleap.designtoolkit.release",
-    "com.magicleap.soundfield": "file:<MAGICLEAP_SDK_ROOT>/tools/unity/msa/v3.2.2-221122.61.6551f4e_1.1.0-dev2",
+    "com.magicleap.soundfield": "3.2.2-221122.61.6551f4e",
     "com.magicleap.unityaudiotools": "file:../../UnityPackages/com.magicleap.unityaudiotools",
-    "com.magicleap.unitysdk": "file:<MAGICLEAP_SDK_ROOT>/tools/unity/v1.3.0/com.magicleap.unitysdk.tgz",
+    "com.magicleap.unitysdk": "1.3.0",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.formats.usd": "3.0.0-exp.2",
     "com.unity.ide.rider": "3.0.16",
@@ -50,6 +50,14 @@
       "scopes": [
         "com.nosuchstudio.rtltmpro",
         "com.whinarn.unitymeshsimplifier"
+      ]
+    },
+    {
+      "name": "NPMJS",
+      "url": "https://registry.npmjs.org/",
+      "scopes": [
+        "com.magicleap.soundfield",
+        "com.magicleap.unitysdk"
       ]
     }
   ]

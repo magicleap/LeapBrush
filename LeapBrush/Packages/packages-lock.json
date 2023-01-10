@@ -14,10 +14,11 @@
       }
     },
     "com.magicleap.soundfield": {
-      "version": "file:<MAGICLEAP_SDK_ROOT>/tools/unity/msa/v3.2.2-221122.61.6551f4e_1.1.0-dev2",
+      "version": "3.2.2-221122.61.6551f4e",
       "depth": 0,
-      "source": "local",
-      "dependencies": {}
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.org"
     },
     "com.magicleap.unityaudiotools": {
       "version": "file:../../UnityPackages/com.magicleap.unityaudiotools",
@@ -29,16 +30,17 @@
       }
     },
     "com.magicleap.unitysdk": {
-      "version": "file:<MAGICLEAP_SDK_ROOT>/tools/unity/v1.3.0/com.magicleap.unitysdk.tgz",
+      "version": "1.3.0",
       "depth": 0,
-      "source": "local-tarball",
+      "source": "registry",
       "dependencies": {
         "com.unity.xr.magicleap": "7.0.0-pre.1",
         "com.unity.xr.arfoundation": "5.0.0-pre.12",
         "com.unity.xr.interaction.toolkit": "2.1.0-pre.1",
         "com.unity.inputsystem": "1.3.0",
         "com.unity.modules.androidjni": "1.0.0"
-      }
+      },
+      "url": "https://registry.npmjs.org"
     },
     "com.nosuchstudio.rtltmpro": {
       "version": "3.4.5",

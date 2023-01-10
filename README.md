@@ -124,10 +124,6 @@ Leap Brush includes a handful of sample 3D Models (available from the Import but
 
     - https://developer-docs.magicleap.cloud/docs/guides/unity/getting-started/set-up-development-environment
     - The current Unity editor version in use is 2022.2.1f1
-    - Edit `LeapBrush/Packages/manifest.json` to replace
-      `<MAGICLEAP_SDK_ROOT>` with the location of your magic leap
-      sdk. Ensure you have the noted sdk package versions present
-      (e.g. `com.magicleap.unitysdk` and `com.magicleap.soundfield`).
 
 2. Open the directory `LeapBrush/` as an application in Unity.
 
