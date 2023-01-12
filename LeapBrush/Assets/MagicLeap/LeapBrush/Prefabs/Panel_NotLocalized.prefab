@@ -276,7 +276,7 @@ Transform:
   m_Children:
   - {fileID: 3971348885807418584}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &3142834669568780731
 PrefabInstance:
@@ -305,8 +305,8 @@ PrefabInstance:
         persistence.
 
 
-        Open the Mapping
-        Tool to
+        Open the Spaces
+        app to
 
         select a Space to localize to.'
       objectReference: {fileID: 0}
@@ -354,8 +354,8 @@ PrefabInstance:
         persistence.
 
 
-        Open the Mapping
-        Tool to
+        Open the Spaces
+        app to
 
         select a Space to localize to.'
       objectReference: {fileID: 0}
@@ -498,6 +498,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3971348885807418584}
     m_Modifications:
+    - target: {fileID: 723269243543632179, guid: 749c93d3daf90994197382bf10c0e095,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 760
+      objectReference: {fileID: 0}
+    - target: {fileID: 723269243543632179, guid: 749c93d3daf90994197382bf10c0e095,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 540
+      objectReference: {fileID: 0}
     - target: {fileID: 2412305126484041891, guid: 749c93d3daf90994197382bf10c0e095,
         type: 3}
       propertyPath: m_Type
@@ -692,12 +702,12 @@ PrefabInstance:
     - target: {fileID: 277328665309707127, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_text
-      value: Open Mapping Tool
+      value: Open Spaces
       objectReference: {fileID: 0}
     - target: {fileID: 277328665309707127, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: originalText
-      value: Open Mapping Tool
+      value: Open Spaces
       objectReference: {fileID: 0}
     - target: {fileID: 296684400102867871, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
@@ -707,12 +717,12 @@ PrefabInstance:
     - target: {fileID: 786193521592058300, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_Name
-      value: Button_OpenMappingTool
+      value: Button_OpenSpaces
       objectReference: {fileID: 0}
     - target: {fileID: 871304602761583178, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: Settings.Label
-      value: Open Mapping Tool
+      value: Open Spaces
       objectReference: {fileID: 0}
     - target: {fileID: 871304602761583178, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}

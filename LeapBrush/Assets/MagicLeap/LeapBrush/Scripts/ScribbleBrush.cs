@@ -172,7 +172,7 @@ namespace MagicLeap.LeapBrush
         {
             _poses.Clear();
             _poses.Add(new Pose(new Vector3(-BrushEndCapLength, 0, 0), Quaternion.identity));
-            _poses.Add(new Pose(new Vector3(0, 0, 0), Quaternion.identity));
+            _poses.Add(Pose.identity);
         }
 
         private void RebuildMesh(IList<Pose> poses)

@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: String Table_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: e8e41daa5f277456489732d059e978d5, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 4282061478414254105
+  m_TableData:
+  - m_Id: 48019529728
+    m_Localized: Join {UserName}...
+    m_Metadata:
+      m_Items:
+      - rid: 4282061478414254105
+  - m_Id: 137291096064
+    m_Localized: Are you at the same location as <b>{UserName}</b>? If so, open the
+      Spaces app to switch spaces to <b>{SpaceName}</b>. Otherwise, select Join
+      Remotely.
+    m_Metadata:
+      m_Items:
+      - rid: 4282061478414254105
+  references:
+    version: 2
+    RefIds:
+    - rid: 4282061478414254105
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 00e02f2e0b00000000e02ff71f000000

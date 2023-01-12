@@ -32,79 +32,91 @@ namespace MagicLeap.LeapBrush {
             "cGJydXNoLlF1YXRlcm5pb25Qcm90byKRAQoOVHJhbnNmb3JtUHJvdG8SKQoI",
             "cG9zaXRpb24YASABKAsyFy5sZWFwYnJ1c2guVmVjdG9yM1Byb3RvEiwKCHJv",
             "dGF0aW9uGAIgASgLMhoubGVhcGJydXNoLlF1YXRlcm5pb25Qcm90bxImCgVz",
-            "Y2FsZRgDIAEoCzIXLmxlYXBicnVzaC5WZWN0b3IzUHJvdG8i3gIKDlVzZXJT",
-            "dGF0ZVByb3RvEhEKCXVzZXJfbmFtZRgBIAEoCRIRCglhbmNob3JfaWQYAiAB",
-            "KAkSJwoJaGVhZF9wb3NlGAUgASgLMhQubGVhcGJydXNoLlBvc2VQcm90bxIq",
-            "Cgxjb250cm9sX3Bvc2UYBiABKAsyFC5sZWFwYnJ1c2guUG9zZVByb3RvEjcK",
-            "CnRvb2xfc3RhdGUYByABKA4yIy5sZWFwYnJ1c2guVXNlclN0YXRlUHJvdG8u",
-            "VG9vbFN0YXRlEhYKDnRvb2xfY29sb3JfcmdiGAggASgNEhMKC3Rvb2xfbGVu",
-            "Z3RoGAkgASgCEhkKEXVzZXJfZGlzcGxheV9uYW1lGAogASgJIlAKCVRvb2xT",
-            "dGF0ZRIICgRNRU5VEAASCQoFTEFTRVIQARIKCgZFUkFTRVIQAhISCg5CUlVT",
-            "SF9TQ1JJQkJMRRADEg4KCkJSVVNIX1BPTFkQBCI9CgtBbmNob3JQcm90bxIK",
-            "CgJpZBgBIAEoCRIiCgRwb3NlGAIgASgLMhQubGVhcGJydXNoLlBvc2VQcm90",
-            "byL6AQoOU3BhY2VJbmZvUHJvdG8SJgoGYW5jaG9yGAMgAygLMhYubGVhcGJy",
-            "dXNoLkFuY2hvclByb3RvEjEKE3RhcmdldF9zcGFjZV9vcmlnaW4YBCABKAsy",
-            "FC5sZWFwYnJ1c2guUG9zZVByb3RvEhIKCnNwYWNlX25hbWUYBSABKAkSEAoI",
-            "c3BhY2VfaWQYBiABKAkSOwoMbWFwcGluZ19tb2RlGAcgASgOMiUubGVhcGJy",
-            "dXNoLlNwYWNlSW5mb1Byb3RvLk1hcHBpbmdNb2RlIioKC01hcHBpbmdNb2Rl",
-            "Eg0KCU9OX0RFVklDRRAAEgwKCEFSX0NMT1VEEAEipwIKEEJydXNoU3Ryb2tl",
-            "UHJvdG8SCgoCaWQYASABKAkSEQoJdXNlcl9uYW1lGAIgASgJEhEKCWFuY2hv",
-            "cl9pZBgDIAEoCRIzCgR0eXBlGAcgASgOMiUubGVhcGJydXNoLkJydXNoU3Ry",
-            "b2tlUHJvdG8uQnJ1c2hUeXBlEigKCmJydXNoX3Bvc2UYBCADKAsyFC5sZWFw",
-            "YnJ1c2guUG9zZVByb3RvEhMKC3N0YXJ0X2luZGV4GAUgASgFEhgKEHN0cm9r",
-            "ZV9jb2xvcl9yZ2IYBiABKA0SFwoPZmlsbF9jb2xvcl9yZ2JhGAggASgNEhUK",
-            "DWZpbGxfZGltbWVyX2EYCSABKA0iIwoJQnJ1c2hUeXBlEgwKCFNDUklCQkxF",
-            "EAASCAoEUE9MWRABIpMBChJFeHRlcm5hbE1vZGVsUHJvdG8SCgoCaWQYASAB",
-            "KAkSEQoJZmlsZV9uYW1lGAIgASgJEhEKCWFuY2hvcl9pZBgDIAEoCRIsCgl0",
-            "cmFuc2Zvcm0YBiABKAsyGS5sZWFwYnJ1c2guVHJhbnNmb3JtUHJvdG8SHQoV",
-            "bW9kaWZpZWRfYnlfdXNlcl9uYW1lGAUgASgJIj8KFVJlZ2lzdGVyRGV2aWNl",
-            "UmVxdWVzdBIRCgl1c2VyX25hbWUYASABKAkSEwoLYXBwX3ZlcnNpb24YAiAB",
-            "KAkiSgoVQnJ1c2hTdHJva2VBZGRSZXF1ZXN0EjEKDGJydXNoX3N0cm9rZRgB",
-            "IAEoCzIbLmxlYXBicnVzaC5CcnVzaFN0cm9rZVByb3RvIjkKGEJydXNoU3Ry",
-            "b2tlUmVtb3ZlUmVxdWVzdBIKCgJpZBgBIAEoCRIRCglhbmNob3JfaWQYAiAB",
-            "KAkiRwoXRXh0ZXJuYWxNb2RlbEFkZFJlcXVlc3QSLAoFbW9kZWwYASABKAsy",
-            "HS5sZWFwYnJ1c2guRXh0ZXJuYWxNb2RlbFByb3RvIjsKGkV4dGVybmFsTW9k",
-            "ZWxSZW1vdmVSZXF1ZXN0EgoKAmlkGAEgASgJEhEKCWFuY2hvcl9pZBgCIAEo",
-            "CSITChFRdWVyeVVzZXJzUmVxdWVzdCKyAQoSUXVlcnlVc2Vyc1Jlc3BvbnNl",
-            "EjUKB3Jlc3VsdHMYASADKAsyJC5sZWFwYnJ1c2guUXVlcnlVc2Vyc1Jlc3Bv",
-            "bnNlLlJlc3VsdBplCgZSZXN1bHQSEQoJdXNlcl9uYW1lGAEgASgJEi0KCnNw",
-            "YWNlX2luZm8YAiABKAsyGS5sZWFwYnJ1c2guU3BhY2VJbmZvUHJvdG8SGQoR",
-            "dXNlcl9kaXNwbGF5X25hbWUYAyABKAkiQgoPU2VydmVySW5mb1Byb3RvEhYK",
-            "DnNlcnZlcl92ZXJzaW9uGAEgASgJEhcKD21pbl9hcHBfdmVyc2lvbhgCIAEo",
-            "CSL5AgoTU2VydmVyU3RhdGVSZXNwb25zZRItCgp1c2VyX3N0YXRlGAEgAygL",
-            "MhkubGVhcGJydXNoLlVzZXJTdGF0ZVByb3RvEjoKEGJydXNoX3N0cm9rZV9h",
-            "ZGQYAiADKAsyIC5sZWFwYnJ1c2guQnJ1c2hTdHJva2VBZGRSZXF1ZXN0EkAK",
-            "E2JydXNoX3N0cm9rZV9yZW1vdmUYAyADKAsyIy5sZWFwYnJ1c2guQnJ1c2hT",
-            "dHJva2VSZW1vdmVSZXF1ZXN0Ej4KEmV4dGVybmFsX21vZGVsX2FkZBgEIAMo",
-            "CzIiLmxlYXBicnVzaC5FeHRlcm5hbE1vZGVsQWRkUmVxdWVzdBJEChVleHRl",
-            "cm5hbF9tb2RlbF9yZW1vdmUYBSADKAsyJS5sZWFwYnJ1c2guRXh0ZXJuYWxN",
-            "b2RlbFJlbW92ZVJlcXVlc3QSLwoLc2VydmVyX2luZm8YBiABKAsyGi5sZWFw",
-            "YnJ1c2guU2VydmVySW5mb1Byb3RvIsQDChNVcGRhdGVEZXZpY2VSZXF1ZXN0",
-            "Ei0KCnVzZXJfc3RhdGUYASABKAsyGS5sZWFwYnJ1c2guVXNlclN0YXRlUHJv",
-            "dG8SLQoKc3BhY2VfaW5mbxgCIAEoCzIZLmxlYXBicnVzaC5TcGFjZUluZm9Q",
-            "cm90bxIMCgRlY2hvGAMgASgIEjoKEGJydXNoX3N0cm9rZV9hZGQYBCABKAsy",
-            "IC5sZWFwYnJ1c2guQnJ1c2hTdHJva2VBZGRSZXF1ZXN0EkAKE2JydXNoX3N0",
-            "cm9rZV9yZW1vdmUYBSABKAsyIy5sZWFwYnJ1c2guQnJ1c2hTdHJva2VSZW1v",
-            "dmVSZXF1ZXN0Ej0KE3F1ZXJ5X3VzZXJzX3JlcXVlc3QYBiABKAsyHC5sZWFw",
-            "YnJ1c2guUXVlcnlVc2Vyc1JlcXVlc3RCAhgBEj4KEmV4dGVybmFsX21vZGVs",
-            "X2FkZBgHIAEoCzIiLmxlYXBicnVzaC5FeHRlcm5hbE1vZGVsQWRkUmVxdWVz",
-            "dBJEChVleHRlcm5hbF9tb2RlbF9yZW1vdmUYCCABKAsyJS5sZWFwYnJ1c2gu",
-            "RXh0ZXJuYWxNb2RlbFJlbW92ZVJlcXVlc3QiVwoUVXBkYXRlRGV2aWNlUmVz",
-            "cG9uc2USPwoUcXVlcnlfdXNlcnNfcmVzcG9uc2UYASABKAsyHS5sZWFwYnJ1",
-            "c2guUXVlcnlVc2Vyc1Jlc3BvbnNlQgIYASJaCgpScGNSZXF1ZXN0EhEKCXVz",
-            "ZXJfbmFtZRgBIAEoCRI5ChNxdWVyeV91c2Vyc19yZXF1ZXN0GAIgASgLMhwu",
-            "bGVhcGJydXNoLlF1ZXJ5VXNlcnNSZXF1ZXN0IkoKC1JwY1Jlc3BvbnNlEjsK",
-            "FHF1ZXJ5X3VzZXJzX3Jlc3BvbnNlGAEgASgLMh0ubGVhcGJydXNoLlF1ZXJ5",
-            "VXNlcnNSZXNwb25zZTLSAgoMTGVhcEJydXNoQXBpElkKEVJlZ2lzdGVyQW5k",
-            "TGlzdGVuEiAubGVhcGJydXNoLlJlZ2lzdGVyRGV2aWNlUmVxdWVzdBoeLmxl",
-            "YXBicnVzaC5TZXJ2ZXJTdGF0ZVJlc3BvbnNlIgAwARJUCgxVcGRhdGVEZXZp",
-            "Y2USHi5sZWFwYnJ1c2guVXBkYXRlRGV2aWNlUmVxdWVzdBofLmxlYXBicnVz",
-            "aC5VcGRhdGVEZXZpY2VSZXNwb25zZSIDiAIBElkKElVwZGF0ZURldmljZVN0",
-            "cmVhbRIeLmxlYXBicnVzaC5VcGRhdGVEZXZpY2VSZXF1ZXN0Gh8ubGVhcGJy",
-            "dXNoLlVwZGF0ZURldmljZVJlc3BvbnNlIgAoARI2CgNScGMSFS5sZWFwYnJ1",
-            "c2guUnBjUmVxdWVzdBoWLmxlYXBicnVzaC5ScGNSZXNwb25zZSIAQkhaMGdp",
-            "dGxhYi5tYWdpY2xlYXAuaW8vZ2hhemVuL2xlYXAtYnJ1c2gvc2VydmVyL2Fw",
-            "aaoCE01hZ2ljTGVhcC5MZWFwQnJ1c2hiBnByb3RvMw=="));
+            "Y2FsZRgDIAEoCzIXLmxlYXBicnVzaC5WZWN0b3IzUHJvdG8itgEKEkJhdHRl",
+            "cnlTdGF0dXNQcm90bxINCgVsZXZlbBgBIAEoDRI5CgVzdGF0ZRgCIAEoDjIq",
+            "LmxlYXBicnVzaC5CYXR0ZXJ5U3RhdHVzUHJvdG8uQmF0dGVyeVN0YXRlIlYK",
+            "DEJhdHRlcnlTdGF0ZRILCgdVTktOT1dOEAASDAoIQ0hBUkdJTkcQARIPCgtE",
+            "SVNDSEFSR0lORxACEhAKDE5PVF9DSEFSR0lORxADEggKBEZVTEwQBCK0BAoO",
+            "VXNlclN0YXRlUHJvdG8SEQoJdXNlcl9uYW1lGAEgASgJEhEKCWFuY2hvcl9p",
+            "ZBgCIAEoCRInCgloZWFkX3Bvc2UYBSABKAsyFC5sZWFwYnJ1c2guUG9zZVBy",
+            "b3RvEioKDGNvbnRyb2xfcG9zZRgGIAEoCzIULmxlYXBicnVzaC5Qb3NlUHJv",
+            "dG8SNwoKdG9vbF9zdGF0ZRgHIAEoDjIjLmxlYXBicnVzaC5Vc2VyU3RhdGVQ",
+            "cm90by5Ub29sU3RhdGUSFgoOdG9vbF9jb2xvcl9yZ2IYCCABKA0SEwoLdG9v",
+            "bF9sZW5ndGgYCSABKAISGQoRdXNlcl9kaXNwbGF5X25hbWUYCiABKAkSPgoL",
+            "ZGV2aWNlX3R5cGUYCyABKA4yJC5sZWFwYnJ1c2guVXNlclN0YXRlUHJvdG8u",
+            "RGV2aWNlVHlwZUgAiAEBEjsKD2hlYWRzZXRfYmF0dGVyeRgMIAEoCzIdLmxl",
+            "YXBicnVzaC5CYXR0ZXJ5U3RhdHVzUHJvdG9IAYgBASJQCglUb29sU3RhdGUS",
+            "CAoETUVOVRAAEgkKBUxBU0VSEAESCgoGRVJBU0VSEAISEgoOQlJVU0hfU0NS",
+            "SUJCTEUQAxIOCgpCUlVTSF9QT0xZEAQiMwoKRGV2aWNlVHlwZRIVChFERVNL",
+            "VE9QX1NQRUNUQVRPUhAAEg4KCk1BR0lDX0xFQVAQAUIOCgxfZGV2aWNlX3R5",
+            "cGVCEgoQX2hlYWRzZXRfYmF0dGVyeSI9CgtBbmNob3JQcm90bxIKCgJpZBgB",
+            "IAEoCRIiCgRwb3NlGAIgASgLMhQubGVhcGJydXNoLlBvc2VQcm90byKaAgoO",
+            "U3BhY2VJbmZvUHJvdG8SJgoGYW5jaG9yGAMgAygLMhYubGVhcGJydXNoLkFu",
+            "Y2hvclByb3RvEjEKE3RhcmdldF9zcGFjZV9vcmlnaW4YBCABKAsyFC5sZWFw",
+            "YnJ1c2guUG9zZVByb3RvEhIKCnNwYWNlX25hbWUYBSABKAkSEAoIc3BhY2Vf",
+            "aWQYBiABKAkSOwoMbWFwcGluZ19tb2RlGAcgASgOMiUubGVhcGJydXNoLlNw",
+            "YWNlSW5mb1Byb3RvLk1hcHBpbmdNb2RlEh4KFnVzaW5nX2ltcG9ydGVkX2Fu",
+            "Y2hvcnMYCCABKAgiKgoLTWFwcGluZ01vZGUSDQoJT05fREVWSUNFEAASDAoI",
+            "QVJfQ0xPVUQQASKnAgoQQnJ1c2hTdHJva2VQcm90bxIKCgJpZBgBIAEoCRIR",
+            "Cgl1c2VyX25hbWUYAiABKAkSEQoJYW5jaG9yX2lkGAMgASgJEjMKBHR5cGUY",
+            "ByABKA4yJS5sZWFwYnJ1c2guQnJ1c2hTdHJva2VQcm90by5CcnVzaFR5cGUS",
+            "KAoKYnJ1c2hfcG9zZRgEIAMoCzIULmxlYXBicnVzaC5Qb3NlUHJvdG8SEwoL",
+            "c3RhcnRfaW5kZXgYBSABKAUSGAoQc3Ryb2tlX2NvbG9yX3JnYhgGIAEoDRIX",
+            "Cg9maWxsX2NvbG9yX3JnYmEYCCABKA0SFQoNZmlsbF9kaW1tZXJfYRgJIAEo",
+            "DSIjCglCcnVzaFR5cGUSDAoIU0NSSUJCTEUQABIICgRQT0xZEAEikwEKEkV4",
+            "dGVybmFsTW9kZWxQcm90bxIKCgJpZBgBIAEoCRIRCglmaWxlX25hbWUYAiAB",
+            "KAkSEQoJYW5jaG9yX2lkGAMgASgJEiwKCXRyYW5zZm9ybRgGIAEoCzIZLmxl",
+            "YXBicnVzaC5UcmFuc2Zvcm1Qcm90bxIdChVtb2RpZmllZF9ieV91c2VyX25h",
+            "bWUYBSABKAkiPwoVUmVnaXN0ZXJEZXZpY2VSZXF1ZXN0EhEKCXVzZXJfbmFt",
+            "ZRgBIAEoCRITCgthcHBfdmVyc2lvbhgCIAEoCSJKChVCcnVzaFN0cm9rZUFk",
+            "ZFJlcXVlc3QSMQoMYnJ1c2hfc3Ryb2tlGAEgASgLMhsubGVhcGJydXNoLkJy",
+            "dXNoU3Ryb2tlUHJvdG8iOQoYQnJ1c2hTdHJva2VSZW1vdmVSZXF1ZXN0EgoK",
+            "AmlkGAEgASgJEhEKCWFuY2hvcl9pZBgCIAEoCSJHChdFeHRlcm5hbE1vZGVs",
+            "QWRkUmVxdWVzdBIsCgVtb2RlbBgBIAEoCzIdLmxlYXBicnVzaC5FeHRlcm5h",
+            "bE1vZGVsUHJvdG8iOwoaRXh0ZXJuYWxNb2RlbFJlbW92ZVJlcXVlc3QSCgoC",
+            "aWQYASABKAkSEQoJYW5jaG9yX2lkGAIgASgJIhMKEVF1ZXJ5VXNlcnNSZXF1",
+            "ZXN0IoMCChJRdWVyeVVzZXJzUmVzcG9uc2USNQoHcmVzdWx0cxgBIAMoCzIk",
+            "LmxlYXBicnVzaC5RdWVyeVVzZXJzUmVzcG9uc2UuUmVzdWx0GrUBCgZSZXN1",
+            "bHQSEQoJdXNlcl9uYW1lGAEgASgJEi0KCnNwYWNlX2luZm8YAiABKAsyGS5s",
+            "ZWFwYnJ1c2guU3BhY2VJbmZvUHJvdG8SGQoRdXNlcl9kaXNwbGF5X25hbWUY",
+            "AyABKAkSPgoLZGV2aWNlX3R5cGUYBCABKA4yJC5sZWFwYnJ1c2guVXNlclN0",
+            "YXRlUHJvdG8uRGV2aWNlVHlwZUgAiAEBQg4KDF9kZXZpY2VfdHlwZSJCCg9T",
+            "ZXJ2ZXJJbmZvUHJvdG8SFgoOc2VydmVyX3ZlcnNpb24YASABKAkSFwoPbWlu",
+            "X2FwcF92ZXJzaW9uGAIgASgJIvkCChNTZXJ2ZXJTdGF0ZVJlc3BvbnNlEi0K",
+            "CnVzZXJfc3RhdGUYASADKAsyGS5sZWFwYnJ1c2guVXNlclN0YXRlUHJvdG8S",
+            "OgoQYnJ1c2hfc3Ryb2tlX2FkZBgCIAMoCzIgLmxlYXBicnVzaC5CcnVzaFN0",
+            "cm9rZUFkZFJlcXVlc3QSQAoTYnJ1c2hfc3Ryb2tlX3JlbW92ZRgDIAMoCzIj",
+            "LmxlYXBicnVzaC5CcnVzaFN0cm9rZVJlbW92ZVJlcXVlc3QSPgoSZXh0ZXJu",
+            "YWxfbW9kZWxfYWRkGAQgAygLMiIubGVhcGJydXNoLkV4dGVybmFsTW9kZWxB",
+            "ZGRSZXF1ZXN0EkQKFWV4dGVybmFsX21vZGVsX3JlbW92ZRgFIAMoCzIlLmxl",
+            "YXBicnVzaC5FeHRlcm5hbE1vZGVsUmVtb3ZlUmVxdWVzdBIvCgtzZXJ2ZXJf",
+            "aW5mbxgGIAEoCzIaLmxlYXBicnVzaC5TZXJ2ZXJJbmZvUHJvdG8ixAMKE1Vw",
+            "ZGF0ZURldmljZVJlcXVlc3QSLQoKdXNlcl9zdGF0ZRgBIAEoCzIZLmxlYXBi",
+            "cnVzaC5Vc2VyU3RhdGVQcm90bxItCgpzcGFjZV9pbmZvGAIgASgLMhkubGVh",
+            "cGJydXNoLlNwYWNlSW5mb1Byb3RvEgwKBGVjaG8YAyABKAgSOgoQYnJ1c2hf",
+            "c3Ryb2tlX2FkZBgEIAEoCzIgLmxlYXBicnVzaC5CcnVzaFN0cm9rZUFkZFJl",
+            "cXVlc3QSQAoTYnJ1c2hfc3Ryb2tlX3JlbW92ZRgFIAEoCzIjLmxlYXBicnVz",
+            "aC5CcnVzaFN0cm9rZVJlbW92ZVJlcXVlc3QSPQoTcXVlcnlfdXNlcnNfcmVx",
+            "dWVzdBgGIAEoCzIcLmxlYXBicnVzaC5RdWVyeVVzZXJzUmVxdWVzdEICGAES",
+            "PgoSZXh0ZXJuYWxfbW9kZWxfYWRkGAcgASgLMiIubGVhcGJydXNoLkV4dGVy",
+            "bmFsTW9kZWxBZGRSZXF1ZXN0EkQKFWV4dGVybmFsX21vZGVsX3JlbW92ZRgI",
+            "IAEoCzIlLmxlYXBicnVzaC5FeHRlcm5hbE1vZGVsUmVtb3ZlUmVxdWVzdCJX",
+            "ChRVcGRhdGVEZXZpY2VSZXNwb25zZRI/ChRxdWVyeV91c2Vyc19yZXNwb25z",
+            "ZRgBIAEoCzIdLmxlYXBicnVzaC5RdWVyeVVzZXJzUmVzcG9uc2VCAhgBIloK",
+            "ClJwY1JlcXVlc3QSEQoJdXNlcl9uYW1lGAEgASgJEjkKE3F1ZXJ5X3VzZXJz",
+            "X3JlcXVlc3QYAiABKAsyHC5sZWFwYnJ1c2guUXVlcnlVc2Vyc1JlcXVlc3Qi",
+            "SgoLUnBjUmVzcG9uc2USOwoUcXVlcnlfdXNlcnNfcmVzcG9uc2UYASABKAsy",
+            "HS5sZWFwYnJ1c2guUXVlcnlVc2Vyc1Jlc3BvbnNlMtICCgxMZWFwQnJ1c2hB",
+            "cGkSWQoRUmVnaXN0ZXJBbmRMaXN0ZW4SIC5sZWFwYnJ1c2guUmVnaXN0ZXJE",
+            "ZXZpY2VSZXF1ZXN0Gh4ubGVhcGJydXNoLlNlcnZlclN0YXRlUmVzcG9uc2Ui",
+            "ADABElQKDFVwZGF0ZURldmljZRIeLmxlYXBicnVzaC5VcGRhdGVEZXZpY2VS",
+            "ZXF1ZXN0Gh8ubGVhcGJydXNoLlVwZGF0ZURldmljZVJlc3BvbnNlIgOIAgES",
+            "WQoSVXBkYXRlRGV2aWNlU3RyZWFtEh4ubGVhcGJydXNoLlVwZGF0ZURldmlj",
+            "ZVJlcXVlc3QaHy5sZWFwYnJ1c2guVXBkYXRlRGV2aWNlUmVzcG9uc2UiACgB",
+            "EjYKA1JwYxIVLmxlYXBicnVzaC5ScGNSZXF1ZXN0GhYubGVhcGJydXNoLlJw",
+            "Y1Jlc3BvbnNlIgBCSFowZ2l0bGFiLm1hZ2ljbGVhcC5pby9naGF6ZW4vbGVh",
+            "cC1icnVzaC9zZXJ2ZXIvYXBpqgITTWFnaWNMZWFwLkxlYXBCcnVzaGIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -112,9 +124,10 @@ namespace MagicLeap.LeapBrush {
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.QuaternionProto), global::MagicLeap.LeapBrush.QuaternionProto.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.PoseProto), global::MagicLeap.LeapBrush.PoseProto.Parser, new[]{ "Position", "Rotation" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.TransformProto), global::MagicLeap.LeapBrush.TransformProto.Parser, new[]{ "Position", "Rotation", "Scale" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.UserStateProto), global::MagicLeap.LeapBrush.UserStateProto.Parser, new[]{ "UserName", "AnchorId", "HeadPose", "ControlPose", "ToolState", "ToolColorRgb", "ToolLength", "UserDisplayName" }, null, new[]{ typeof(global::MagicLeap.LeapBrush.UserStateProto.Types.ToolState) }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.BatteryStatusProto), global::MagicLeap.LeapBrush.BatteryStatusProto.Parser, new[]{ "Level", "State" }, null, new[]{ typeof(global::MagicLeap.LeapBrush.BatteryStatusProto.Types.BatteryState) }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.UserStateProto), global::MagicLeap.LeapBrush.UserStateProto.Parser, new[]{ "UserName", "AnchorId", "HeadPose", "ControlPose", "ToolState", "ToolColorRgb", "ToolLength", "UserDisplayName", "DeviceType", "HeadsetBattery" }, new[]{ "DeviceType", "HeadsetBattery" }, new[]{ typeof(global::MagicLeap.LeapBrush.UserStateProto.Types.ToolState), typeof(global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType) }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.AnchorProto), global::MagicLeap.LeapBrush.AnchorProto.Parser, new[]{ "Id", "Pose" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.SpaceInfoProto), global::MagicLeap.LeapBrush.SpaceInfoProto.Parser, new[]{ "Anchor", "TargetSpaceOrigin", "SpaceName", "SpaceId", "MappingMode" }, null, new[]{ typeof(global::MagicLeap.LeapBrush.SpaceInfoProto.Types.MappingMode) }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.SpaceInfoProto), global::MagicLeap.LeapBrush.SpaceInfoProto.Parser, new[]{ "Anchor", "TargetSpaceOrigin", "SpaceName", "SpaceId", "MappingMode", "UsingImportedAnchors" }, null, new[]{ typeof(global::MagicLeap.LeapBrush.SpaceInfoProto.Types.MappingMode) }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.BrushStrokeProto), global::MagicLeap.LeapBrush.BrushStrokeProto.Parser, new[]{ "Id", "UserName", "AnchorId", "Type", "BrushPose", "StartIndex", "StrokeColorRgb", "FillColorRgba", "FillDimmerA" }, null, new[]{ typeof(global::MagicLeap.LeapBrush.BrushStrokeProto.Types.BrushType) }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.ExternalModelProto), global::MagicLeap.LeapBrush.ExternalModelProto.Parser, new[]{ "Id", "FileName", "AnchorId", "Transform", "ModifiedByUserName" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.RegisterDeviceRequest), global::MagicLeap.LeapBrush.RegisterDeviceRequest.Parser, new[]{ "UserName", "AppVersion" }, null, null, null, null),
@@ -123,7 +136,7 @@ namespace MagicLeap.LeapBrush {
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.ExternalModelAddRequest), global::MagicLeap.LeapBrush.ExternalModelAddRequest.Parser, new[]{ "Model" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.ExternalModelRemoveRequest), global::MagicLeap.LeapBrush.ExternalModelRemoveRequest.Parser, new[]{ "Id", "AnchorId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.QueryUsersRequest), global::MagicLeap.LeapBrush.QueryUsersRequest.Parser, null, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.QueryUsersResponse), global::MagicLeap.LeapBrush.QueryUsersResponse.Parser, new[]{ "Results" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.QueryUsersResponse.Types.Result), global::MagicLeap.LeapBrush.QueryUsersResponse.Types.Result.Parser, new[]{ "UserName", "SpaceInfo", "UserDisplayName" }, null, null, null, null)}),
+            new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.QueryUsersResponse), global::MagicLeap.LeapBrush.QueryUsersResponse.Parser, new[]{ "Results" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.QueryUsersResponse.Types.Result), global::MagicLeap.LeapBrush.QueryUsersResponse.Types.Result.Parser, new[]{ "UserName", "SpaceInfo", "UserDisplayName", "DeviceType" }, new[]{ "DeviceType" }, null, null, null)}),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.ServerInfoProto), global::MagicLeap.LeapBrush.ServerInfoProto.Parser, new[]{ "ServerVersion", "MinAppVersion" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.ServerStateResponse), global::MagicLeap.LeapBrush.ServerStateResponse.Parser, new[]{ "UserState", "BrushStrokeAdd", "BrushStrokeRemove", "ExternalModelAdd", "ExternalModelRemove", "ServerInfo" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.UpdateDeviceRequest), global::MagicLeap.LeapBrush.UpdateDeviceRequest.Parser, new[]{ "UserState", "SpaceInfo", "Echo", "BrushStrokeAdd", "BrushStrokeRemove", "QueryUsersRequest", "ExternalModelAdd", "ExternalModelRemove" }, null, null, null, null),
@@ -1233,6 +1246,251 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  public sealed partial class BatteryStatusProto : pb::IMessage<BatteryStatusProto>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<BatteryStatusProto> _parser = new pb::MessageParser<BatteryStatusProto>(() => new BatteryStatusProto());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<BatteryStatusProto> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public BatteryStatusProto() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public BatteryStatusProto(BatteryStatusProto other) : this() {
+      level_ = other.level_;
+      state_ = other.state_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public BatteryStatusProto Clone() {
+      return new BatteryStatusProto(this);
+    }
+
+    /// <summary>Field number for the "level" field.</summary>
+    public const int LevelFieldNumber = 1;
+    private uint level_;
+    /// <summary>
+    /// Battery level between 0 and 100.
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint Level {
+      get { return level_; }
+      set {
+        level_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "state" field.</summary>
+    public const int StateFieldNumber = 2;
+    private global::MagicLeap.LeapBrush.BatteryStatusProto.Types.BatteryState state_ = global::MagicLeap.LeapBrush.BatteryStatusProto.Types.BatteryState.Unknown;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::MagicLeap.LeapBrush.BatteryStatusProto.Types.BatteryState State {
+      get { return state_; }
+      set {
+        state_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as BatteryStatusProto);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(BatteryStatusProto other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Level != other.Level) return false;
+      if (State != other.State) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Level != 0) hash ^= Level.GetHashCode();
+      if (State != global::MagicLeap.LeapBrush.BatteryStatusProto.Types.BatteryState.Unknown) hash ^= State.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Level != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(Level);
+      }
+      if (State != global::MagicLeap.LeapBrush.BatteryStatusProto.Types.BatteryState.Unknown) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) State);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Level != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(Level);
+      }
+      if (State != global::MagicLeap.LeapBrush.BatteryStatusProto.Types.BatteryState.Unknown) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) State);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Level != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Level);
+      }
+      if (State != global::MagicLeap.LeapBrush.BatteryStatusProto.Types.BatteryState.Unknown) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) State);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(BatteryStatusProto other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Level != 0) {
+        Level = other.Level;
+      }
+      if (other.State != global::MagicLeap.LeapBrush.BatteryStatusProto.Types.BatteryState.Unknown) {
+        State = other.State;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Level = input.ReadUInt32();
+            break;
+          }
+          case 16: {
+            State = (global::MagicLeap.LeapBrush.BatteryStatusProto.Types.BatteryState) input.ReadEnum();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Level = input.ReadUInt32();
+            break;
+          }
+          case 16: {
+            State = (global::MagicLeap.LeapBrush.BatteryStatusProto.Types.BatteryState) input.ReadEnum();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+    #region Nested types
+    /// <summary>Container for nested types declared in the BatteryStatusProto message type.</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static partial class Types {
+      public enum BatteryState {
+        [pbr::OriginalName("UNKNOWN")] Unknown = 0,
+        [pbr::OriginalName("CHARGING")] Charging = 1,
+        [pbr::OriginalName("DISCHARGING")] Discharging = 2,
+        [pbr::OriginalName("NOT_CHARGING")] NotCharging = 3,
+        [pbr::OriginalName("FULL")] Full = 4,
+      }
+
+    }
+    #endregion
+
+  }
+
   public sealed partial class UserStateProto : pb::IMessage<UserStateProto>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -1240,6 +1498,7 @@ namespace MagicLeap.LeapBrush {
   {
     private static readonly pb::MessageParser<UserStateProto> _parser = new pb::MessageParser<UserStateProto>(() => new UserStateProto());
     private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<UserStateProto> Parser { get { return _parser; } }
@@ -1247,7 +1506,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[4]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1267,6 +1526,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public UserStateProto(UserStateProto other) : this() {
+      _hasBits0 = other._hasBits0;
       userName_ = other.userName_;
       anchorId_ = other.anchorId_;
       headPose_ = other.headPose_ != null ? other.headPose_.Clone() : null;
@@ -1275,6 +1535,8 @@ namespace MagicLeap.LeapBrush {
       toolColorRgb_ = other.toolColorRgb_;
       toolLength_ = other.toolLength_;
       userDisplayName_ = other.userDisplayName_;
+      deviceType_ = other.deviceType_;
+      headsetBattery_ = other.headsetBattery_ != null ? other.headsetBattery_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1380,6 +1642,43 @@ namespace MagicLeap.LeapBrush {
       }
     }
 
+    /// <summary>Field number for the "device_type" field.</summary>
+    public const int DeviceTypeFieldNumber = 11;
+    private global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType deviceType_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType DeviceType {
+      get { if ((_hasBits0 & 1) != 0) { return deviceType_; } else { return global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType.DesktopSpectator; } }
+      set {
+        _hasBits0 |= 1;
+        deviceType_ = value;
+      }
+    }
+    /// <summary>Gets whether the "device_type" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasDeviceType {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "device_type" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearDeviceType() {
+      _hasBits0 &= ~1;
+    }
+
+    /// <summary>Field number for the "headset_battery" field.</summary>
+    public const int HeadsetBatteryFieldNumber = 12;
+    private global::MagicLeap.LeapBrush.BatteryStatusProto headsetBattery_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::MagicLeap.LeapBrush.BatteryStatusProto HeadsetBattery {
+      get { return headsetBattery_; }
+      set {
+        headsetBattery_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1403,6 +1702,8 @@ namespace MagicLeap.LeapBrush {
       if (ToolColorRgb != other.ToolColorRgb) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(ToolLength, other.ToolLength)) return false;
       if (UserDisplayName != other.UserDisplayName) return false;
+      if (DeviceType != other.DeviceType) return false;
+      if (!object.Equals(HeadsetBattery, other.HeadsetBattery)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1418,6 +1719,8 @@ namespace MagicLeap.LeapBrush {
       if (ToolColorRgb != 0) hash ^= ToolColorRgb.GetHashCode();
       if (ToolLength != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(ToolLength);
       if (UserDisplayName.Length != 0) hash ^= UserDisplayName.GetHashCode();
+      if (HasDeviceType) hash ^= DeviceType.GetHashCode();
+      if (headsetBattery_ != null) hash ^= HeadsetBattery.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1468,6 +1771,14 @@ namespace MagicLeap.LeapBrush {
         output.WriteRawTag(82);
         output.WriteString(UserDisplayName);
       }
+      if (HasDeviceType) {
+        output.WriteRawTag(88);
+        output.WriteEnum((int) DeviceType);
+      }
+      if (headsetBattery_ != null) {
+        output.WriteRawTag(98);
+        output.WriteMessage(HeadsetBattery);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1510,6 +1821,14 @@ namespace MagicLeap.LeapBrush {
         output.WriteRawTag(82);
         output.WriteString(UserDisplayName);
       }
+      if (HasDeviceType) {
+        output.WriteRawTag(88);
+        output.WriteEnum((int) DeviceType);
+      }
+      if (headsetBattery_ != null) {
+        output.WriteRawTag(98);
+        output.WriteMessage(HeadsetBattery);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1543,6 +1862,12 @@ namespace MagicLeap.LeapBrush {
       }
       if (UserDisplayName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(UserDisplayName);
+      }
+      if (HasDeviceType) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) DeviceType);
+      }
+      if (headsetBattery_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(HeadsetBattery);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1585,6 +1910,15 @@ namespace MagicLeap.LeapBrush {
       }
       if (other.UserDisplayName.Length != 0) {
         UserDisplayName = other.UserDisplayName;
+      }
+      if (other.HasDeviceType) {
+        DeviceType = other.DeviceType;
+      }
+      if (other.headsetBattery_ != null) {
+        if (headsetBattery_ == null) {
+          HeadsetBattery = new global::MagicLeap.LeapBrush.BatteryStatusProto();
+        }
+        HeadsetBattery.MergeFrom(other.HeadsetBattery);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1637,6 +1971,17 @@ namespace MagicLeap.LeapBrush {
           }
           case 82: {
             UserDisplayName = input.ReadString();
+            break;
+          }
+          case 88: {
+            DeviceType = (global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType) input.ReadEnum();
+            break;
+          }
+          case 98: {
+            if (headsetBattery_ == null) {
+              HeadsetBattery = new global::MagicLeap.LeapBrush.BatteryStatusProto();
+            }
+            input.ReadMessage(HeadsetBattery);
             break;
           }
         }
@@ -1692,6 +2037,17 @@ namespace MagicLeap.LeapBrush {
             UserDisplayName = input.ReadString();
             break;
           }
+          case 88: {
+            DeviceType = (global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType) input.ReadEnum();
+            break;
+          }
+          case 98: {
+            if (headsetBattery_ == null) {
+              HeadsetBattery = new global::MagicLeap.LeapBrush.BatteryStatusProto();
+            }
+            input.ReadMessage(HeadsetBattery);
+            break;
+          }
         }
       }
     }
@@ -1708,6 +2064,11 @@ namespace MagicLeap.LeapBrush {
         [pbr::OriginalName("ERASER")] Eraser = 2,
         [pbr::OriginalName("BRUSH_SCRIBBLE")] BrushScribble = 3,
         [pbr::OriginalName("BRUSH_POLY")] BrushPoly = 4,
+      }
+
+      public enum DeviceType {
+        [pbr::OriginalName("DESKTOP_SPECTATOR")] DesktopSpectator = 0,
+        [pbr::OriginalName("MAGIC_LEAP")] MagicLeap = 1,
       }
 
     }
@@ -1729,7 +2090,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[5]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1964,7 +2325,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[6]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1989,6 +2350,7 @@ namespace MagicLeap.LeapBrush {
       spaceName_ = other.spaceName_;
       spaceId_ = other.spaceId_;
       mappingMode_ = other.mappingMode_;
+      usingImportedAnchors_ = other.usingImportedAnchors_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2057,6 +2419,18 @@ namespace MagicLeap.LeapBrush {
       }
     }
 
+    /// <summary>Field number for the "using_imported_anchors" field.</summary>
+    public const int UsingImportedAnchorsFieldNumber = 8;
+    private bool usingImportedAnchors_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool UsingImportedAnchors {
+      get { return usingImportedAnchors_; }
+      set {
+        usingImportedAnchors_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -2077,6 +2451,7 @@ namespace MagicLeap.LeapBrush {
       if (SpaceName != other.SpaceName) return false;
       if (SpaceId != other.SpaceId) return false;
       if (MappingMode != other.MappingMode) return false;
+      if (UsingImportedAnchors != other.UsingImportedAnchors) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2089,6 +2464,7 @@ namespace MagicLeap.LeapBrush {
       if (SpaceName.Length != 0) hash ^= SpaceName.GetHashCode();
       if (SpaceId.Length != 0) hash ^= SpaceId.GetHashCode();
       if (MappingMode != global::MagicLeap.LeapBrush.SpaceInfoProto.Types.MappingMode.OnDevice) hash ^= MappingMode.GetHashCode();
+      if (UsingImportedAnchors != false) hash ^= UsingImportedAnchors.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2124,6 +2500,10 @@ namespace MagicLeap.LeapBrush {
         output.WriteRawTag(56);
         output.WriteEnum((int) MappingMode);
       }
+      if (UsingImportedAnchors != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(UsingImportedAnchors);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2151,6 +2531,10 @@ namespace MagicLeap.LeapBrush {
         output.WriteRawTag(56);
         output.WriteEnum((int) MappingMode);
       }
+      if (UsingImportedAnchors != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(UsingImportedAnchors);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2173,6 +2557,9 @@ namespace MagicLeap.LeapBrush {
       }
       if (MappingMode != global::MagicLeap.LeapBrush.SpaceInfoProto.Types.MappingMode.OnDevice) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MappingMode);
+      }
+      if (UsingImportedAnchors != false) {
+        size += 1 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2201,6 +2588,9 @@ namespace MagicLeap.LeapBrush {
       }
       if (other.MappingMode != global::MagicLeap.LeapBrush.SpaceInfoProto.Types.MappingMode.OnDevice) {
         MappingMode = other.MappingMode;
+      }
+      if (other.UsingImportedAnchors != false) {
+        UsingImportedAnchors = other.UsingImportedAnchors;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2238,6 +2628,10 @@ namespace MagicLeap.LeapBrush {
           }
           case 56: {
             MappingMode = (global::MagicLeap.LeapBrush.SpaceInfoProto.Types.MappingMode) input.ReadEnum();
+            break;
+          }
+          case 64: {
+            UsingImportedAnchors = input.ReadBool();
             break;
           }
         }
@@ -2278,6 +2672,10 @@ namespace MagicLeap.LeapBrush {
             MappingMode = (global::MagicLeap.LeapBrush.SpaceInfoProto.Types.MappingMode) input.ReadEnum();
             break;
           }
+          case 64: {
+            UsingImportedAnchors = input.ReadBool();
+            break;
+          }
         }
       }
     }
@@ -2312,7 +2710,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[7]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2799,7 +3197,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[8]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3145,7 +3543,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[9]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3371,7 +3769,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[10]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3569,7 +3967,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[11]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3795,7 +4193,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[12]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3993,7 +4391,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[13]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4219,7 +4617,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[14]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[15]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4371,7 +4769,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[15]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[16]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4545,6 +4943,7 @@ namespace MagicLeap.LeapBrush {
       {
         private static readonly pb::MessageParser<Result> _parser = new pb::MessageParser<Result>(() => new Result());
         private pb::UnknownFieldSet _unknownFields;
+        private int _hasBits0;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pb::MessageParser<Result> Parser { get { return _parser; } }
@@ -4572,9 +4971,11 @@ namespace MagicLeap.LeapBrush {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public Result(Result other) : this() {
+          _hasBits0 = other._hasBits0;
           userName_ = other.userName_;
           spaceInfo_ = other.spaceInfo_ != null ? other.spaceInfo_.Clone() : null;
           userDisplayName_ = other.userDisplayName_;
+          deviceType_ = other.deviceType_;
           _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
         }
 
@@ -4620,6 +5021,31 @@ namespace MagicLeap.LeapBrush {
           }
         }
 
+        /// <summary>Field number for the "device_type" field.</summary>
+        public const int DeviceTypeFieldNumber = 4;
+        private global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType deviceType_;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType DeviceType {
+          get { if ((_hasBits0 & 1) != 0) { return deviceType_; } else { return global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType.DesktopSpectator; } }
+          set {
+            _hasBits0 |= 1;
+            deviceType_ = value;
+          }
+        }
+        /// <summary>Gets whether the "device_type" field is set</summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public bool HasDeviceType {
+          get { return (_hasBits0 & 1) != 0; }
+        }
+        /// <summary>Clears the value of the "device_type" field</summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void ClearDeviceType() {
+          _hasBits0 &= ~1;
+        }
+
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override bool Equals(object other) {
@@ -4638,6 +5064,7 @@ namespace MagicLeap.LeapBrush {
           if (UserName != other.UserName) return false;
           if (!object.Equals(SpaceInfo, other.SpaceInfo)) return false;
           if (UserDisplayName != other.UserDisplayName) return false;
+          if (DeviceType != other.DeviceType) return false;
           return Equals(_unknownFields, other._unknownFields);
         }
 
@@ -4648,6 +5075,7 @@ namespace MagicLeap.LeapBrush {
           if (UserName.Length != 0) hash ^= UserName.GetHashCode();
           if (spaceInfo_ != null) hash ^= SpaceInfo.GetHashCode();
           if (UserDisplayName.Length != 0) hash ^= UserDisplayName.GetHashCode();
+          if (HasDeviceType) hash ^= DeviceType.GetHashCode();
           if (_unknownFields != null) {
             hash ^= _unknownFields.GetHashCode();
           }
@@ -4678,6 +5106,10 @@ namespace MagicLeap.LeapBrush {
             output.WriteRawTag(26);
             output.WriteString(UserDisplayName);
           }
+          if (HasDeviceType) {
+            output.WriteRawTag(32);
+            output.WriteEnum((int) DeviceType);
+          }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
           }
@@ -4700,6 +5132,10 @@ namespace MagicLeap.LeapBrush {
             output.WriteRawTag(26);
             output.WriteString(UserDisplayName);
           }
+          if (HasDeviceType) {
+            output.WriteRawTag(32);
+            output.WriteEnum((int) DeviceType);
+          }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(ref output);
           }
@@ -4718,6 +5154,9 @@ namespace MagicLeap.LeapBrush {
           }
           if (UserDisplayName.Length != 0) {
             size += 1 + pb::CodedOutputStream.ComputeStringSize(UserDisplayName);
+          }
+          if (HasDeviceType) {
+            size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) DeviceType);
           }
           if (_unknownFields != null) {
             size += _unknownFields.CalculateSize();
@@ -4742,6 +5181,9 @@ namespace MagicLeap.LeapBrush {
           }
           if (other.UserDisplayName.Length != 0) {
             UserDisplayName = other.UserDisplayName;
+          }
+          if (other.HasDeviceType) {
+            DeviceType = other.DeviceType;
           }
           _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
         }
@@ -4771,6 +5213,10 @@ namespace MagicLeap.LeapBrush {
               }
               case 26: {
                 UserDisplayName = input.ReadString();
+                break;
+              }
+              case 32: {
+                DeviceType = (global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType) input.ReadEnum();
                 break;
               }
             }
@@ -4803,6 +5249,10 @@ namespace MagicLeap.LeapBrush {
                 UserDisplayName = input.ReadString();
                 break;
               }
+              case 32: {
+                DeviceType = (global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType) input.ReadEnum();
+                break;
+              }
             }
           }
         }
@@ -4829,7 +5279,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[16]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[17]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5055,7 +5505,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[17]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[18]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5383,7 +5833,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[18]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[19]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5898,7 +6348,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[19]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[20]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6100,7 +6550,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[20]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[21]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6335,7 +6785,7 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[21]; }
+      get { return global::MagicLeap.LeapBrush.LeapBrushApiReflection.Descriptor.MessageTypes[22]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

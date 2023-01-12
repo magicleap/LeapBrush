@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 namespace MagicLeap.LeapBrush
@@ -9,7 +10,7 @@ namespace MagicLeap.LeapBrush
         private GameObject _statusLayout = null;
 
         [SerializeField, Tooltip("The text field for showing this anchor's status")]
-        private TextMesh _statusText = null;
+        private TextMeshPro _statusText = null;
 
         [SerializeField, Tooltip("The root of the main anchor collider and visualizations")]
         private GameObject _colliderAndVisualization = null;
@@ -98,10 +99,7 @@ namespace MagicLeap.LeapBrush
             {
                 transform.position = anchorData.Pose.position;
                 transform.rotation = anchorData.Pose.rotation;
-                _visualization.GetComponent<Rigidbody>().Sleep();
                 _visualization.transform.rotation = anchorData.Pose.rotation;
-                _visualization.transform.localPosition = Vector3.zero;
-                _visualization.GetComponent<Rigidbody>().WakeUp();
             }
 
             if (oldAnchorData.IsPersisted != anchorData.IsPersisted)

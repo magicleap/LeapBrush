@@ -59,6 +59,13 @@ namespace MagicLeap.LeapBrush
 
         private InstructionType _instructionType = InstructionType.MainMenu;
 
+        private void Awake()
+        {
+#if !UNITY_ANDROID || UNITY_EDITOR
+            gameObject.SetActive(false);
+#endif
+        }
+
         private void Start()
         {
             SetInstructionSet(InstructionType.MainMenu);
@@ -66,6 +73,11 @@ namespace MagicLeap.LeapBrush
 
         public void SetInstructionSet(InstructionType instructionType)
         {
+            if (!isActiveAndEnabled)
+            {
+                return;
+            }
+
             InstructionSet instructionSet;
             switch (instructionType)
             {

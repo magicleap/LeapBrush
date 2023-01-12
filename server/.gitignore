@@ -1,0 +1,5 @@
+/.idea/
+/bin
+/leap-brush-*.tgz
+helm/**/*.tgz
+helm/Chart.lock

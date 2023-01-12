@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5557291541651888677}
   - component: {fileID: 697113220895158216}
   - component: {fileID: 1151073942235128830}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,10 +133,64 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1365882838405093661}
   - {fileID: 3620503132223583495}
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7953180387755417872
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1365882838405093661}
+  - component: {fileID: 9205515075317807801}
+  m_Layer: 0
+  m_Name: ModalBackPlane
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1365882838405093661
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7953180387755417872}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.136, z: 0.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7371999483242880039}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &9205515075317807801
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7953180387755417872}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.01}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8945427694839660787
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,7 +201,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3776515729919852767}
   - component: {fileID: 8261865243288881044}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: '[ToolButtonStrip]'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,6 +284,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button_Continue
       objectReference: {fileID: 0}
+    - target: {fileID: 786193521592058300, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 871304602761583178, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: Settings.Label
@@ -245,10 +304,20 @@ PrefabInstance:
       propertyPath: Settings.ButtonType
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1054400383908094115, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2621255153164542305, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_LocalScale.x
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555028048445086833, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7442873442711598431, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
@@ -355,6 +424,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7592316230310131216, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8002258200407529468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -371,6 +445,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 1dc8468b8e6722c42a37f227f730b440,
         type: 3}
+    - target: {fileID: 9123807680305631468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -410,6 +489,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button_Cancel
       objectReference: {fileID: 0}
+    - target: {fileID: 786193521592058300, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 871304602761583178, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: Settings.Label
@@ -420,10 +504,20 @@ PrefabInstance:
       propertyPath: Settings.LabelType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1054400383908094115, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2621255153164542305, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_LocalScale.x
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555028048445086833, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7442873442711598431, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
@@ -530,6 +624,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7592316230310131216, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8002258200407529468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -538,6 +637,11 @@ PrefabInstance:
     - target: {fileID: 8455967087066105595, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9123807680305631468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -559,6 +663,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3620503132223583495}
     m_Modifications:
+    - target: {fileID: 723269243543632179, guid: 749c93d3daf90994197382bf10c0e095,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 540
+      objectReference: {fileID: 0}
+    - target: {fileID: 723269243543632179, guid: 749c93d3daf90994197382bf10c0e095,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 360
+      objectReference: {fileID: 0}
     - target: {fileID: 2412305126484041891, guid: 749c93d3daf90994197382bf10c0e095,
         type: 3}
       propertyPath: m_Type
@@ -589,6 +703,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BackgroundPlane_UGUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 3352166771937683710, guid: 749c93d3daf90994197382bf10c0e095,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3352166771937683710, guid: 749c93d3daf90994197382bf10c0e095,
         type: 3}
@@ -801,6 +920,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Text_Description
+      objectReference: {fileID: 0}
+    - target: {fileID: 8447826861104588024, guid: c20feb313764f6f4398cbfb17706b525,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8790495133474809325, guid: c20feb313764f6f4398cbfb17706b525,
         type: 3}
@@ -1050,6 +1174,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Text_Title
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707355277608874196, guid: 0d2e70876bad3e14c87c2795c156f58b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7356616115477988910, guid: 0d2e70876bad3e14c87c2795c156f58b,
         type: 3}

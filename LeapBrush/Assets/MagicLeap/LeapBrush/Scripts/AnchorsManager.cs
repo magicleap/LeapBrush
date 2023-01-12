@@ -17,6 +17,7 @@ namespace MagicLeap.LeapBrush
         private const float AnchorsUpdateDelaySeconds = .1f;
 
         private AnchorsApi.Anchor[] _anchors = new AnchorsApi.Anchor[0];
+        private bool _isUsingImportedAnchors;
         private Dictionary<string, GameObject> _anchorGameObjectsMap = new();
 
         private IEnumerator _updateAnchorsCoroutine;
@@ -59,10 +60,9 @@ namespace MagicLeap.LeapBrush
         /// <summary>
         /// Get the current anchor results, sorted by Id
         /// </summary>
-        public AnchorsApi.Anchor[] Anchors
-        {
-            get { return _anchors; }
-        }
+        public AnchorsApi.Anchor[] Anchors => _anchors;
+
+        public bool IsUsingImportedAnchors => _isUsingImportedAnchors;
 
         public bool TryGetAnchorGameObject(string anchorId, out GameObject gameObject)
         {
@@ -88,7 +88,8 @@ namespace MagicLeap.LeapBrush
         private void UpdateAnchorsOnWorkerThread()
         {
             AnchorsApi.Anchor[] anchors;
-            MLResult result = AnchorsApi.QueryAnchors(out anchors);
+            bool isUsingImportedAnchors;
+            MLResult result = AnchorsApi.QueryAnchors(out anchors, out isUsingImportedAnchors);
             if (result.IsOk)
             {
                 bool hasValidPoses = true;
@@ -111,13 +112,15 @@ namespace MagicLeap.LeapBrush
                     string.CompareOrdinal(a.Id, b.Id));
 
                 ThreadDispatcher.ScheduleMain(() => UpdateAnchorsOnMainThread(
-                    anchors));
+                    anchors, isUsingImportedAnchors));
             }
         }
 
-        private void UpdateAnchorsOnMainThread(AnchorsApi.Anchor[] anchors)
+        private void UpdateAnchorsOnMainThread(
+            AnchorsApi.Anchor[] anchors, bool isUsingImportedAnchors)
         {
             _anchors = anchors;
+            _isUsingImportedAnchors = isUsingImportedAnchors;
 
             HashSet<string> removedAnchorIds = new HashSet<string>();
             foreach (KeyValuePair<string, GameObject> anchorEntry in _anchorGameObjectsMap)

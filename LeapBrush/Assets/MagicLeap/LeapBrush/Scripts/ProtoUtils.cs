@@ -145,5 +145,38 @@ namespace MagicLeap
                         nameof(mappingMode), mappingMode, null);
             }
         }
+
+        public static MLAnchors.MappingMode FromProto(SpaceInfoProto.Types.MappingMode mappingMode)
+        {
+            switch (mappingMode)
+            {
+                case SpaceInfoProto.Types.MappingMode.OnDevice:
+                    return MLAnchors.MappingMode.OnDevice;
+                case SpaceInfoProto.Types.MappingMode.ArCloud:
+                    return MLAnchors.MappingMode.ARCloud;
+                default:
+                    throw new ArgumentOutOfRangeException(
+                        nameof(mappingMode), mappingMode, null);
+            }
+        }
+
+        public static BatteryStatusProto.Types.BatteryState ToProto(BatteryStatus batteryStatus)
+        {
+            switch (batteryStatus)
+            {
+                case BatteryStatus.Unknown:
+                    return BatteryStatusProto.Types.BatteryState.Unknown;
+                case BatteryStatus.Charging:
+                    return BatteryStatusProto.Types.BatteryState.Charging;
+                case BatteryStatus.Discharging:
+                    return BatteryStatusProto.Types.BatteryState.Discharging;
+                case BatteryStatus.NotCharging:
+                    return BatteryStatusProto.Types.BatteryState.NotCharging;
+                case BatteryStatus.Full:
+                    return BatteryStatusProto.Types.BatteryState.Full;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(batteryStatus), batteryStatus, null);
+            }
+        }
     }
 }

@@ -81,7 +81,7 @@ GameObject:
   - component: {fileID: 2710092931950738976}
   - component: {fileID: 1916988429208073613}
   - component: {fileID: 2115193106426304537}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +205,7 @@ Transform:
   m_Children:
   - {fileID: 645403643873480201}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8325310268723626758
 GameObject:
@@ -238,7 +238,7 @@ RectTransform:
   m_Children:
   - {fileID: 42251470996172104}
   - {fileID: 3368394149286222501}
-  - {fileID: 6057667690958600466}
+  - {fileID: 5126947600045091138}
   m_Father: {fileID: 645403643873480201}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
@@ -370,7 +370,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!1001 &737930576357110695
+--- !u!1001 &1804286439926670327
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -386,17 +386,12 @@ PrefabInstance:
     - target: {fileID: 3715457020018474582, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: m_Name
-      value: Button_BroadcastSettings
-      objectReference: {fileID: 0}
-    - target: {fileID: 3715457020018474582, guid: 5936e2856599c2f4dad8c994f9e575f3,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
+      value: Button_LeaveSession
       objectReference: {fileID: 0}
     - target: {fileID: 3851022183163733408, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: Settings.Label
-      value: Broadcast Settings
+      value: Leave Session
       objectReference: {fileID: 0}
     - target: {fileID: 3851022183163733408, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
@@ -406,12 +401,12 @@ PrefabInstance:
     - target: {fileID: 4233293891329754269, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: m_text
-      value: Broadcast Settings
+      value: Leave Session
       objectReference: {fileID: 0}
     - target: {fileID: 4233293891329754269, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: originalText
-      value: Broadcast Settings
+      value: Leave Session
       objectReference: {fileID: 0}
     - target: {fileID: 5494193552900012409, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
@@ -427,7 +422,7 @@ PrefabInstance:
     - target: {fileID: 6691335874716667343, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: m_text
-      value: Broadcast Settings
+      value: Join User Session
       objectReference: {fileID: 0}
     - target: {fileID: 6691335874716667343, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
@@ -467,7 +462,7 @@ PrefabInstance:
     - target: {fileID: 6785956349182773941, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6785956349182773941, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
@@ -477,7 +472,7 @@ PrefabInstance:
     - target: {fileID: 6785956349182773941, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6785956349182773941, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
@@ -527,12 +522,12 @@ PrefabInstance:
     - target: {fileID: 6785956349182773941, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6785956349182773941, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6785956349182773941, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
@@ -554,11 +549,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5936e2856599c2f4dad8c994f9e575f3, type: 3}
---- !u!224 &6057667690958600466 stripped
+--- !u!224 &5126947600045091138 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6785956349182773941, guid: 5936e2856599c2f4dad8c994f9e575f3,
     type: 3}
-  m_PrefabInstance: {fileID: 737930576357110695}
+  m_PrefabInstance: {fileID: 1804286439926670327}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2936102474091194298
 PrefabInstance:
@@ -568,6 +563,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 645403643873480201}
     m_Modifications:
+    - target: {fileID: 723269243543632179, guid: 749c93d3daf90994197382bf10c0e095,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 760
+      objectReference: {fileID: 0}
+    - target: {fileID: 723269243543632179, guid: 749c93d3daf90994197382bf10c0e095,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 540
+      objectReference: {fileID: 0}
     - target: {fileID: 2412305126484041891, guid: 749c93d3daf90994197382bf10c0e095,
         type: 3}
       propertyPath: m_Type
@@ -598,6 +603,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BackgroundPlane_UGUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 3352166771937683710, guid: 749c93d3daf90994197382bf10c0e095,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3352166771937683710, guid: 749c93d3daf90994197382bf10c0e095,
         type: 3}
@@ -1127,12 +1137,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button_Back
       objectReference: {fileID: 0}
+    - target: {fileID: 786193521592058300, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 871304602761583178, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: Settings.Icon
       value: 
       objectReference: {fileID: 21300000, guid: 26429d300e68f49af8f62a5e1a136713,
         type: 3}
+    - target: {fileID: 1054400383908094115, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2621255153164542305, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -1142,6 +1162,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.y
       value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555028048445086833, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7221873649240117497, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
@@ -1258,6 +1283,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7592316230310131216, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8002258200407529468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -1309,6 +1339,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 26429d300e68f49af8f62a5e1a136713,
         type: 3}
+    - target: {fileID: 9123807680305631468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1789,6 +1824,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Text_Title
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707355277608874196, guid: 0d2e70876bad3e14c87c2795c156f58b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7356616115477988910, guid: 0d2e70876bad3e14c87c2795c156f58b,
         type: 3}
@@ -2370,12 +2410,12 @@ PrefabInstance:
     - target: {fileID: 3715457020018474582, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: m_Name
-      value: Button_JoinUserSession
+      value: Button_JoinSession
       objectReference: {fileID: 0}
     - target: {fileID: 3851022183163733408, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: Settings.Label
-      value: Join User Session
+      value: Join Session...
       objectReference: {fileID: 0}
     - target: {fileID: 3851022183163733408, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
@@ -2385,12 +2425,12 @@ PrefabInstance:
     - target: {fileID: 4233293891329754269, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: m_text
-      value: Join User Session
+      value: Join Session...
       objectReference: {fileID: 0}
     - target: {fileID: 4233293891329754269, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: originalText
-      value: Join User Session
+      value: Join Session...
       objectReference: {fileID: 0}
     - target: {fileID: 5494193552900012409, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}

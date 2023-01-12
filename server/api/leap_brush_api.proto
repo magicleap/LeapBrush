@@ -39,6 +39,20 @@ message TransformProto {
   Vector3Proto scale = 3;
 }
 
+message BatteryStatusProto {
+  enum BatteryState {
+    UNKNOWN = 0;
+    CHARGING = 1;
+    DISCHARGING = 2;
+    NOT_CHARGING = 3;
+    FULL = 4;
+  }
+
+  // Battery level between 0 and 100.
+  uint32 level = 1;
+  BatteryState state = 2;
+}
+
 message UserStateProto {
   enum ToolState {
     MENU = 0;
@@ -46,6 +60,11 @@ message UserStateProto {
     ERASER = 2;
     BRUSH_SCRIBBLE = 3;
     BRUSH_POLY = 4;
+  }
+
+  enum DeviceType {
+    DESKTOP_SPECTATOR = 0;
+    MAGIC_LEAP = 1;
   }
 
   string user_name = 1;
@@ -56,6 +75,8 @@ message UserStateProto {
   uint32 tool_color_rgb = 8;
   float tool_length = 9;
   string user_display_name = 10;
+  optional DeviceType device_type = 11;
+  optional BatteryStatusProto headset_battery = 12;
 }
 
 message AnchorProto {
@@ -73,6 +94,7 @@ message SpaceInfoProto {
   string space_name = 5;
   string space_id = 6;
   MappingMode mapping_mode = 7;
+  bool using_imported_anchors = 8;
 }
 
 message BrushStrokeProto {
@@ -131,6 +153,7 @@ message QueryUsersResponse {
     string user_name = 1;
     SpaceInfoProto space_info = 2;
     string user_display_name = 3;
+    optional UserStateProto.DeviceType device_type = 4;
   }
 
   repeated Result results = 1;

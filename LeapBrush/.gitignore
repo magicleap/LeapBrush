@@ -87,3 +87,6 @@ Runtime/Audio/SoundAssets/Sounds/.DS_Store
 
 # Noisy rider preference file
 /ProjectSettings/RiderScriptEditorPersistedState.asset
+
+# Ignore link.xml which is used during build time. See https://forum.unity.com/threads/link-xml-part-of-version-control.1227360/
+/Assets/AddressableAssetsData/link.xml*

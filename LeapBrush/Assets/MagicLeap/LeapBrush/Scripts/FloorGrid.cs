@@ -104,36 +104,6 @@ namespace MagicLeap
         private IEnumerator UpdateFloorPlane()
         {
             yield break;
-            /*
-            MLResult result = MappingToolAPI.StartFloorYPositionQuery(
-                Camera.main.transform.position,
-                out MappingToolAPI.IFloorYPositionQueryHandle queryHandle);
-            if (!result.IsOk)
-            {
-                Debug.LogError("Failed to start floor plane query: " + result);
-                yield break;
-            }
-
-            while (true)
-            {
-                // Wait until the next frame to query for a result, and for each retry.
-                // An immediate check after starting a query will get a Pending result.
-                yield return new WaitForEndOfFrame();
-
-                result = MappingToolAPI.TryGetFloorYPosition(
-                    queryHandle, Camera.main.transform.position, out float floorYPosition);
-                if (result.IsOk)
-                {
-                    _floorYPosition = floorYPosition;
-                    yield break;
-                }
-
-                if (result.Result != MLResult.Code.Pending)
-                {
-                    // No floor y position could be found so far.
-                    yield break;
-                }
-            }*/
         }
 
         public void FoundContentAtPosition(Vector3 position)

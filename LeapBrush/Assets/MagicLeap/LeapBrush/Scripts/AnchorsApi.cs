@@ -1,21 +1,14 @@
 using System;
-using System.IO;
 using UnityEngine;
 using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap.LeapBrush
 {
-    [RequireComponent(typeof(AnchorsApiFake))]
     public class AnchorsApi : MonoBehaviour
     {
-#pragma warning disable CS0414
-        [SerializeField]
-        private bool _useFakeData = false;
-#pragma warning restore CS0414
-
-        private AnchorsApiImplBase _apiImpl = null;
-
         private static AnchorsApi _instance;
+
+        private Anchor[] _importedAnchors;
 
         [Serializable]
         public struct LocalizationInfo
@@ -97,80 +90,160 @@ namespace MagicLeap.LeapBrush
             public abstract MLResult Publish();
         }
 
-        private void Awake()
+        [Serializable]
+        public class ImportedAnchor : Anchor
         {
-            _instance = this;
-
-#if UNITY_EDITOR || !UNITY_ANDROID
-            // When running from the unity editor or on a non-magicleap device, fake data and the
-            // fake api must be used.
-            _apiImpl = GetComponent<AnchorsApiFake>();
-            _useFakeData = true;
-#else
-            // On a magic-leap device, use a unity property to determine whether to use the fake
-            // api and fake data. This allows a special version of the app to be built for
-            // side-loading.
-            _useFakeData |= UseFakeDataRuntimeOverride();
-            if (_useFakeData)
+            public ImportedAnchor()
             {
-                _apiImpl = GetComponent<AnchorsApiFake>();
+                ExpirationTimeStamp = (ulong)
+                    DateTimeOffset.Now.AddYears(1).ToUnixTimeMilliseconds();
             }
-            else
+
+            public override MLResult Publish()
             {
-                _apiImpl = gameObject.AddComponent<AnchorsApiImpl>();
+                return MLResult.Create(MLResult.Code.NotImplemented);
             }
-#endif
-
-            _apiImpl.Create();
-        }
-
-        private bool UseFakeDataRuntimeOverride()
-        {
-            string isSpectatorFilePath = Path.Join(
-                Application.persistentDataPath, "isSpectator.txt");
-
-            try
-            {
-                // TODO(ghazen): Inefficient on main thread.
-                bool isSpectator = File.Exists(isSpectatorFilePath);
-                Debug.LogFormat("AnchorsApi: use fake data override (create path {0}) = {1}",
-                    isSpectatorFilePath, isSpectator);
-                return isSpectator;
-            }
-            catch (IOException e)
-            {
-                Debug.LogException(e);
-                return false;
-            }
-        }
-
-        private void OnDestroy()
-        {
-            _apiImpl.Destroy();
-        }
-
-        private static AnchorsApi Instance
-        {
-            get
-            {
-                return _instance;
-            }
-        }
-
-        public static bool UseFakeData => Instance._useFakeData;
-
-        public static AnchorsApiFake TryGetFakeApi()
-        {
-            return Instance._apiImpl as AnchorsApiFake;
         }
 
         public static MLResult GetLocalizationInfo(out LocalizationInfo info) =>
-            Instance._apiImpl.GetLocalizationInfo(out info);
+            _instance.GetLocalizationInfoImpl(out info);
 
-        public static MLResult QueryAnchors(out Anchor[] anchors) =>
-            Instance._apiImpl.QueryAnchors(out anchors);
+        public static MLResult QueryAnchors(out Anchor[] anchors, out bool isUsingImportedAnchors)
+            => _instance.QueryAnchorsImpl(out anchors, out isUsingImportedAnchors);
 
-        public static MLResult CreateAnchor(Pose pose, ulong expirationTimeStamp, out Anchor anchor) =>
-            Instance._apiImpl.CreateAnchor(pose, expirationTimeStamp, out anchor);
+        public static MLResult CreateAnchor(Pose pose, ulong expirationTimeStamp,
+            out Anchor anchor) =>
+            _instance.CreateAnchorImpl(pose, expirationTimeStamp, out anchor);
+
+        public static void SetImportedAnchors(Anchor[] importedAnchors) =>
+            _instance.SetImportedAnchorsImpl(importedAnchors);
+
+        public static void ClearImportedAnchors() => _instance.ClearImportedAnchorsImpl();
+
+        private class AnchorImpl : Anchor
+        {
+            private MLAnchors.Anchor _mlAnchor;
+
+            public AnchorImpl(MLAnchors.Anchor mlAnchor)
+            {
+                _mlAnchor = mlAnchor;
+                Id = _mlAnchor.Id;
+                SpaceId = _mlAnchor.SpaceId;
+                Pose = mlAnchor.Pose;
+                ExpirationTimeStamp = mlAnchor.ExpirationTimeStamp;
+                IsPersisted = mlAnchor.IsPersisted;
+            }
+
+            public override MLResult Publish()
+            {
+                return _mlAnchor.Publish();
+            }
+        }
+
+        private void Awake()
+        {
+            _instance = this;
+        }
+
+        private MLResult GetLocalizationInfoImpl(out LocalizationInfo info)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            MLAnchors.LocalizationInfo mlInfo;
+            MLResult result = MLAnchors.GetLocalizationInfo(out mlInfo);
+            info = new AnchorsApi.LocalizationInfo(mlInfo.LocalizationStatus, mlInfo.MappingMode,
+                mlInfo.SpaceName, mlInfo.SpaceId, mlInfo.SpaceOrigin);
+            return result;
+#else
+            info = new LocalizationInfo(
+                MLAnchors.LocalizationStatus.NotLocalized, MLAnchors.MappingMode.OnDevice,
+                "Default", "DEFAULT_SPACE_ID", Pose.identity);
+            return MLResult.Create(MLResult.Code.Ok);
+#endif
+        }
+
+        private MLResult QueryAnchorsImpl(out Anchor[] anchors, out bool isUsingImportedAnchors)
+        {
+            lock (this)
+            {
+                if (_importedAnchors != null)
+                {
+                    anchors = _importedAnchors;
+                    isUsingImportedAnchors = true;
+                    return MLResult.Create(MLResult.Code.Ok);
+                }
+            }
+
+            isUsingImportedAnchors = false;
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            anchors = Array.Empty<Anchor>();
+
+            MLAnchors.Request request = new MLAnchors.Request();
+            MLAnchors.Request.Params queryParams = new MLAnchors.Request.Params();
+            MLResult result = request.Start(queryParams);
+            if (!result.IsOk)
+            {
+                return result;
+            }
+
+            MLAnchors.Request.Result resultData;
+            result = request.TryGetResult(out resultData);
+            if (result.IsOk)
+            {
+                anchors = new Anchor[resultData.anchors.Length];
+                for (int i = 0; i < anchors.Length; ++i)
+                {
+                    anchors[i] = new AnchorImpl(resultData.anchors[i]);
+                }
+            }
+            return result;
+#else
+            // Return a default anchor for non-ML2 applications.
+            anchors = new Anchor[]
+            {
+                new ImportedAnchor
+                {
+                    Id = "DEFAULT_ANCHOR_ID",
+                    Pose = Pose.identity
+                }
+            };
+            return MLResult.Create(MLResult.Code.Ok);
+#endif
+        }
+
+        private MLResult CreateAnchorImpl(Pose pose, ulong expirationTimeStamp, out Anchor anchor)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            MLAnchors.Anchor mlAnchor;
+            MLResult result = MLAnchors.Anchor.Create(pose, (long) expirationTimeStamp, out mlAnchor);
+            if (!result.IsOk)
+            {
+                anchor = null;
+                return result;
+            }
+
+            anchor = new AnchorImpl(mlAnchor);
+            return result;
+#else
+            anchor = null;
+            return MLResult.Create(MLResult.Code.NotImplemented);
+#endif
+        }
+
+        private void SetImportedAnchorsImpl(Anchor[] importedAnchors)
+        {
+            lock (this)
+            {
+                _importedAnchors = importedAnchors;
+            }
+        }
+
+        private void ClearImportedAnchorsImpl()
+        {
+            lock (this)
+            {
+                _importedAnchors = null;
+            }
+        }
     }
 }

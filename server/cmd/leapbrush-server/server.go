@@ -493,11 +493,12 @@ func (s *Server) HandleUpdateDevice(req *pb.UpdateDeviceRequest) *pb.UpdateDevic
 	return resp
 }
 
-func (s *Server) HandleQueryUsersLocked(userName string, req *pb.QueryUsersRequest) *pb.QueryUsersResponse {
+func (s *Server) HandleQueryUsersLocked(userName string, _ *pb.QueryUsersRequest) *pb.QueryUsersResponse {
 	resp := &pb.QueryUsersResponse{}
 
 	for userName, userState := range s.userStateMap {
-		result := &pb.QueryUsersResponse_Result{UserName: userName, UserDisplayName: userState.stateProto.UserDisplayName}
+		result := &pb.QueryUsersResponse_Result{UserName: userName, UserDisplayName: userState.stateProto.UserDisplayName,
+			DeviceType: userState.stateProto.DeviceType}
 		result.SpaceInfo = userState.spaceInfoProto
 		resp.Results = append(resp.Results, result)
 	}
@@ -606,11 +607,30 @@ func (s *Server) DistributeMissingBrushStrokesToUserLocked(userStateEntry *UserS
 		return
 	}
 
+	anchorSet := make(map[string]bool)
 	for _, anchor := range userStateEntry.spaceInfoProto.Anchor {
+		anchorSet[anchor.Id] = true
 		if anchorState, ok := s.anchorStateMap[anchor.Id]; ok {
 			for brushStrokeId, _ := range anchorState.brushStrokes {
 				userConnectionState.notifyAboutBrushStrokeAdds[brushStrokeId] = anchor.Id
 			}
+		}
+	}
+
+	// Delete obsolete brush states for anchors no longer found by the user.
+
+	var obsoleteBrushStates []string = nil
+	for brushId, brushStrokeState := range userConnectionState.brushStrokeState {
+		if _, ok := anchorSet[brushStrokeState.anchorId]; !ok {
+			if obsoleteBrushStates == nil {
+				obsoleteBrushStates = make([]string, 0, len(userConnectionState.brushStrokeState))
+			}
+			obsoleteBrushStates = append(obsoleteBrushStates, brushId)
+		}
+	}
+	if obsoleteBrushStates != nil {
+		for _, brushId := range obsoleteBrushStates {
+			delete(userConnectionState.brushStrokeState, brushId)
 		}
 	}
 }
