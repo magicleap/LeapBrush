@@ -32,7 +32,7 @@ Transform:
   - {fileID: 2946376798284656111}
   - {fileID: 7201015453495491534}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-4406465597331142982
 MonoBehaviour:
@@ -171,7 +171,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &6376285408170172673
 MonoBehaviour:

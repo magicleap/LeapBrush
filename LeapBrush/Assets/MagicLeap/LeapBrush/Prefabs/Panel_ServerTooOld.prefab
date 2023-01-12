@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 238277225165635221}
   - component: {fileID: 2399828837234339288}
   - component: {fileID: 2454594677161139867}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,7 +63,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &2399828837234339288
 MonoBehaviour:
@@ -135,7 +135,7 @@ Transform:
   m_Children:
   - {fileID: 3959903825890658381}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6484755722116117938
 GameObject:
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 1593954572361284771}
   - component: {fileID: 2573717954148027190}
   - component: {fileID: 4151775831127453867}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Illustration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -304,6 +304,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Text_Description
+      objectReference: {fileID: 0}
+    - target: {fileID: 8447826861104588024, guid: c20feb313764f6f4398cbfb17706b525,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8790495133474809325, guid: c20feb313764f6f4398cbfb17706b525,
         type: 3}
@@ -541,6 +546,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2707355277608874196, guid: 0d2e70876bad3e14c87c2795c156f58b,
         type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707355277608874196, guid: 0d2e70876bad3e14c87c2795c156f58b,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -613,6 +623,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3959903825890658381}
     m_Modifications:
+    - target: {fileID: 723269243543632179, guid: 749c93d3daf90994197382bf10c0e095,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 760
+      objectReference: {fileID: 0}
+    - target: {fileID: 723269243543632179, guid: 749c93d3daf90994197382bf10c0e095,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 540
+      objectReference: {fileID: 0}
     - target: {fileID: 2412305126484041891, guid: 749c93d3daf90994197382bf10c0e095,
         type: 3}
       propertyPath: m_Type
@@ -643,6 +663,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BackgroundPlane_UGUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 3352166771937683710, guid: 749c93d3daf90994197382bf10c0e095,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3352166771937683710, guid: 749c93d3daf90994197382bf10c0e095,
         type: 3}

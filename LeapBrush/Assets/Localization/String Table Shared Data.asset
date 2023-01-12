@@ -23,6 +23,10 @@ MonoBehaviour:
     m_Key: Popup_JoinUserLocalOrRemote_Description
     m_Metadata:
       m_Items: []
+  - m_Id: 666561592418304
+    m_Key: Panel_NotConnected_Description
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8746974577996682121}
   - component: {fileID: 7698571615898511953}
   - component: {fileID: 7633767525769003186}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,7 +64,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &7698571615898511953
 MonoBehaviour:
@@ -136,7 +136,7 @@ Transform:
   m_Children:
   - {fileID: 6793139552323148744}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5402866547119783875
 GameObject:
@@ -148,7 +148,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5607554352921669008}
   - component: {fileID: 5530984201324100335}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: '[ToolButtonStrip]'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -214,7 +214,7 @@ GameObject:
   - component: {fileID: 8428990942754299623}
   - component: {fileID: 8812053616830347060}
   - component: {fileID: 4488347407779564775}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Illustration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -307,6 +307,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button_DrawSolo
       objectReference: {fileID: 0}
+    - target: {fileID: 786193521592058300, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 871304602761583178, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: Settings.Label
@@ -322,10 +327,20 @@ PrefabInstance:
       propertyPath: Settings.ButtonType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1054400383908094115, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2621255153164542305, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_LocalScale.x
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555028048445086833, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7442873442711598431, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
@@ -432,6 +447,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7592316230310131216, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8002258200407529468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -448,6 +468,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 05b47d4af17a4244ba4b1f2b4ec659ba,
         type: 3}
+    - target: {fileID: 9123807680305631468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -470,7 +495,7 @@ PrefabInstance:
     - target: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
         type: 3}
       propertyPath: m_text
-      value: 'Not connected to a server (trying ServerName:Port...)
+      value: 'Not connected to a server (trying {ServerHostAndPort}...)
 
 
         In
@@ -508,8 +533,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
         type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: a7b1eb3942d2c8c488872d9cb07e253e,
+        type: 2}
+    - target: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
+        type: 3}
       propertyPath: originalText
-      value: 'Not connected to a server (trying ServerName:Port...)
+      value: 'Not connected to a server (trying {ServerHostAndPort}...)
 
 
         In
@@ -527,6 +558,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
         type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -406019996522594200, guid: a7b1eb3942d2c8c488872d9cb07e253e,
+        type: 2}
+    - target: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
+        type: 3}
       propertyPath: m_VerticalAlignment
       value: 256
       objectReference: {fileID: 0}
@@ -534,6 +571,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Text_Description
+      objectReference: {fileID: 0}
+    - target: {fileID: 8447826861104588024, guid: c20feb313764f6f4398cbfb17706b525,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8790495133474809325, guid: c20feb313764f6f4398cbfb17706b525,
         type: 3}
@@ -643,8 +685,78 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8447826861104588024, guid: c20feb313764f6f4398cbfb17706b525,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6033129399115363982}
   m_SourcePrefab: {fileID: 100100000, guid: c20feb313764f6f4398cbfb17706b525, type: 3}
+--- !u!114 &4382354737683121452 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
+    type: 3}
+  m_PrefabInstance: {fileID: 3743509105738353123}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5102341394683260187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9839c2d141529145a431aef4d757ff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &5102341394683260187 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8447826861104588024, guid: c20feb313764f6f4398cbfb17706b525,
+    type: 3}
+  m_PrefabInstance: {fileID: 3743509105738353123}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6033129399115363982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5102341394683260187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:e8e41daa5f277456489732d059e978d5
+    m_TableEntryReference:
+      m_KeyId: 666561592418304
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 1
+    m_LocalVariables:
+    - name: ServerHostAndPort
+      variable:
+        rid: 4282061517796409348
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4382354737683121452}
+        m_TargetAssemblyTypeName: RTLTMPro.RTLTextMeshPro, RTLTMPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: 4282061517796409348
+      type: {class: StringVariable, ns: UnityEngine.Localization.SmartFormat.PersistentVariables,
+        asm: Unity.Localization}
+      data:
+        m_Value: ExampleServer:Port
 --- !u!224 &5336063028123757582 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8790495133474809325, guid: c20feb313764f6f4398cbfb17706b525,
@@ -679,6 +791,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button_ChooseServer
       objectReference: {fileID: 0}
+    - target: {fileID: 786193521592058300, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 871304602761583178, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: Settings.Label
@@ -694,10 +811,20 @@ PrefabInstance:
       propertyPath: Settings.ButtonType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1054400383908094115, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2621255153164542305, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_LocalScale.x
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555028048445086833, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7442873442711598431, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
@@ -804,6 +931,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7592316230310131216, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8002258200407529468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -820,6 +952,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 05b47d4af17a4244ba4b1f2b4ec659ba,
         type: 3}
+    - target: {fileID: 9123807680305631468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -951,6 +1088,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2707355277608874196, guid: 0d2e70876bad3e14c87c2795c156f58b,
         type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707355277608874196, guid: 0d2e70876bad3e14c87c2795c156f58b,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -1063,6 +1205,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BackgroundPlane_UGUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 3352166771937683710, guid: 749c93d3daf90994197382bf10c0e095,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3352166771937683710, guid: 749c93d3daf90994197382bf10c0e095,
         type: 3}

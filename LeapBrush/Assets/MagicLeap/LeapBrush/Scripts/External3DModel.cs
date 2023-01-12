@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using MagicLeap.DesignToolkit.Actions;
 using MagicLeap.LeapBrush;
+using TMPro;
 using UnityEngine;
 
 namespace MagicLeap
@@ -16,7 +17,7 @@ namespace MagicLeap
         public string AnchorId;
 
         [SerializeField]
-        private TextMesh _statusText;
+        private TMP_Text _statusText;
 
         [SerializeField]
         private GameObject _loadingCube;
@@ -51,7 +52,6 @@ namespace MagicLeap
             _interactable.Settings.Grabbable = false;
             _loadingCubeInitialRotation = _loadingCube.transform.rotation;
 
-            _loadingCube.GetComponent<Renderer>().material.color = new Color(0, 0.7f, 0);
             _loadingCube.SetActive(false);
             _delayLoadingCubeCoroutine = ShowLoadingCubeWithDelayCoroutine();
             StartCoroutine(_delayLoadingCubeCoroutine);
@@ -86,6 +86,7 @@ namespace MagicLeap
         {
             _fileName = fileName;
             _statusText.text = string.Format("Loading {0}...", fileName);
+            _loadingCube.GetComponent<Renderer>().material.color = new Color(0, 0.7f, 0);
         }
 
         public void OnDestroy()

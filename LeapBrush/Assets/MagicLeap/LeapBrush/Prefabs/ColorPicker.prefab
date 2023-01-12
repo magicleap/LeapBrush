@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 527583327226118296}
   - component: {fileID: 5961616044987809279}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: ColorPicker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32,7 +32,7 @@ Transform:
   - {fileID: 8795444162674494198}
   - {fileID: 8434047847404061243}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5961616044987809279
 MonoBehaviour:
@@ -63,7 +63,7 @@ GameObject:
   - component: {fileID: 527583327874303062}
   - component: {fileID: 527583327874303057}
   - component: {fileID: 527583327874303056}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: HueHandle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 3611931670540463351}
   - component: {fileID: 5870054328163815031}
   - component: {fileID: 3577031416174694985}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: SaturationBrightnessHandle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 66655646757616669}
   - component: {fileID: 5494099834499423564}
   - component: {fileID: 687421965673642012}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: HueRing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -425,6 +425,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audioSourcePool: {fileID: 0}
+  InteractionSupportSettings:
+    Controller: 1
+    Gesture: 1
+    Direct: 1
+    Indirect: 1
   Select: {fileID: 11400000, guid: 914f2140b1e189c40b022466f7d7db5c, type: 2}
   SelectOrGrabWhenDisabled: {fileID: 0}
   TargetEnter: {fileID: 0}
@@ -446,7 +451,7 @@ GameObject:
   - component: {fileID: 7382857678568358917}
   - component: {fileID: 8501163134068357871}
   - component: {fileID: 9210290378538792400}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SaturationBrightnessQuad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -636,6 +641,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audioSourcePool: {fileID: 0}
+  InteractionSupportSettings:
+    Controller: 1
+    Gesture: 1
+    Direct: 1
+    Indirect: 1
   Select: {fileID: 11400000, guid: 914f2140b1e189c40b022466f7d7db5c, type: 2}
   SelectOrGrabWhenDisabled: {fileID: 0}
   TargetEnter: {fileID: 0}

@@ -64,7 +64,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &697113220895158216
 MonoBehaviour:
@@ -927,6 +927,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button_CancelImportModels
       objectReference: {fileID: 0}
+    - target: {fileID: 786193521592058300, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 871304602761583178, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: Settings.Icon
@@ -948,6 +953,11 @@ PrefabInstance:
       propertyPath: Settings.ButtonType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1054400383908094115, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2621255153164542305, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -957,6 +967,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.y
       value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 5555028048445086833, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7221873649240117497, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
@@ -1088,6 +1103,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7592316230310131216, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8002258200407529468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -1104,6 +1124,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 675186467be6949d6b9802ea202406af,
         type: 3}
+    - target: {fileID: 9123807680305631468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1168,6 +1193,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
         type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: a7b1eb3942d2c8c488872d9cb07e253e,
+        type: 2}
+    - target: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
+        type: 3}
       propertyPath: originalText
       value: Are you at the same location as <b>{UserName}</b>? If so, open the Spaces
         app to switch spaces to <b>{SpaceName}</b>. Otherwise, select Join Remotely.
@@ -1177,6 +1208,12 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 22
       objectReference: {fileID: 0}
+    - target: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -406019996522594200, guid: a7b1eb3942d2c8c488872d9cb07e253e,
+        type: 2}
     - target: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
         type: 3}
       propertyPath: m_VerticalAlignment
@@ -1541,6 +1578,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7356616115477988910, guid: 0d2e70876bad3e14c87c2795c156f58b,
         type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: a7b1eb3942d2c8c488872d9cb07e253e,
+        type: 2}
+    - target: {fileID: 7356616115477988910, guid: 0d2e70876bad3e14c87c2795c156f58b,
+        type: 3}
       propertyPath: originalText
       value: Join {UserName}...
       objectReference: {fileID: 0}
@@ -1549,6 +1592,12 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 26
       objectReference: {fileID: 0}
+    - target: {fileID: 7356616115477988910, guid: 0d2e70876bad3e14c87c2795c156f58b,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -406019996522594200, guid: a7b1eb3942d2c8c488872d9cb07e253e,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -591,6 +591,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7356616115477988910, guid: 0d2e70876bad3e14c87c2795c156f58b,
         type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: a7b1eb3942d2c8c488872d9cb07e253e,
+        type: 2}
+    - target: {fileID: 7356616115477988910, guid: 0d2e70876bad3e14c87c2795c156f58b,
+        type: 3}
       propertyPath: originalText
       value: User Name
       objectReference: {fileID: 0}
@@ -599,6 +605,12 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 7356616115477988910, guid: 0d2e70876bad3e14c87c2795c156f58b,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -406019996522594200, guid: a7b1eb3942d2c8c488872d9cb07e253e,
+        type: 2}
     - target: {fileID: 7356616115477988910, guid: 0d2e70876bad3e14c87c2795c156f58b,
         type: 3}
       propertyPath: m_VerticalAlignment

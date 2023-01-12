@@ -12,6 +12,8 @@ using MagicLeap.DesignToolkit.Input.Controller;
 using MagicLeap.DesignToolkit.Keyboard;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Components;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.MagicLeap;
 using TransformExtensions = Unity.XR.CoreUtils.TransformExtensions;
@@ -761,19 +763,16 @@ namespace MagicLeap.LeapBrush
 
         private void UpdateNotConnectedDescriptionText()
         {
-            StringBuilder sb = new StringBuilder();
+            LocalizeStringEvent textLocalized =
+                _notConnectedDescriptionText.GetComponent<LocalizeStringEvent>();
+
             lock (_serverUrlLock)
             {
-                sb.AppendFormat("Not connected to a server (trying {0}...)\n", _serverUrl);
+                ((StringVariable) textLocalized.StringReference["ServerHostAndPort"]).Value
+                    = _serverUrl;
             }
 
-            sb.Append("\nIn order to draw on the world with others, you need to be ");
-            sb.Append("connected to a Leap Brush server.\n");
-
-            sb.Append("\nPlease follow the setup instructions and check your ");
-            sb.Append("network connectivity.\n");
-
-            _notConnectedDescriptionText.text = sb.ToString();
+            textLocalized.StringReference.RefreshString();
         }
 
         private void OnEraserCollisionTrigger(Collider collider)

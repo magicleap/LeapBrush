@@ -118,9 +118,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4233293891329754269, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: a7b1eb3942d2c8c488872d9cb07e253e,
+        type: 2}
+    - target: {fileID: 4233293891329754269, guid: 5936e2856599c2f4dad8c994f9e575f3,
+        type: 3}
       propertyPath: originalText
       value: File Name
       objectReference: {fileID: 0}
+    - target: {fileID: 4233293891329754269, guid: 5936e2856599c2f4dad8c994f9e575f3,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -406019996522594200, guid: a7b1eb3942d2c8c488872d9cb07e253e,
+        type: 2}
     - target: {fileID: 4233293891329754269, guid: 5936e2856599c2f4dad8c994f9e575f3,
         type: 3}
       propertyPath: m_HorizontalAlignment
