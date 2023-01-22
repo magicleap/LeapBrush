@@ -2666,16 +2666,6 @@ PrefabInstance:
       propertyPath: _brushColorManager
       value: 
       objectReference: {fileID: 2018120105}
-    - target: {fileID: 3211694530904154086, guid: 87b3616ea29b1435cbeaee26b3392562,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3383068148590240650, guid: 87b3616ea29b1435cbeaee26b3392562,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 4190368802709348390, guid: 87b3616ea29b1435cbeaee26b3392562,
         type: 3}
       propertyPath: m_Name
@@ -2740,16 +2730,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7221514129087191462, guid: 87b3616ea29b1435cbeaee26b3392562,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 7374311721022219722, guid: 87b3616ea29b1435cbeaee26b3392562,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

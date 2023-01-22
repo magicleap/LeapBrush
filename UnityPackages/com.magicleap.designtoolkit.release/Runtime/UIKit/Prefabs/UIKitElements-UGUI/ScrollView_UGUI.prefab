@@ -180,7 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _swipeLogic: 0
   _scrollable: {fileID: 7190521046583968996}
-  _scrollSpeed: -0.5
+  _scrollSpeed: -1
   _forcePressToPage: 0
 --- !u!114 &7190521046583968996
 MonoBehaviour:

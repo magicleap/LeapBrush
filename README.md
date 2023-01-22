@@ -2,7 +2,15 @@
 
 Leap Brush is Magic Leap's AR Cloud reference application that lets you draw in AR with other ML2 devices. From the paintbrush with its assortment of colors to the poly tool backed with the segmented dimmer and the ability to place 3D models, use your imagination to make your space your canvas. Also can't join in person? No problem, using the included spectator view will be able to remotely participate in the action watching your fellow participants in real time as they create their masterpieces.
 
-[![Main Application](/docs/main_app_screenshot_small.png?raw=true "Main Application")](/docs/main_app_screenshot.png)
+## Spectator App
+A spectator user observing a space being modified in realtime.
+
+[![Spectator Application](/docs/spectator_app_screenshot_small.png?raw=true "Spectator Application")](/docs/spectator_app_screenshot.png)
+
+## Magic Leap App
+A Magic Leap 2 user watching another user draw in realtime.
+
+![ML2 Application](/docs/main_app_animation.gif)
 
 ## Basic Setup
 
@@ -72,11 +80,6 @@ Leap Brush is Magic Leap's AR Cloud reference application that lets you draw in 
 
 [![Brush and Poly Style Dialog](/docs/brush_and_poly_style_dialog_screenshot_small.png?raw=true "Brush and Poly Style Dialog")](/docs/brush_and_poly_style_dialog_screenshot.png)
 
-### Joining a Remote User from the ML2 App
-
-* The ML2 device can join a remote user's session by being configured as another spectator device. Run the following command and then restart the Leap Brush App:
-  * `adb shell touch /storage/emulated/0/Android/data/com.magicleap.leapbrush/files/isSpectator.txt`
-
 ## Spectator App Instructions
 
 ### Configuration
@@ -123,7 +126,7 @@ Leap Brush includes a handful of sample 3D Models (available from the Import but
 1. Prepare a Unity environment for ML2 development.
 
     - https://developer-docs.magicleap.cloud/docs/guides/unity/getting-started/set-up-development-environment
-    - The current Unity editor version in use is 2022.2.1f1
+    - The current Unity editor version in use is 2022.2.2f1
 
 2. Open the directory `LeapBrush/` as an application in Unity.
 

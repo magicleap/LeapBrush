@@ -449,7 +449,8 @@ namespace MagicLeap.LeapBrush
                     }
                 }
 
-                _batteryStatus.Level = (uint) Mathf.RoundToInt(SystemInfo.batteryLevel * 100);
+                _batteryStatus.Level = (uint) Mathf.RoundToInt(
+                    Mathf.Clamp01(SystemInfo.batteryLevel) * 100);
                 _batteryStatus.State = ProtoUtils.ToProto(SystemInfo.batteryStatus);
 
                 GameObject anchorClosestToHeadGameObject = null;
@@ -583,11 +584,22 @@ namespace MagicLeap.LeapBrush
 
         private void MaybeExpireOtherUserControls()
         {
+            List<string> userNamesToRemove = null;
             List<GameObject> gameObjectsToDestroy = null;
 
             DateTimeOffset now = DateTimeOffset.Now;
             foreach (var entry in _otherUserControllers)
             {
+                if (entry.Value == null)
+                {
+                    if (userNamesToRemove == null)
+                    {
+                        userNamesToRemove = new();
+                    }
+                    userNamesToRemove.Add(entry.Key);
+                    continue;
+                }
+
                 if (entry.Value.LastUpdateTime < now - OtherUserControllerExpirationAge)
                 {
                     if (gameObjectsToDestroy == null)
@@ -595,6 +607,14 @@ namespace MagicLeap.LeapBrush
                         gameObjectsToDestroy = new ();
                     }
                     gameObjectsToDestroy.Add(entry.Value.gameObject);
+                }
+            }
+
+            if (userNamesToRemove != null)
+            {
+                foreach (string userName in userNamesToRemove)
+                {
+                    _otherUserControllers.Remove(userName);
                 }
             }
 
@@ -609,11 +629,22 @@ namespace MagicLeap.LeapBrush
 
         private void MaybeExpireOtherUserWearables()
         {
+            List<string> userNamesToRemove = null;
             List<GameObject> gameObjectsToDestroy = null;
 
             DateTimeOffset now = DateTimeOffset.Now;
             foreach (var entry in _otherUserWearables)
             {
+                if (entry.Value == null)
+                {
+                    if (userNamesToRemove == null)
+                    {
+                        userNamesToRemove = new();
+                    }
+                    userNamesToRemove.Add(entry.Key);
+                    continue;
+                }
+
                 if (entry.Value.LastUpdateTime < now - OtherUserWearableExpirationAge)
                 {
                     if (gameObjectsToDestroy == null)
@@ -622,6 +653,16 @@ namespace MagicLeap.LeapBrush
                     }
                     gameObjectsToDestroy.Add(entry.Value.gameObject);
                 }
+            }
+
+            if (userNamesToRemove != null)
+            {
+                foreach (string userName in userNamesToRemove)
+                {
+                    _otherUserWearables.Remove(userName);
+                }
+
+                UpdateStartDescriptionText();
             }
 
             if (gameObjectsToDestroy != null)

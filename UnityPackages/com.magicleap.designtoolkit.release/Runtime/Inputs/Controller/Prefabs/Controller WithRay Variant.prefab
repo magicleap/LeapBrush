@@ -60,6 +60,7 @@ MonoBehaviour:
     ScaleUp: 273
     ScaleDown: 274
   _interactor: {fileID: 3002236955960286547}
+  _xrDeviceSimulator: {fileID: 0}
 --- !u!114 &6130764761589395977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,6 +308,7 @@ MonoBehaviour:
     ScaleUp: 273
     ScaleDown: 274
   _interactor: {fileID: 5187486507497819688}
+  _xrDeviceSimulator: {fileID: 0}
 --- !u!1 &9019424990207878567
 GameObject:
   m_ObjectHideFlags: 0
@@ -653,6 +655,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 497033921846940092, guid: 1f948ce919627f94dbf4b2dcd918a7c5,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 497033921846940092, guid: 1f948ce919627f94dbf4b2dcd918a7c5,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 497033921846940092, guid: 1f948ce919627f94dbf4b2dcd918a7c5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 600178347727528039, guid: 1f948ce919627f94dbf4b2dcd918a7c5,
         type: 3}
