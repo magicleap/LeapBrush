@@ -189,13 +189,15 @@ namespace MagicLeap.LeapBrush
         {
             try
             {
-                AndroidJavaClass activityClass = new AndroidJavaClass(
-                    "com.unity3d.player.UnityPlayer");
-                AndroidJavaObject activity = activityClass.GetStatic<AndroidJavaObject>(
-                    "currentActivity");
-                AndroidJavaObject intent = new AndroidJavaObject("android.content.Intent",
-                    "android.settings.DISPLAY_SETTINGS");
-                activity.Call("startActivity", intent);
+                using (AndroidJavaClass activityClass = new AndroidJavaClass(
+                    "com.unity3d.player.UnityPlayer"))
+                using (AndroidJavaObject activity = activityClass.GetStatic<AndroidJavaObject>(
+                           "currentActivity"))
+                using (AndroidJavaObject intent = new AndroidJavaObject("android.content.Intent",
+                           "android.settings.DISPLAY_SETTINGS"))
+                {
+                    activity.Call("startActivity", intent);
+                }
             }
             catch (Exception e)
             {
@@ -211,18 +213,20 @@ namespace MagicLeap.LeapBrush
                 bool dimmerEnabled = false;
                 try
                 {
-                    AndroidJavaClass activityClass = new AndroidJavaClass(
-                        "com.unity3d.player.UnityPlayer");
-                    AndroidJavaObject activity = activityClass.GetStatic<AndroidJavaObject>(
-                        "currentActivity");
-                    AndroidJavaObject contentResolver = activity.Call<AndroidJavaObject>(
-                        "getContentResolver");
-                    AndroidJavaClass systemSettings
-                        = new AndroidJavaClass("android.provider.Settings$System");
-                    int segmentedDimmerEnabledValue = systemSettings.CallStatic<int>(
-                        "getInt", contentResolver,
-                        "is_segmented_dimmer_enabled", 0);
-                    dimmerEnabled = (segmentedDimmerEnabledValue != 0);
+                    using (AndroidJavaClass activityClass = new AndroidJavaClass(
+                               "com.unity3d.player.UnityPlayer"))
+                    using (AndroidJavaObject activity = activityClass.GetStatic<AndroidJavaObject>(
+                               "currentActivity"))
+                    using (AndroidJavaObject contentResolver = activity.Call<AndroidJavaObject>(
+                               "getContentResolver"))
+                    using (AndroidJavaClass systemSettings = new AndroidJavaClass(
+                               "android.provider.Settings$System"))
+                    {
+                        int segmentedDimmerEnabledValue = systemSettings.CallStatic<int>(
+                            "getInt", contentResolver,
+                            "is_segmented_dimmer_enabled", 0);
+                        dimmerEnabled = (segmentedDimmerEnabledValue != 0);
+                    }
                 }
                 catch (Exception e)
                 {

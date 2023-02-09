@@ -332,6 +332,7 @@ GameObject:
   - component: {fileID: 1418602743171009786}
   - component: {fileID: 7204947665109380997}
   - component: {fileID: 555540907580093197}
+  - component: {fileID: 1059294115129273070}
   m_Layer: 5
   m_Name: Interactable_Empty-UGUI
   m_TagString: Untagged
@@ -528,6 +529,18 @@ MonoBehaviour:
     Indirect: 1
   HoverHaptics: 1
   SelectHaptics: 1
+--- !u!114 &1059294115129273070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5191895373326959383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -426191006, guid: b5e08719cdaec43e482cc299e379a5ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5495996910364795400
 GameObject:
   m_ObjectHideFlags: 0

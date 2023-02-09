@@ -295,6 +295,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Events:
+    OnInitialized:
+      m_PersistentCalls:
+        m_Calls: []
+    OnValueChanged:
+      m_PersistentCalls:
+        m_Calls: []
+    OnToggleableChanged:
+      m_PersistentCalls:
+        m_Calls: []
     On:
       m_PersistentCalls:
         m_Calls:
@@ -327,14 +336,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    FireOnEnableIfOn:
-      m_PersistentCalls:
-        m_Calls: []
-    UseOnEvents: 1
-    FireOnEnableIfOff:
-      m_PersistentCalls:
-        m_Calls: []
-    UseOffEvents: 1
+    FireOnStart: 1
   _toggleable: {fileID: 5410293233359773968}
 --- !u!1 &501095058
 GameObject:
@@ -427,6 +429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ActiveMotionInt: 0
+  InstanceMaterial: 1
   _targetObject: {fileID: 501095058}
   _targetProperty: _Activation
   _resetValue: 0
@@ -489,7 +492,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 24, y: 24}
+  m_SizeDelta: {x: 32, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1021748213
 GameObject:

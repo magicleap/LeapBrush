@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -119,7 +118,7 @@ namespace MagicLeap.LeapBrush
             }
         }
 
-        public override LeapBrushClient Connect(string serverUrl)
+        public LeapBrushClient Connect(string serverUrl)
         {
             UriBuilder remappedServerUrl = new UriBuilder(
                 serverUrl.Contains("://") ? serverUrl : "http://" + serverUrl);

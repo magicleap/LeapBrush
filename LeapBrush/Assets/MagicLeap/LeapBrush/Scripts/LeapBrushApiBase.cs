@@ -29,7 +29,5 @@ namespace MagicLeap.LeapBrush
 
             public abstract void Dispose();
         }
-
-        public abstract LeapBrushClient Connect(string serverUrl);
     }
 }

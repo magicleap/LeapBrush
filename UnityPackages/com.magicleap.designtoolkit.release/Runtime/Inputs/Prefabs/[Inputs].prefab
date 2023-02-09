@@ -82,7 +82,7 @@ Transform:
   - {fileID: 5509541081538118157}
   - {fileID: 1611512319410755711}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9144813005435666147
 GameObject:
@@ -825,7 +825,7 @@ MonoBehaviour:
   m_Script: {fileID: -1910968025, guid: b5e08719cdaec43e482cc299e379a5ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  events:
+  Events:
     OnEnterLeftHand:
       m_PersistentCalls:
         m_Calls:
@@ -887,6 +887,8 @@ MonoBehaviour:
             m_BoolArgument: 1
           m_CallState: 1
   _inHandDistance: 0.15
+  _dataBufferSize: 60
+  _debugText: {fileID: 0}
 --- !u!114 &7526325533099753720 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3605010111046638275, guid: b42f598834a1461488c7281bee76035a,

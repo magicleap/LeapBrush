@@ -217,7 +217,7 @@ namespace MagicLeap.LeapBrush
             }
         }
 
-        public override LeapBrushClient Connect(string serverUrl)
+        public LeapBrushClient Connect(string serverUrl)
         {
             return new LeapBrushClientCpp(serverUrl);
         }

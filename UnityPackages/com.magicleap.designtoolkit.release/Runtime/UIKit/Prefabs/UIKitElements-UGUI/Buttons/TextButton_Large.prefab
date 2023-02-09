@@ -121,12 +121,12 @@ PrefabInstance:
     - target: {fileID: 3033995251850783417, guid: 42c04e28058ce5b4fa224f632e08e61b,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3033995251850783417, guid: 42c04e28058ce5b4fa224f632e08e61b,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3033995251850783417, guid: 42c04e28058ce5b4fa224f632e08e61b,
         type: 3}
@@ -148,10 +148,20 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3033995251850783417, guid: 42c04e28058ce5b4fa224f632e08e61b,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3033995251850783417, guid: 42c04e28058ce5b4fa224f632e08e61b,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3228140656384694911, guid: 42c04e28058ce5b4fa224f632e08e61b,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 196
+      value: 116.957634
       objectReference: {fileID: 0}
     - target: {fileID: 3934091079305481080, guid: 42c04e28058ce5b4fa224f632e08e61b,
         type: 3}
@@ -174,6 +184,16 @@ PrefabInstance:
       propertyPath: originalText
       value: Label
       objectReference: {fileID: 0}
+    - target: {fileID: 4618537410607740660, guid: 42c04e28058ce5b4fa224f632e08e61b,
+        type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4618537410607740660, guid: 42c04e28058ce5b4fa224f632e08e61b,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5178888189162098204, guid: 42c04e28058ce5b4fa224f632e08e61b,
         type: 3}
       propertyPath: m_IsActive
@@ -183,6 +203,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TextButton_Large
+      objectReference: {fileID: 0}
+    - target: {fileID: 5752905793673713609, guid: 42c04e28058ce5b4fa224f632e08e61b,
+        type: 3}
+      propertyPath: Settings.Label
+      value: Label
       objectReference: {fileID: 0}
     - target: {fileID: 5752905793673713609, guid: 42c04e28058ce5b4fa224f632e08e61b,
         type: 3}
@@ -197,7 +222,7 @@ PrefabInstance:
     - target: {fileID: 7467392670289751266, guid: 42c04e28058ce5b4fa224f632e08e61b,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 196
+      value: 116.957634
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

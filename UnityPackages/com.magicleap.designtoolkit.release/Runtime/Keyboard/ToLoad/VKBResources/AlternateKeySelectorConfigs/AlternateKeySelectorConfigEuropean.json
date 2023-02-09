@@ -397,6 +397,42 @@
     ]
   },
   {
+    "AlternateKeyGroupID":"üKeysLower",
+    "AlternateKeys":[
+      {"Key":"Ü"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"üKeysUpper",
+    "AlternateKeys":[
+      {"Key":"ü"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"öKeysLower",
+    "AlternateKeys":[
+      {"Key":"Ö"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"öKeysUpper",
+    "AlternateKeys":[
+      {"Key":"ö"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"äKeysLower",
+    "AlternateKeys":[
+      {"Key":"Ä"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"äKeysUpper",
+    "AlternateKeys":[
+      {"Key":"ä"}
+    ]
+  },
+  {
     "AlternateKeyGroupID":"periodKeys",
     "AlternateKeys":[
       {"Key":"…"}

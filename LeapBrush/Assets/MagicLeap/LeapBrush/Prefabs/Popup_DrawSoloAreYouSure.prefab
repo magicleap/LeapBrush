@@ -114,6 +114,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7371999483242880039}
+  - component: {fileID: 7107862020660820671}
   m_Layer: 0
   m_Name: Popup_DrawSoloAreYouSure
   m_TagString: Untagged
@@ -136,8 +137,20 @@ Transform:
   - {fileID: 1365882838405093661}
   - {fileID: 3620503132223583495}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7107862020660820671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7371999483242880040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d20fe4cbf784bc1ae100c9d1d350eb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7953180387755417872
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,6 +286,11 @@ PrefabInstance:
         type: 3}
       propertyPath: originalText
       value: Continue
+      objectReference: {fileID: 0}
+    - target: {fileID: 277328665309707127, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 296684400102867871, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
@@ -429,6 +447,36 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7627964339717711674, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627964339717711674, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627964339717711674, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627964339717711674, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627964339717711674, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627964339717711674, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8002258200407529468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -478,6 +526,11 @@ PrefabInstance:
         type: 3}
       propertyPath: originalText
       value: Cancel
+      objectReference: {fileID: 0}
+    - target: {fileID: 277328665309707127, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 296684400102867871, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
@@ -627,6 +680,36 @@ PrefabInstance:
     - target: {fileID: 7592316230310131216, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
         type: 3}
       propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627964339717711674, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627964339717711674, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627964339717711674, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627964339717711674, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627964339717711674, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627964339717711674, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8002258200407529468, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
@@ -872,8 +955,8 @@ PrefabInstance:
     - target: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
         type: 3}
       propertyPath: m_text
-      value: Are you sure? Drawings created without a server will not persist, and
-        no other users will be present.
+      value: Are you sure? Drawings created without a server will only be visible
+        on this device, and no other users will be present.
       objectReference: {fileID: 0}
     - target: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
         type: 3}
@@ -903,8 +986,8 @@ PrefabInstance:
     - target: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
         type: 3}
       propertyPath: originalText
-      value: Are you sure? Drawings created without a server will not persist, and
-        no other users will be present.
+      value: Are you sure? Drawings created without a server will only be visible
+        on this device, and no other users will be present.
       objectReference: {fileID: 0}
     - target: {fileID: 1090677983177592015, guid: c20feb313764f6f4398cbfb17706b525,
         type: 3}

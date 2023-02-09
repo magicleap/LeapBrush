@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4436908883501692355}
   - component: {fileID: 5989374561855447392}
   m_Layer: 0
-  m_Name: DirectInteractor
+  m_Name: SelectiveKeypointVisualizer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,12 +49,12 @@ MonoBehaviour:
   _handType: 1
   _visuals:
   - FingerType: 1
-    KeypointType: 3
-    FilterType: 1
+    KeypointType: 4
+    FilterType: 0
     ProjectOnClipPlane: 0
     Visual: {fileID: 4013280420101958577}
   _movementSettings: {fileID: 11400000, guid: 3a79d03ca1d24fe4a85ae2d75db839b4, type: 2}
-  rotationSettingsSettings: {fileID: 11400000, guid: a29001de5ebb9ef43b702caa12eeea37,
+  rotationSettingsSettings: {fileID: 11400000, guid: d52e286d188a36444a4dfe3547439515,
     type: 2}
   _onlyShowExtended: 0
   _debug: 0
@@ -731,8 +731,9 @@ MonoBehaviour:
   _headposeAngleCalculator: {fileID: 0}
   _headposeAngleRotatesRay: 0
   _headposeRotationAngle: 10
+  _debug: 0
   _headYPositionOffset: -0.23
-  _pinchDetector: {fileID: 6609209384239155098}
+  _directInteractorParent: {fileID: 2162989350861993446}
   _directInteractor: {fileID: 4013280420101958580}
   _shoulderEstimator: {fileID: 7171079337132799362}
   _contextSensitiveCursor: {fileID: 5935473733038905829}
@@ -740,6 +741,65 @@ MonoBehaviour:
   _rayInteractor: {fileID: 5328478453199167093}
   _drawGizmos: 0
   _hideWhenPalmFacingHead: 1
+  _switchToDirectAnimation:
+    Time: 0.4
+    OnAnimationBegin:
+      m_PersistentCalls:
+        m_Calls: []
+    OnAnimationPercentComplete:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4348401950789078103}
+          m_TargetAssemblyTypeName: MagicLeap.DesignToolkit.Animation.AnimateMaterialFloat,
+            MagicLeap.DesignToolkitRelease
+          m_MethodName: AnimatePercent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
+    OnAnimationComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  _switchToRayAnimation:
+    Time: 0.4
+    OnAnimationBegin:
+      m_PersistentCalls:
+        m_Calls: []
+    OnAnimationPercentComplete:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4348401950789078103}
+          m_TargetAssemblyTypeName: MagicLeap.DesignToolkit.Animation.AnimateMaterialFloat,
+            MagicLeap.DesignToolkitRelease
+          m_MethodName: AnimatePercentInverse
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
+    OnAnimationComplete:
+      m_PersistentCalls:
+        m_Calls: []
+  _switchToNoInteractorAnimation:
+    Time: 0.3
+    OnAnimationBegin:
+      m_PersistentCalls:
+        m_Calls: []
+    OnAnimationPercentComplete:
+      m_PersistentCalls:
+        m_Calls: []
+    OnAnimationComplete:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!114 &7975469885902319551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -872,11 +932,104 @@ PrefabInstance:
       propertyPath: _inputType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6560691886778764905, guid: 6b608de9e0b34334c985c93f0c7a1132,
+        type: 3}
+      propertyPath: DirectInteractionEvents.Array.data[0].OnApproach.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6560691886778764905, guid: 6b608de9e0b34334c985c93f0c7a1132,
+        type: 3}
+      propertyPath: DirectInteractionEvents.Array.data[0].OnExitBelow.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6560691886778764905, guid: 6b608de9e0b34334c985c93f0c7a1132,
+        type: 3}
+      propertyPath: DirectInteractionEvents.Array.data[0].OnEnterFromBelow.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759154248608624554, guid: 6b608de9e0b34334c985c93f0c7a1132,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759154248608624554, guid: 6b608de9e0b34334c985c93f0c7a1132,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759154248608624554, guid: 6b608de9e0b34334c985c93f0c7a1132,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759154248608624554, guid: 6b608de9e0b34334c985c93f0c7a1132,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.70710677
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759154248608624554, guid: 6b608de9e0b34334c985c93f0c7a1132,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.70710677
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759154248608624554, guid: 6b608de9e0b34334c985c93f0c7a1132,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759154248608624554, guid: 6b608de9e0b34334c985c93f0c7a1132,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759154248608624554, guid: 6b608de9e0b34334c985c93f0c7a1132,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 9162978180454781128, guid: 6b608de9e0b34334c985c93f0c7a1132,
+        type: 3}
+      propertyPath: ContactTransform
+      value: 
+      objectReference: {fileID: 9006592279870778095}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2457073867081248013, guid: 6b608de9e0b34334c985c93f0c7a1132,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4348401950789078103}
   m_SourcePrefab: {fileID: 100100000, guid: 6b608de9e0b34334c985c93f0c7a1132, type: 3}
+--- !u!1 &3783422721219463269 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2457073867081248013, guid: 6b608de9e0b34334c985c93f0c7a1132,
+    type: 3}
+  m_PrefabInstance: {fileID: 1628101029455750504}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4348401950789078103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3783422721219463269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1290189391, guid: b5e08719cdaec43e482cc299e379a5ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ActiveMotionInt: 0
+  InstanceMaterial: 0
+  _targetObject: {fileID: 3783422721219463269}
+  _targetProperty: _OverrideAlpha
+  _resetValue: 0
+  AnimateMaterialFloatSettings:
+  - {fileID: 11400000, guid: c4e6e477c382e461a8fecbf03e0aa647, type: 2}
+  _reverseDirection: 0
+  _playOnAwake: 0
+  _playbackType: 0
+  _debug: 1
 --- !u!4 &4013280420101958576 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2389762160447016664, guid: 6b608de9e0b34334c985c93f0c7a1132,
@@ -901,6 +1054,12 @@ MonoBehaviour:
   m_Script: {fileID: -1450442556, guid: b5e08719cdaec43e482cc299e379a5ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &9006592279870778095 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7666809605515726727, guid: 6b608de9e0b34334c985c93f0c7a1132,
+    type: 3}
+  m_PrefabInstance: {fileID: 1628101029455750504}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3191090843940485158
 PrefabInstance:
   m_ObjectHideFlags: 0

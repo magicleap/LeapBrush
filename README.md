@@ -14,8 +14,8 @@ A Magic Leap 2 user watching another user draw in realtime.
 
 ## Basic Setup
 
-* Set up an ARCloud environment:
-  * Refer to the `README.md` document inside the arcloud zip file.
+* Set up an AR Cloud environment:
+  * See the [AR Cloud project](https://github.com/magicleap/arcloud) and follow the setup instructions.
 * Set up a Leap Brush server (A single server can support many devices and is reusable across Spaces, locations, etc). See instructions below.
 * Connect your ML2 device to wifi:
   * Navigate to `Settings > Wifi` on device, and connect to a wireless network where both ARCloud and Leap Brush Server are accessible.

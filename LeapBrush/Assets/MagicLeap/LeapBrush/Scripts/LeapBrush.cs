@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -62,64 +61,37 @@ namespace MagicLeap.LeapBrush
         private Transform _toolBasePose;
 
         [SerializeField]
-        private GameObject _panelStart;
+        private StartPanel _startPanel;
 
         [SerializeField]
-        private GameObject _panelMain;
+        private MainPanel _mainPanel;
 
         [SerializeField]
-        private GameObject _panelSettings;
+        private SettingsPanel _settingsPanel;
 
         [SerializeField]
-        private GameObject _panelNotLocalized;
+        private NotLocalizedPanel _notLocalizedPanel;
 
         [SerializeField]
-        private GameObject _panelNotConnected;
+        private NotConnectedPanel _notConnectedPanel;
 
         [SerializeField]
-        private GameObject _panelAppTooOld;
+        private AppTooOldPanel _appTooOldPanel;
 
         [SerializeField]
-        private GameObject _panelServerTooOld;
+        private ServerTooOldPanel _serverTooOldPanel;
 
         [SerializeField]
         private GameObject _rayAndCursor;
 
         [SerializeField]
-        private GameObject _worldOriginAxis;
-
-        [SerializeField]
         private GameObject _spaceOriginAxis;
-
-        [SerializeField]
-        private Toggleable _showSpatialAnchorsToggle;
-
-        [SerializeField]
-        private Toggleable _showOriginsToggle;
-
-        [SerializeField]
-        private Toggleable _showWearablesToggle;
-
-        [SerializeField]
-        private Toggleable _showControllersToggle;
-
-        [SerializeField]
-        private Toggleable _showFloorGridToggle;
-
-        [SerializeField]
-        private Toggleable _showSpaceMeshToggle;
-
-        [SerializeField]
-        private Interactable _startContinueButton;
 
         [SerializeField]
         private TMP_Text _startDescriptionText;
 
         [SerializeField]
         private TMP_Text _notConnectedDescriptionText;
-
-        [SerializeField]
-        private Interactable _changeSpaceButton;
 
         [SerializeField]
         private Interactable _changeUserNameButton;
@@ -134,25 +106,13 @@ namespace MagicLeap.LeapBrush
         private Interactable _drawSoloButton;
 
         [SerializeField]
-        private GameObject _drawSoloPopup;
+        private DrawSoloAreYourSurePopup _drawSoloAreYourSurePopup;
 
         [SerializeField]
         private Interactable _drawSoloCancelButton;
 
         [SerializeField]
         private Interactable _drawSoloContinueButton;
-
-        [SerializeField]
-        private Interactable _joinSessionButton;
-
-        [SerializeField]
-        private Interactable _leaveSessionButton;
-
-        [SerializeField]
-        private JoinUserLocalOrRemotePopup _joinUserLocalOrRemotePopup;
-
-        [SerializeField]
-        private Interactable _clearAllContentButton;
 
         [SerializeField]
         private Interactable _scribbleBrushButton;
@@ -174,9 +134,6 @@ namespace MagicLeap.LeapBrush
 
         [SerializeField]
         private Interactable _settingsButton;
-
-        [SerializeField]
-        private Interactable _settingsBackButton;
 
         [SerializeField]
         private ImportModelsPopup _importModelPopup;
@@ -209,7 +166,7 @@ namespace MagicLeap.LeapBrush
         private Thread _uploadThread;
         private Thread _downloadThread;
         private IEnumerator _updateStatusTextCoroutine;
-        private MapLocalizationManager _localizationManager;
+        private SpaceLocalizationManager _localizationManager;
         private AnchorsManager _anchorsManager;
         private SpaceMeshManager _spaceMeshManager;
         private External3DModelManager _external3dModelManager;
@@ -221,11 +178,10 @@ namespace MagicLeap.LeapBrush
         private Dictionary<string, BrushBase> _brushStrokeMap = new();
         private Dictionary<string, External3DModel> _externalModelMap = new();
         private IEnumerator _maybeCreateAnchorAfterLocalizationWithDelayCoroutine;
-        private LeapBrushApiBase _leapBrushApi = LeapBrushApiFactory.Create();
+        private LeapBrushApiFactory _leapBrushApiFactory = new();
         private ServerInfoProto _serverInfo;
         private bool _appTooOld;
         private bool _serverTooOld;
-        private bool _drawWithoutServer;
 
         private object _lock = new();
         private string _userName;
@@ -248,6 +204,7 @@ namespace MagicLeap.LeapBrush
         private Dictionary<string, ExternalModelProto> _externalModelsToUpdate = new();
         private LinkedList<ExternalModelRemoveRequest> _externalModelsToRemove = new();
         private LeapBrushApiBase.LeapBrushClient _leapBrushClient;
+        private bool _drawSolo;
 
         private object _serverUrlLock = new();
         private string _serverUrl;
@@ -280,12 +237,13 @@ namespace MagicLeap.LeapBrush
         {
             Application.logMessageReceived += OnLogMessageReceived;
 
-            _localizationManager = gameObject.AddComponent<MapLocalizationManager>();
+            _localizationManager = GetComponent<SpaceLocalizationManager>();
             _anchorsManager = GetComponent<AnchorsManager>();
             _spaceMeshManager = GetComponent<SpaceMeshManager>();
             _external3dModelManager = GetComponent<External3DModelManager>();
-            _delayedButtonHandler = gameObject.AddComponent<DelayedButtonHandler>();
             _brushColorManager = GetComponent<BrushColorManager>();
+
+            _delayedButtonHandler = gameObject.AddComponent<DelayedButtonHandler>();
 
             SanityCheckValidAppExecution();
         }
@@ -307,7 +265,7 @@ namespace MagicLeap.LeapBrush
                 _appVersion = Application.version;
             }
 
-            ThreadDispatcher.ScheduleWork(StartServerConnections);
+            ThreadDispatcher.ScheduleWork(StartServerConnectionsOnWorkerThread);
 
             _updateStatusTextCoroutine = UpdateStatusTextPeriodically();
             StartCoroutine(_updateStatusTextCoroutine);
@@ -318,6 +276,14 @@ namespace MagicLeap.LeapBrush
             ControllerInput.Instance.Events.OnTriggerDown += OnTriggerButtonDown;
             ControllerInput.Instance.Events.OnTriggerUp += OnTriggerButtonUp;
             ControllerInput.Instance.Events.OnTouchDelta += OnTouchDelta;
+
+            _settingsPanel.OnShowHeadsetsChanged += OnShowHeadsetsChanged;
+            _settingsPanel.OnShowControllersChanged += OnShowControllersChanged;
+            _settingsPanel.OnClearAllContentSelected += OnClearAllContentSelected;
+            _settingsPanel.OnSettingsPanelHidden += OnSettingsPanelHidden;
+
+            _startPanel.OnContinueSelected += OnStartPanelContinueSelected;
+            _startPanel.OnSetUserDisplayName += OnSetUserDisplayName;
 
             _scribbleBrushTool.OnPosesAdded += OnScribbleBrushStrokePosesAdded;
             _scribbleBrushTool.OnDrawingCompleted += OnScribbleBrushDrawingCompleted;
@@ -332,65 +298,29 @@ namespace MagicLeap.LeapBrush
             _laserPointerButton.Events.OnSelect.AddListener(OnLaserPointerSelected);
             _importModelButton.Events.OnSelect.AddListener(OnImportModelButtonSelected);
             _settingsButton.Events.OnSelect.AddListener(OnSettingsButtonSelected);
-            _settingsBackButton.Events.OnSelect.AddListener(OnSettingsBackButtonSelected);
-            _clearAllContentButton.Events.OnSelect.AddListener(OnClearAllContentButtonSelected);
-            _startContinueButton.Events.OnSelect.AddListener(OnStartPanelContinueButtonSelected);
-            _changeUserNameButton.Events.OnSelect.AddListener(OnChangeUserNameButtonSelected);
-            _changeSpaceButton.Events.OnSelect.AddListener(OnChangeSpaceButtonSelected);
             _openSpacesAppButton.Events.OnSelect.AddListener(OnStartSpacesAppButtonSelected);
             _chooseServerButton.Events.OnSelect.AddListener(OnChooseServerButtonSelected);
             _drawSoloButton.Events.OnSelect.AddListener(OnDrawSoloButtonSelected);
             _drawSoloContinueButton.Events.OnSelect.AddListener(OnDrawSoloContinueButtonSelected);
             _drawSoloCancelButton.Events.OnSelect.AddListener(OnDrawSoloCancelButtonSelected);
 
-            _showSpatialAnchorsToggle.Events.On.AddListener(OnToggleShowAnchors);
-            _showSpatialAnchorsToggle.Events.Off.AddListener(OnToggleShowAnchors);
-
-            _showOriginsToggle.Events.On.AddListener(OnToggleShowOrigins);
-            _showOriginsToggle.Events.Off.AddListener(OnToggleShowOrigins);
-
-            _showWearablesToggle.Events.On.AddListener(OnToggleShowWearables);
-            _showWearablesToggle.Events.Off.AddListener(OnToggleShowWearables);
-
-            _showControllersToggle.Events.On.AddListener(OnToggleShowControllers);
-            _showControllersToggle.Events.Off.AddListener(OnToggleShowControllers);
-
-            _showFloorGridToggle.Events.On.AddListener(OnToggleShowFloorGrid);
-            _showFloorGridToggle.Events.Off.AddListener(OnToggleShowFloorGrid);
-
-            _showSpaceMeshToggle.Events.On.AddListener(OnToggleShowSpaceMesh);
-            _showSpaceMeshToggle.Events.Off.AddListener(OnToggleShowSpaceMesh);
-
             _external3dModelManager.OnModelsListUpdated += OnExternal3DModelsListUpdated;
             _importModelPopup.OnPlaceNewExternal3DModel += OnPlaceNewExternal3DModel;
 
-            _showControllersToggle.On();
+#if !UNITY_ANDROID
+            _floorGrid.gameObject.SetActive(true);
+#endif
 
 #if !UNITY_ANDROID
-            _showWearablesToggle.On();
-            _showSpaceMeshToggle.On();
-            _floorGrid.gameObject.SetActive(true);
             ControllerInput.Instance.gameObject.SetActive(true);
-            _changeSpaceButton.gameObject.SetActive(false);
-#else
-            _showFloorGridToggle.gameObject.SetActive(false);
 #endif
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-            _clearAllContentButton.gameObject.SetActive(false);
-#endif
-
-            _joinSessionButton.Events.OnSelect.AddListener(OnJoinSessionButtonSelected);
-            _joinUserPopup.OnRefreshRequested += OnJoinUsersRefreshRequested;
-            _leaveSessionButton.Events.OnSelect.AddListener(OnLeaveSessionButtonSelected);
-            _leaveSessionButton.gameObject.SetActive(false);
+            _joinUserPopup.OnJoinUserSessionRemotelySelected += OnJoinUserSessionRemotelySelected;
 
             UpdateUserBrushColors();
             _brushColorManager.OnBrushColorsChanged += UpdateUserBrushColors;
 
             LoadUserDisplayName();
-
-            UpdateStartDescriptionText();
         }
 
         private void Update()
@@ -404,6 +334,8 @@ namespace MagicLeap.LeapBrush
                         otherUserWearable.transform.position, otherUserWearable.transform.rotation);
                 }
             }
+
+            bool drawSolo;
 
             lock (_lock)
             {
@@ -489,36 +421,38 @@ namespace MagicLeap.LeapBrush
                 }
 
                 _currentToolColor = _brushColorManager.StrokeColor;
+
+                drawSolo = _drawSolo;
             }
 
             if (_appTooOld || _serverTooOld)
             {
                 if (_appTooOld)
                 {
-                    _panelAppTooOld.SetActive(true);
+                    _appTooOldPanel.gameObject.SetActive(true);
                 }
                 else
                 {
-                    _panelServerTooOld.SetActive(true);
+                    _serverTooOldPanel.gameObject.SetActive(true);
                 }
-                _panelNotConnected.SetActive(false);
-                _panelNotLocalized.SetActive(false);
-                _panelStart.SetActive(false);
-                _panelMain.SetActive(false);
-                _panelSettings.SetActive(false);
+                _notConnectedPanel.gameObject.SetActive(false);
+                _notLocalizedPanel.gameObject.SetActive(false);
+                _startPanel.Hide();
+                _mainPanel.gameObject.SetActive(false);
+                _settingsPanel.Hide();
                 _keyboardManager.gameObject.SetActive(false);
-                _drawSoloPopup.SetActive(false);
+                _drawSoloAreYourSurePopup.gameObject.SetActive(false);
             }
-            else if ((!_lastServerDownloadOk || !_lastServerUploadOk) && !_drawWithoutServer)
+            else if ((!_lastServerDownloadOk || !_lastServerUploadOk) && !drawSolo)
             {
                 if (!_keyboardManager.gameObject.activeSelf)
                 {
-                    _panelNotConnected.SetActive(true);
+                    _notConnectedPanel.gameObject.SetActive(true);
                 }
-                _panelNotLocalized.SetActive(false);
-                _panelStart.SetActive(false);
-                _panelMain.SetActive(false);
-                _panelSettings.SetActive(false);
+                _notLocalizedPanel.gameObject.SetActive(false);
+                _startPanel.Hide();
+                _mainPanel.gameObject.SetActive(false);
+                _settingsPanel.Hide();
             }
 #if UNITY_ANDROID && !UNITY_EDITOR
             else if (_localizationManager.LocalizationInfo.LocalizationStatus == MLAnchors.LocalizationStatus.NotLocalized ||
@@ -526,24 +460,38 @@ namespace MagicLeap.LeapBrush
                        (string.IsNullOrEmpty(_localizationManager.LocalizationInfo.SpaceName) &&
                         string.IsNullOrEmpty(_localizationManager.LocalizationInfo.SpaceId)))
             {
-                _panelNotConnected.SetActive(false);
-                _panelNotLocalized.SetActive(true);
-                _panelStart.SetActive(false);
-                _panelMain.SetActive(false);
-                _panelSettings.SetActive(false);
+                _notConnectedPanel.gameObject.SetActive(false);
+                _notLocalizedPanel.gameObject.SetActive(true);
+                _startPanel.Hide();
+                _mainPanel.gameObject.SetActive(false);
+                _settingsPanel.Hide();
                 _keyboardManager.gameObject.SetActive(false);
-                _drawSoloPopup.SetActive(false);
+                _drawSoloAreYourSurePopup.gameObject.SetActive(false);
             }
 #endif
             else
             {
-                _panelNotConnected.SetActive(false);
-                _panelNotLocalized.SetActive(false);
-                _drawSoloPopup.SetActive(false);
-                if (!_panelSettings.activeSelf && !_keyboardManager.gameObject.activeSelf)
+                _notConnectedPanel.gameObject.SetActive(false);
+                _notLocalizedPanel.gameObject.SetActive(false);
+                _drawSoloAreYourSurePopup.gameObject.SetActive(false);
+                if (!_settingsPanel.isActiveAndEnabled && !_keyboardManager.gameObject.activeSelf)
                 {
-                    _panelStart.SetActive(!_continuedPastStartPanel);
-                    _panelMain.SetActive(_continuedPastStartPanel);
+                    if (_continuedPastStartPanel)
+                    {
+                        _startPanel.Hide();
+                        _mainPanel.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        string userDisplayName;
+                        lock (_lock)
+                        {
+                            userDisplayName = _userDisplayName;
+                        }
+
+                        _startPanel.Show(userDisplayName);
+                        _mainPanel.gameObject.SetActive(false);
+                    }
                 }
             }
 
@@ -662,7 +610,7 @@ namespace MagicLeap.LeapBrush
                     _otherUserWearables.Remove(userName);
                 }
 
-                UpdateStartDescriptionText();
+                _startPanel.OnOtherUserCountChanged(_otherUserWearables.Count);
             }
 
             if (gameObjectsToDestroy != null)
@@ -671,8 +619,6 @@ namespace MagicLeap.LeapBrush
                 {
                     Destroy(gameObject);
                 }
-
-                UpdateStartDescriptionText();
             }
         }
 
@@ -691,6 +637,9 @@ namespace MagicLeap.LeapBrush
             }
 
             _localizationManager.OnLocalizationInfoChanged -= OnLocalizationInfoChanged;
+
+            _settingsPanel.OnShowHeadsetsChanged -= OnShowHeadsetsChanged;
+            _settingsPanel.OnShowControllersChanged -= OnShowControllersChanged;
 
             _eraserTool.OnTriggerEnterEvent -= OnEraserCollisionTrigger;
             _scribbleBrushTool.OnPosesAdded -= OnScribbleBrushStrokePosesAdded;
@@ -764,44 +713,6 @@ namespace MagicLeap.LeapBrush
 #endif
         }
 
-        private void UpdateStartDescriptionText()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Hi <b>");
-
-            lock (_lock)
-            {
-                sb.Append(_userDisplayName);
-            }
-
-            sb.Append("</b>, select continue to draw in the <b>");
-            sb.Append(_localizationManager.LocalizationInfo.SpaceName);
-            sb.Append("</b> space. ");
-
-            if (!_drawWithoutServer)
-            {
-                if (_otherUserWearables.Count == 0)
-                {
-                    sb.Append("You are the first person here.");
-                }
-                else if (_otherUserWearables.Count == 1)
-                {
-                    sb.Append("There is one other person here.");
-                }
-                else
-                {
-                    sb.AppendFormat("There are {0} other people here.", _otherUserWearables.Count);
-                }
-            }
-
-#if !UNITY_ANDROID
-            sb.Append("\n\n(You can join another user's session from the Settings "
-                      + "menu after continuing)");
-#endif
-
-            _startDescriptionText.text = sb.ToString();
-        }
-
         private void UpdateNotConnectedDescriptionText()
         {
             LocalizeStringEvent textLocalized =
@@ -873,7 +784,6 @@ namespace MagicLeap.LeapBrush
 
                 TransformExtensions.SetWorldPose(
                     _spaceOriginAxis.transform, info.TargetSpaceOriginPose);
-                _spaceOriginAxis.SetActive(_showOriginsToggle.IsOn);
 
                 _spaceMeshManager.UpdateSpaceMesh(info.SpaceId, info.TargetSpaceOriginPose);
             }
@@ -882,8 +792,6 @@ namespace MagicLeap.LeapBrush
                 StopCoroutine(_maybeCreateAnchorAfterLocalizationWithDelayCoroutine);
                 _maybeCreateAnchorAfterLocalizationWithDelayCoroutine = null;
             }
-
-            UpdateStartDescriptionText();
         }
 
         private void OnMenuButtonDown()
@@ -1142,6 +1050,22 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        private void OnShowHeadsetsChanged()
+        {
+            foreach (var entry in _otherUserWearables)
+            {
+                entry.Value.gameObject.SetActive(_settingsPanel.IsShowHeadsets);
+            }
+        }
+
+        private void OnShowControllersChanged()
+        {
+            foreach (var entry in _otherUserControllers)
+            {
+                entry.Value.gameObject.SetActive(_settingsPanel.IsShowControllers);
+            }
+        }
+
         public void OnScribbleBrushToolSelected(Interactor interactor)
         {
             _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
@@ -1252,167 +1176,20 @@ namespace MagicLeap.LeapBrush
 
         public void OnSettingsButtonSelected(Interactor interactor)
         {
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                _panelSettings.SetActive(true);
-                _panelMain.SetActive(false);
-            });
-        }
-
-        private void OnSettingsBackButtonSelected(Interactor interactor)
-        {
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                _panelMain.SetActive(true);
-                _panelSettings.SetActive(false);
-            });
-        }
-
-        public void OnToggleShowAnchors()
-        {
-            _anchorsManager.SetShown(_showSpatialAnchorsToggle.IsOn);
-        }
-
-        private void OnToggleShowOrigins()
-        {
-            _worldOriginAxis.SetActive(_showOriginsToggle.IsOn);
-            _spaceOriginAxis.SetActive(
-                _showOriginsToggle.IsOn
-                && _localizationManager.LocalizationInfo.LocalizationStatus
-                == MLAnchors.LocalizationStatus.Localized);
-        }
-
-        private void OnToggleShowWearables()
-        {
-            foreach (var entry in _otherUserWearables)
-            {
-                entry.Value.gameObject.SetActive(_showWearablesToggle.IsOn);
-            }
-        }
-
-        private void OnToggleShowControllers()
-        {
-            foreach (var entry in _otherUserControllers)
-            {
-                entry.Value.gameObject.SetActive(_showControllersToggle.IsOn);
-            }
-        }
-
-        private void OnToggleShowFloorGrid()
-        {
-            _floorGrid.gameObject.SetActive(_showFloorGridToggle.IsOn);
-        }
-
-        private void OnToggleShowSpaceMesh()
-        {
-            _spaceMeshManager.SetShown(_showSpaceMeshToggle.IsOn);
-        }
-
-        private void OnJoinSessionButtonSelected(Interactor _)
-        {
-            RefreshJoinUsers();
-
-            _joinUserPopup.Show();
-        }
-
-        private void OnLeaveSessionButtonSelected(Interactor _)
-        {
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                AnchorsApi.ClearImportedAnchors();
-                _leaveSessionButton.gameObject.SetActive(false);
-            });
-        }
-
-        private void OnJoinUsersRefreshRequested()
-        {
-            RefreshJoinUsers();
-        }
-
-        private void RefreshJoinUsers()
-        {
-            ThreadDispatcher.ScheduleWork(() =>
-            {
-                RpcRequest req = new RpcRequest();
-                lock (_lock)
-                {
-                    req.UserName = _userName;
-                }
-
-                req.QueryUsersRequest = new QueryUsersRequest();
-                try
-                {
-                    RpcResponse resp = _leapBrushClient.Rpc(req);
-                    ThreadDispatcher.ScheduleMain(() =>
-                    {
-                        HandleQueryUsersResultOnMainThread(resp.QueryUsersResponse);
-                    });
-                }
-                catch (RpcException e)
-                {
-                    Debug.LogWarning("Rpc.QueryUsersRequest failed: " + e);
-                }
-            });
-        }
-
-        private void HandleQueryUsersResultOnMainThread(QueryUsersResponse response)
-        {
             string userName;
             lock (_lock)
             {
                 userName = _userName;
             }
 
-            Debug.LogFormat("Join Users: Found {0} users", response.Results.Count);
-
-            _joinUserPopup.ClearUsersList();
-
-            QueryUsersResponse.Types.Result[] userResults = response.Results.ToArray();
-            Array.Sort(userResults, (a, b) =>
-                string.CompareOrdinal(a.UserDisplayName, b.UserDisplayName));
-
-            foreach (var userResult in userResults)
+            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
             {
-                if (userName == userResult.UserName || userResult.SpaceInfo == null
-                    || string.IsNullOrEmpty(userResult.SpaceInfo.SpaceId) ||
-                    userResult.SpaceInfo.Anchor.Count == 0)
-                {
-                    continue;
-                }
-
-                _joinUserPopup.AddUser(userResult, () =>
-                    JoinUserSessionButtonClicked(userResult));
-            }
+                _settingsPanel.Show(userName, _leapBrushClient);
+                _mainPanel.gameObject.SetActive(false);
+            });
         }
 
-        private void JoinUserSessionButtonClicked(QueryUsersResponse.Types.Result userResult)
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            if (userResult.SpaceInfo.MappingMode == SpaceInfoProto.Types.MappingMode.ArCloud)
-            {
-                _joinUserLocalOrRemotePopup.Show(userResult.UserDisplayName,
-                    userResult.SpaceInfo.SpaceName, () =>
-                    {
-                        _joinUserLocalOrRemotePopup.Hide();
-                        JoinUserSessionRemotely(userResult);
-                    }, () =>
-                    {
-                        _joinUserPopup.Hide();
-                        _joinUserLocalOrRemotePopup.Hide();
-                        StartSpacesAppToSelectSpace(userResult.SpaceInfo.SpaceId,
-                            ProtoUtils.FromProto(userResult.SpaceInfo.MappingMode));
-                    });
-            }
-            else
-            {
-                JoinUserSessionRemotely(userResult);
-            }
-#else
-            JoinUserSessionRemotely(userResult);
-#endif
-        }
-
-        private void JoinUserSessionRemotely(QueryUsersResponse.Types.Result userResult)
+        private void OnJoinUserSessionRemotelySelected(QueryUsersResponse.Types.Result userResult)
         {
             var anchors = new AnchorsApi.Anchor[userResult.SpaceInfo.Anchor.Count];
             for (int i = 0; i < anchors.Length; i++)
@@ -1426,7 +1203,7 @@ namespace MagicLeap.LeapBrush
             }
 
             AnchorsApi.SetImportedAnchors(anchors);
-            _leaveSessionButton.gameObject.SetActive(true);
+            _settingsPanel.OnSessionJoined();
 
             _spaceMeshManager.UpdateSpaceMesh(userResult.SpaceInfo.SpaceId,
                 ProtoUtils.FromProto(userResult.SpaceInfo.TargetSpaceOrigin));
@@ -1447,7 +1224,7 @@ namespace MagicLeap.LeapBrush
             });
         }
 
-        private void OnClearAllContentButtonSelected(Interactor interactor)
+        private void OnClearAllContentSelected()
         {
             foreach (var entry in _brushStrokeMap)
             {
@@ -1480,55 +1257,22 @@ namespace MagicLeap.LeapBrush
             }
         }
 
-        private void OnStartPanelContinueButtonSelected(Interactor interactor)
+        private void OnSettingsPanelHidden()
         {
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                _continuedPastStartPanel = true;
-                _panelStart.SetActive(false);
-                _panelMain.SetActive(true);
-
-                _anchorsManager.SetContentShown(true);
-            });
+            _mainPanel.gameObject.SetActive(true);
         }
 
-        private void OnChangeUserNameButtonSelected(Interactor interactor)
+        private void OnStartPanelContinueSelected()
         {
-            _keyboardManager.gameObject.SetActive(true);
-            _keyboardManager.OnKeyboardClose.AddListener(OnChangeUsernameKeyboardClosed);
-            _keyboardManager.PublishKeyEvent.AddListener(OnChangeUsernameKeyboardKeyPressed);
+            _continuedPastStartPanel = true;
+            _mainPanel.gameObject.SetActive(true);
 
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                lock (_lock)
-                {
-                    _keyboardManager.TypedContent = _userDisplayName;
-                    _keyboardManager.InputField.text = _userDisplayName;
-                }
-
-                _mainMenu.SetActive(false);
-            });
+            _anchorsManager.SetContentShown(true);
         }
 
-
-        private void OnChangeUsernameKeyboardKeyPressed(
-            string textToType, KeyType keyType, bool doubleClicked, string typedContent)
+        private void OnSetUserDisplayName(string userDisplayName)
         {
-            if (keyType == KeyType.kEnter || keyType == KeyType.kJPEnter)
-            {
-                SetUserDisplayName(typedContent.Trim());
-            }
-        }
-
-        private void OnChangeUsernameKeyboardClosed()
-        {
-            _keyboardManager.PublishKeyEvent.RemoveListener(OnChangeUsernameKeyboardKeyPressed);
-            _keyboardManager.OnKeyboardClose.RemoveListener(OnChangeUsernameKeyboardClosed);
-
-            SetUserDisplayName(_keyboardManager.TypedContent.Trim());
-
-            _keyboardManager.gameObject.SetActive(false);
-            _mainMenu.SetActive(true);
+            SetUserDisplayName(userDisplayName);
         }
 
         private void SetUserDisplayName(string userDisplayName)
@@ -1543,16 +1287,8 @@ namespace MagicLeap.LeapBrush
                 _userDisplayName = userDisplayName;
             }
 
-            SaveUserDisplayName(_userDisplayName);
-            UpdateStartDescriptionText();
-        }
-
-        private void OnChangeSpaceButtonSelected(Interactor interactor)
-        {
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                StartSpacesApp();
-            });
+            SaveUserDisplayName(userDisplayName);
+            _startPanel.OnUserDisplayNameChanged(userDisplayName);
         }
 
         private void OnChooseServerButtonSelected(Interactor interactor)
@@ -1614,11 +1350,7 @@ namespace MagicLeap.LeapBrush
             SaveServerUrl(_serverUrl);
             UpdateNotConnectedDescriptionText();
 
-            ThreadDispatcher.ScheduleWork(() =>
-            {
-                StopServerConnections();
-                StartServerConnections();
-            });
+            RestartServerConnections();
         }
 
         private void UpdateActiveTool()
@@ -1677,25 +1409,30 @@ namespace MagicLeap.LeapBrush
         {
             _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
             {
-                StartSpacesApp();
+                SpacesAppApi.StartApp();
             });
         }
 
         public void OnDrawSoloButtonSelected(Interactor interactor)
         {
-            _drawSoloPopup.SetActive(true);
+            _drawSoloAreYourSurePopup.gameObject.SetActive(true);
         }
 
         public void OnDrawSoloContinueButtonSelected(Interactor interactor)
         {
             _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
             {
-                _drawSoloPopup.SetActive(false);
-                _drawWithoutServer = true;
-                _shutDownTokenSource.Cancel();
-                _joinSessionButton.gameObject.SetActive(false);
+                _drawSoloAreYourSurePopup.gameObject.SetActive(false);
 
-                UpdateStartDescriptionText();
+                lock (_lock)
+                {
+                    _drawSolo = true;
+                }
+
+                _settingsPanel.OnDrawSolo();
+                _startPanel.OnDrawSolo();
+
+                RestartServerConnections();
             });
         }
 
@@ -1703,46 +1440,8 @@ namespace MagicLeap.LeapBrush
         {
             _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
             {
-                _drawSoloPopup.SetActive(false);
+                _drawSoloAreYourSurePopup.gameObject.SetActive(false);
             });
-        }
-
-        private void StartSpacesApp()
-        {
-            try
-            {
-                AndroidJavaClass activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-                AndroidJavaObject activity = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
-                AndroidJavaObject intent = new AndroidJavaObject("android.content.Intent",
-                    "com.magicleap.intent.action.SPACES");
-                activity.Call("startActivity", intent);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError("Error while launching spaces app: " + e);
-            }
-        }
-
-        public void StartSpacesAppToSelectSpace(string spaceId, MLAnchors.MappingMode mappingMode)
-        {
-            try
-            {
-                AndroidJavaClass activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-                AndroidJavaObject activity = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
-                AndroidJavaObject intent = new AndroidJavaObject("android.content.Intent",
-                    "com.magicleap.intent.action.SELECT_SPACE");
-                intent.Call<AndroidJavaObject>(
-                    "putExtra", "com.magicleap.intent.extra.SPACE_ID",
-                    spaceId);
-                intent.Call<AndroidJavaObject>(
-                    "putExtra", "com.magicleap.intent.extra.MAPPING_MODE",
-                    mappingMode == MLAnchors.MappingMode.ARCloud ? 1 : 0);
-                activity.Call("startActivityForResult", intent, 0);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError("Error while launching spaces app: " + e);
-            }
         }
 
         private IEnumerator MaybeCreateAnchorAfterLocalizationWithDelay()
@@ -1789,17 +1488,23 @@ namespace MagicLeap.LeapBrush
             string userDisplayName;
             bool lastServerUploadOk;
             bool lastServerDownloadOk;
+            bool drawSolo;
             lock (_lock)
             {
                 userDisplayName = _userDisplayName;
                 lastServerUploadOk = _lastServerUploadOk;
                 lastServerDownloadOk = _lastServerDownloadOk;
+                drawSolo = _drawSolo;
             }
 
             string serverUrlAndVersionString;
             lock (_serverUrlLock)
             {
-                if (_serverInfo != null)
+                if (drawSolo)
+                {
+                    serverUrlAndVersionString = "<color=#ffa500>Drawing Solo</color>";
+                }
+                else if (_serverInfo != null)
                 {
                     serverUrlAndVersionString = string.Format(
                         "{0} (v{1})", _serverUrl, _serverInfo.ServerVersion);
@@ -1810,10 +1515,20 @@ namespace MagicLeap.LeapBrush
                 }
             }
 
-            string serverConnectionString = "<color=#ff0000>Disconnected</color>";
-            if (lastServerDownloadOk && lastServerUploadOk)
+            string serverDetailsString;
+            if (drawSolo)
             {
-                serverConnectionString = "<color=#00ff00>Connected</color>";
+                serverDetailsString = "<color=#ffa500>Drawing Solo</color>";
+            }
+            else if (lastServerDownloadOk && lastServerUploadOk)
+            {
+                serverDetailsString = string.Format(
+                    "{0}: {1}", serverUrlAndVersionString, "<color=#00ff00>Connected</color>");
+            }
+            else
+            {
+                serverDetailsString = string.Format(
+                    "{0}: {1}", serverUrlAndVersionString, "<color=#ff0000>Disconnected</color>");
             }
 
             string localizationString = _localizationManager.LocalizationInfo.ToString();
@@ -1831,12 +1546,11 @@ namespace MagicLeap.LeapBrush
             statusTextBuilder.AppendFormat(
                 "<color=#dbfb76><b>Leap Brush v{0}</b></color>\n" +
                 "UserName: {1}\n" +
-                "Server Connection: {2}: {3}\n" +
-                "Map Localization: <i>{4}</i>\n",
+                "Server Connection: {2}\n" +
+                "Map Localization: <i>{3}</i>\n",
                 Application.version,
                 userDisplayName,
-                serverUrlAndVersionString,
-                serverConnectionString,
+                serverDetailsString,
                 localizationString);
 
             if (_exceptionsOrAssertsLogged > 0)
@@ -1856,10 +1570,19 @@ namespace MagicLeap.LeapBrush
             _statusText.text = statusTextBuilder.ToString();
         }
 
-        private void StartServerConnections()
+        private void StartServerConnectionsOnWorkerThread()
         {
+            bool drawSolo;
+            string persistentDataPath;
+            lock (_lock)
+            {
+                drawSolo = _drawSolo;
+                persistentDataPath = _persistentDataPath;
+            }
+
             _shutDownTokenSource = new();
-            _leapBrushClient = _leapBrushApi.Connect(GetOrLoadServerUrl());
+            _leapBrushClient = _leapBrushApiFactory.Connect(
+                GetOrLoadServerUrl(), drawSolo, persistentDataPath);
 
             _uploadThread = new Thread(() => UploadThreadBody(
                 _leapBrushClient, _shutDownTokenSource));
@@ -1892,6 +1615,15 @@ namespace MagicLeap.LeapBrush
                 _downloadThread.Join();
                 Debug.Log("Upload download joined");
             }
+        }
+
+        private void RestartServerConnections()
+        {
+            ThreadDispatcher.ScheduleWork(() =>
+            {
+                StopServerConnections();
+                StartServerConnectionsOnWorkerThread();
+            });
         }
 
         private void UploadThreadBody(LeapBrushApiBase.LeapBrushClient leapBrushClient,
@@ -2226,6 +1958,12 @@ namespace MagicLeap.LeapBrush
         {
             if (resp.ServerInfo != null)
             {
+                bool drawSolo;
+                lock (_lock)
+                {
+                    drawSolo = _drawSolo;
+                }
+
                 _serverInfo = resp.ServerInfo;
                 if (!VersionUtil.IsGreatorOrEqual(_appVersion, _serverInfo.MinAppVersion) && !_appTooOld)
                 {
@@ -2235,7 +1973,8 @@ namespace MagicLeap.LeapBrush
                     _shutDownTokenSource.Cancel();
                     return;
                 }
-                if (!VersionUtil.IsGreatorOrEqual(_serverInfo.ServerVersion, _minServerVersion) && !_serverTooOld)
+                if (!VersionUtil.IsGreatorOrEqual(_serverInfo.ServerVersion, _minServerVersion)
+                    && !_serverTooOld && !drawSolo)
                 {
                     _serverTooOld = true;
                     Debug.LogErrorFormat("Shutting down due to outdated server ({0} < {1})",
@@ -2442,13 +2181,16 @@ namespace MagicLeap.LeapBrush
                 Debug.Log("Found other user " + otherUserState.UserName);
                 otherUserWearable = Instantiate(_otherUserWearablePrefab, anchorGameObject.transform)
                     .GetComponent<OtherUserWearable>();
-                otherUserWearable.gameObject.SetActive(_showWearablesToggle.IsOn);
+                otherUserWearable.gameObject.SetActive(_settingsPanel.IsShowHeadsets);
 
                 _otherUserWearables[otherUserState.UserName] = otherUserWearable;
                 otherUserWearable.OnDestroyed += () =>
+                {
                     _otherUserWearables.Remove(otherUserState.UserName);
+                    _startPanel.OnOtherUserCountChanged(_otherUserWearables.Count);
+                };
 
-                UpdateStartDescriptionText();
+                _startPanel.OnOtherUserCountChanged(_otherUserWearables.Count);
             }
 
             if (otherUserWearable.transform.parent != anchorGameObject.transform)
@@ -2491,7 +2233,7 @@ namespace MagicLeap.LeapBrush
             {
                 otherUserController = Instantiate(_otherUserControllerPrefab, anchorGameObject.transform)
                     .GetComponent<OtherUserController>();
-                otherUserController.gameObject.SetActive(_showControllersToggle.IsOn);
+                otherUserController.gameObject.SetActive(_settingsPanel.IsShowControllers);
 
                 _otherUserControllers[otherUserState.UserName] = otherUserController;
                 otherUserController.OnDestroyed += () =>
