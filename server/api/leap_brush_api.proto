@@ -5,13 +5,17 @@ option csharp_namespace = "MagicLeap.LeapBrush";
 
 package leapbrush;
 
+// LeapBrushApi contains the definition for the leap brush grpc service
 service LeapBrushApi {
+  // Rpc to register with the server and listen for a stream of server state updates. This rpc remains streaming
+  // for the duration of the client's connection.
   rpc RegisterAndListen (RegisterDeviceRequest) returns (stream ServerStateResponse) {}
-  rpc UpdateDevice (UpdateDeviceRequest) returns (UpdateDeviceResponse) {
-    // Deprecated: Last used 2022-08-01-v1
-    option deprecated = true;
-  }
+
+  // Rpc to send a stream of updates from the device to the server. This rpc remains streaming for the duration
+  // of the client's connection.
   rpc UpdateDeviceStream (stream UpdateDeviceRequest) returns (UpdateDeviceResponse) {}
+
+  // Generic rpc request from the client.
   rpc Rpc (RpcRequest) returns (RpcResponse) {}
 }
 
@@ -67,136 +71,208 @@ message UserStateProto {
     MAGIC_LEAP = 1;
   }
 
+  // User identifier
   string user_name = 1;
+  // Anchor id for the spatial anchor closest to the user
   string anchor_id = 2;
+  // Pose for the user's Headset relative to the closest spatial anchor
   PoseProto head_pose = 5;
+  // Pose for the user's Controller relative to the closest spatial anchor
   PoseProto control_pose = 6;
+  // Current tool being used by the user
   ToolState tool_state = 7;
+  // The color of the tool in use
   uint32 tool_color_rgb = 8;
+  // The length in meters of the tool being used (e.g. the length of the laser pointer)
   float tool_length = 9;
+  // The user's display name
   string user_display_name = 10;
+  // The type of device that this client is running on
   optional DeviceType device_type = 11;
+  // The status of the headset or companion computer's battery
   optional BatteryStatusProto headset_battery = 12;
 }
 
+// AnchorProto contains an anchor's id and metadata
 message AnchorProto {
   string id = 1;
   PoseProto pose = 2;
 }
 
+// SpaceInfoProto contains information about the space that the user is localized to
 message SpaceInfoProto {
   enum MappingMode {
     ON_DEVICE = 0;
     AR_CLOUD = 1;
   }
+
+  // List of anchors currently found by the user.
   repeated AnchorProto anchor = 3;
+  // The pose of the space origin for the space localized to by the user. The RGB mesh from ARCloud uses this origin.
   PoseProto target_space_origin = 4;
+  // The name of the space
   string space_name = 5;
+  // The identifier of the space
   string space_id = 6;
+  // The current mapping mode: ARCloud or OnDevice
   MappingMode mapping_mode = 7;
+  // Whether the client is using imported anchors vs. real found spatial anchors. In the case of imported anchors,
+  // the uses is remotely joining another session.
   bool using_imported_anchors = 8;
 }
 
+// BrushStrokeProto contains data for a brush stroke, consisting of metadata and a list of pose transforms for
+// the points that make up the brush stroke
 message BrushStrokeProto {
   enum BrushType {
     SCRIBBLE = 0;
     POLY = 1;
   }
 
+  // Identifier for this brush stroke instance
   string id = 1;
+  // The user identifier for the creator of this brush stroke
   string user_name = 2;
+  // The identifier for the spatial anchor closest to this brush stroke when it was created
   string anchor_id = 3;
+  // The type of brush stroke
   BrushType type = 7;
+  // A list of poses that make up the points of this brush stroke (or the poses being modified as part of an
+  // incremental update).
   repeated PoseProto brush_pose = 4;
+  // The start index for the current brush pose list, in the case of incremental updates to an existing brush stroke
   int32 start_index = 5;
+  // The color of the brush stroke (optional for incremental updates)
   uint32 stroke_color_rgb = 6;
+  // The fill color of the brush stroke (optional for incremental updates)
   uint32 fill_color_rgba = 8;
+  // The alpha value between 0 and 255 for the segmented dimmer fill of this brush stroke (optional for incremental
+  // updates)
   uint32 fill_dimmer_a = 9;
 }
 
+// ExternalModelProto represents a new or updated 3D model
 message ExternalModelProto {
+  // The identifier of this 3D model instance.
   string id = 1;
+  // The file name for this 3D model.
   string file_name = 2;
+  // The anchor id for the closest spatial anchor when this 3D model was created.
   string anchor_id = 3;
+  // The current transform of this 3D model relative to the provided spatial anchor.
   TransformProto transform = 6;
+  // The last user identifier to modify this 3D model.
   string modified_by_user_name = 5;
 }
 
+// RegisterDeviceRequest contains the initialization data for a device registering for updates with the server
 message RegisterDeviceRequest {
+  // The user identifier
   string user_name = 1;
+  // The version string for the client
   string app_version = 2;
 }
 
+// BrushStrokeAddRequest represents a single brush stroke to be added or modified
 message BrushStrokeAddRequest {
   BrushStrokeProto brush_stroke = 1;
 }
 
+// BrushStrokeRemoveRequest identifies a single brush stroke to be removed
 message BrushStrokeRemoveRequest {
   string id = 1;
   string anchor_id = 2;
 }
 
+// ExternalModelAddRequest represents a single 3D model to be added or modified
 message ExternalModelAddRequest {
   ExternalModelProto model = 1;
 }
 
+// ExternalModelRemoveRequest identifies a single 3D model to be removed
 message ExternalModelRemoveRequest {
   string id = 1;
   string anchor_id = 2;
 }
 
+// QueryUsersRequest contains request parameters for an rpc to list users connected to the server
 message QueryUsersRequest {
 }
 
+// QueryUsersResponse contains the results list for currently connected users.
 message QueryUsersResponse {
   message Result {
+    // User identifier
     string user_name = 1;
+    // The space information for this user.
     SpaceInfoProto space_info = 2;
+    // The display name for this user.
     string user_display_name = 3;
+    // The device type for this user.
     optional UserStateProto.DeviceType device_type = 4;
   }
 
+  // List of users connected to the server.
   repeated Result results = 1;
 }
 
+// ServerInfoProto contians information about the server
 message ServerInfoProto {
+  // The version string for the server
   string server_version = 1;
+  // The minimum version string required for connecting to this server.
   string min_app_version = 2;
 }
 
+// ServerStateResponse contains a single response from the server containing state updates.
 message ServerStateResponse {
+  // Optional list of user states that have changed since last update
   repeated UserStateProto user_state = 1;
+  // Optional list of brush strokes that have been added or modified since last update.
   repeated BrushStrokeAddRequest brush_stroke_add = 2;
+  // Optional list of brush strokes that have been removed since last update.
   repeated BrushStrokeRemoveRequest brush_stroke_remove = 3;
+  // Optional list of 3D models that have been added or modified since last update.
   repeated ExternalModelAddRequest external_model_add = 4;
+  // Optional list of 3D models that have been removed since last update.
   repeated ExternalModelRemoveRequest external_model_remove = 5;
+  // Optional information about the server
   ServerInfoProto server_info = 6;
 }
 
+// UpdateDeviceRequest contains a single state update from a connected client
 message UpdateDeviceRequest {
+  // Optional updates to the users state if changed since last update.
   UserStateProto user_state = 1;
+  // Optional updates to the users localized space if changed since last update.
   SpaceInfoProto space_info = 2;
+  // Whether the client requests echoing of changes it makes (e.g. to test server round trips)
   bool echo = 3;
+  // Optional information about a brush stroke information that was added or updated since last update.
   BrushStrokeAddRequest brush_stroke_add = 4;
+  // Optional brush stroke information for a brush stroke that was removed since last update.
   BrushStrokeRemoveRequest brush_stroke_remove = 5;
-
-  // Deprecated: Last used 2022-08-01-v1
-  QueryUsersRequest query_users_request = 6 [deprecated = true];
-
+  // Optional information about a 3D model that was added or updated since last update.
   ExternalModelAddRequest external_model_add = 7;
+  // Optional 3D model information for a 3D model that was removed since last update.
   ExternalModelRemoveRequest external_model_remove = 8;
 }
 
+// UpdateDeviceResponse contains the response for an UpdateDeviceRequest. Server updates are sent back via the
+// RegisterAndListen api instead.
 message UpdateDeviceResponse {
-  // Deprecated: Last used 2022-08-01-v1
-  QueryUsersResponse query_users_response = 1 [deprecated = true];
 }
 
+// RpcRequest contains a single generic RPC sent from a client
 message RpcRequest {
+  // The user identifier for the user sending the request.
   string user_name = 1;
+  // Optional query for the list of connected users.
   QueryUsersRequest query_users_request = 2;
 }
 
+// RpcResponse contains the response for the generic Rpc api
 message RpcResponse {
+  // Optional response to the QueryUsersRequest if provided in RpcRequest
   QueryUsersResponse query_users_response = 1;
 }

@@ -5,18 +5,19 @@ import os
 import sys
 import subprocess
 import tempfile
-import pipes
 import re
 
 
 TARGET_ANDROID = 'Android'
 TARGET_OSX = 'OSX'
+TARGET_WINDOWS = 'Windows'
 TARGET_LINUX = 'Linux'
 TARGET_SERVER = 'Server'
-TARGETS = [TARGET_ANDROID, TARGET_OSX, TARGET_LINUX, TARGET_SERVER]
+TARGETS = [TARGET_ANDROID, TARGET_OSX, TARGET_WINDOWS, TARGET_LINUX, TARGET_SERVER]
 
 TARGET_TO_UNITY_TARGET = {
   TARGET_ANDROID: 'Android',
+  TARGET_WINDOWS: 'Win64',
   TARGET_OSX: 'OSXUniversal',
   TARGET_LINUX: 'Linux64'
 }

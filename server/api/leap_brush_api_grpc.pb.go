@@ -22,10 +22,13 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type LeapBrushApiClient interface {
+	// Rpc to register with the server and listen for a stream of server state updates. This rpc remains streaming
+	// for the duration of the client's connection.
 	RegisterAndListen(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (LeapBrushApi_RegisterAndListenClient, error)
-	// Deprecated: Do not use.
-	UpdateDevice(ctx context.Context, in *UpdateDeviceRequest, opts ...grpc.CallOption) (*UpdateDeviceResponse, error)
+	// Rpc to send a stream of updates from the device to the server. This rpc remains streaming for the duration
+	// of the client's connection.
 	UpdateDeviceStream(ctx context.Context, opts ...grpc.CallOption) (LeapBrushApi_UpdateDeviceStreamClient, error)
+	// Generic rpc request from the client.
 	Rpc(ctx context.Context, in *RpcRequest, opts ...grpc.CallOption) (*RpcResponse, error)
 }
 
@@ -67,16 +70,6 @@ func (x *leapBrushApiRegisterAndListenClient) Recv() (*ServerStateResponse, erro
 		return nil, err
 	}
 	return m, nil
-}
-
-// Deprecated: Do not use.
-func (c *leapBrushApiClient) UpdateDevice(ctx context.Context, in *UpdateDeviceRequest, opts ...grpc.CallOption) (*UpdateDeviceResponse, error) {
-	out := new(UpdateDeviceResponse)
-	err := c.cc.Invoke(ctx, "/leapbrush.LeapBrushApi/UpdateDevice", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *leapBrushApiClient) UpdateDeviceStream(ctx context.Context, opts ...grpc.CallOption) (LeapBrushApi_UpdateDeviceStreamClient, error) {
@@ -126,10 +119,13 @@ func (c *leapBrushApiClient) Rpc(ctx context.Context, in *RpcRequest, opts ...gr
 // All implementations must embed UnimplementedLeapBrushApiServer
 // for forward compatibility
 type LeapBrushApiServer interface {
+	// Rpc to register with the server and listen for a stream of server state updates. This rpc remains streaming
+	// for the duration of the client's connection.
 	RegisterAndListen(*RegisterDeviceRequest, LeapBrushApi_RegisterAndListenServer) error
-	// Deprecated: Do not use.
-	UpdateDevice(context.Context, *UpdateDeviceRequest) (*UpdateDeviceResponse, error)
+	// Rpc to send a stream of updates from the device to the server. This rpc remains streaming for the duration
+	// of the client's connection.
 	UpdateDeviceStream(LeapBrushApi_UpdateDeviceStreamServer) error
+	// Generic rpc request from the client.
 	Rpc(context.Context, *RpcRequest) (*RpcResponse, error)
 	mustEmbedUnimplementedLeapBrushApiServer()
 }
@@ -140,9 +136,6 @@ type UnimplementedLeapBrushApiServer struct {
 
 func (UnimplementedLeapBrushApiServer) RegisterAndListen(*RegisterDeviceRequest, LeapBrushApi_RegisterAndListenServer) error {
 	return status.Errorf(codes.Unimplemented, "method RegisterAndListen not implemented")
-}
-func (UnimplementedLeapBrushApiServer) UpdateDevice(context.Context, *UpdateDeviceRequest) (*UpdateDeviceResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateDevice not implemented")
 }
 func (UnimplementedLeapBrushApiServer) UpdateDeviceStream(LeapBrushApi_UpdateDeviceStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method UpdateDeviceStream not implemented")
@@ -182,24 +175,6 @@ type leapBrushApiRegisterAndListenServer struct {
 
 func (x *leapBrushApiRegisterAndListenServer) Send(m *ServerStateResponse) error {
 	return x.ServerStream.SendMsg(m)
-}
-
-func _LeapBrushApi_UpdateDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDeviceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(LeapBrushApiServer).UpdateDevice(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/leapbrush.LeapBrushApi/UpdateDevice",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LeapBrushApiServer).UpdateDevice(ctx, req.(*UpdateDeviceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _LeapBrushApi_UpdateDeviceStream_Handler(srv interface{}, stream grpc.ServerStream) error {
@@ -253,10 +228,6 @@ var LeapBrushApi_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "leapbrush.LeapBrushApi",
 	HandlerType: (*LeapBrushApiServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "UpdateDevice",
-			Handler:    _LeapBrushApi_UpdateDevice_Handler,
-		},
 		{
 			MethodName: "Rpc",
 			Handler:    _LeapBrushApi_Rpc_Handler,

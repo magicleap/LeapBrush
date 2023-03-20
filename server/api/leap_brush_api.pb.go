@@ -581,16 +581,26 @@ type UserStateProto struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserName        string                     `protobuf:"bytes,1,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
-	AnchorId        string                     `protobuf:"bytes,2,opt,name=anchor_id,json=anchorId,proto3" json:"anchor_id,omitempty"`
-	HeadPose        *PoseProto                 `protobuf:"bytes,5,opt,name=head_pose,json=headPose,proto3" json:"head_pose,omitempty"`
-	ControlPose     *PoseProto                 `protobuf:"bytes,6,opt,name=control_pose,json=controlPose,proto3" json:"control_pose,omitempty"`
-	ToolState       UserStateProto_ToolState   `protobuf:"varint,7,opt,name=tool_state,json=toolState,proto3,enum=leapbrush.UserStateProto_ToolState" json:"tool_state,omitempty"`
-	ToolColorRgb    uint32                     `protobuf:"varint,8,opt,name=tool_color_rgb,json=toolColorRgb,proto3" json:"tool_color_rgb,omitempty"`
-	ToolLength      float32                    `protobuf:"fixed32,9,opt,name=tool_length,json=toolLength,proto3" json:"tool_length,omitempty"`
-	UserDisplayName string                     `protobuf:"bytes,10,opt,name=user_display_name,json=userDisplayName,proto3" json:"user_display_name,omitempty"`
-	DeviceType      *UserStateProto_DeviceType `protobuf:"varint,11,opt,name=device_type,json=deviceType,proto3,enum=leapbrush.UserStateProto_DeviceType,oneof" json:"device_type,omitempty"`
-	HeadsetBattery  *BatteryStatusProto        `protobuf:"bytes,12,opt,name=headset_battery,json=headsetBattery,proto3,oneof" json:"headset_battery,omitempty"`
+	// User identifier
+	UserName string `protobuf:"bytes,1,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
+	// Anchor id for the spatial anchor closest to the user
+	AnchorId string `protobuf:"bytes,2,opt,name=anchor_id,json=anchorId,proto3" json:"anchor_id,omitempty"`
+	// Pose for the user's Headset relative to the closest spatial anchor
+	HeadPose *PoseProto `protobuf:"bytes,5,opt,name=head_pose,json=headPose,proto3" json:"head_pose,omitempty"`
+	// Pose for the user's Controller relative to the closest spatial anchor
+	ControlPose *PoseProto `protobuf:"bytes,6,opt,name=control_pose,json=controlPose,proto3" json:"control_pose,omitempty"`
+	// Current tool being used by the user
+	ToolState UserStateProto_ToolState `protobuf:"varint,7,opt,name=tool_state,json=toolState,proto3,enum=leapbrush.UserStateProto_ToolState" json:"tool_state,omitempty"`
+	// The color of the tool in use
+	ToolColorRgb uint32 `protobuf:"varint,8,opt,name=tool_color_rgb,json=toolColorRgb,proto3" json:"tool_color_rgb,omitempty"`
+	// The length in meters of the tool being used (e.g. the length of the laser pointer)
+	ToolLength float32 `protobuf:"fixed32,9,opt,name=tool_length,json=toolLength,proto3" json:"tool_length,omitempty"`
+	// The user's display name
+	UserDisplayName string `protobuf:"bytes,10,opt,name=user_display_name,json=userDisplayName,proto3" json:"user_display_name,omitempty"`
+	// The type of device that this client is running on
+	DeviceType *UserStateProto_DeviceType `protobuf:"varint,11,opt,name=device_type,json=deviceType,proto3,enum=leapbrush.UserStateProto_DeviceType,oneof" json:"device_type,omitempty"`
+	// The status of the headset or companion computer's battery
+	HeadsetBattery *BatteryStatusProto `protobuf:"bytes,12,opt,name=headset_battery,json=headsetBattery,proto3,oneof" json:"headset_battery,omitempty"`
 }
 
 func (x *UserStateProto) Reset() {
@@ -695,6 +705,7 @@ func (x *UserStateProto) GetHeadsetBattery() *BatteryStatusProto {
 	return nil
 }
 
+// AnchorProto contains an anchor's id and metadata
 type AnchorProto struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -750,17 +761,25 @@ func (x *AnchorProto) GetPose() *PoseProto {
 	return nil
 }
 
+// SpaceInfoProto contains information about the space that the user is localized to
 type SpaceInfoProto struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Anchor               []*AnchorProto             `protobuf:"bytes,3,rep,name=anchor,proto3" json:"anchor,omitempty"`
-	TargetSpaceOrigin    *PoseProto                 `protobuf:"bytes,4,opt,name=target_space_origin,json=targetSpaceOrigin,proto3" json:"target_space_origin,omitempty"`
-	SpaceName            string                     `protobuf:"bytes,5,opt,name=space_name,json=spaceName,proto3" json:"space_name,omitempty"`
-	SpaceId              string                     `protobuf:"bytes,6,opt,name=space_id,json=spaceId,proto3" json:"space_id,omitempty"`
-	MappingMode          SpaceInfoProto_MappingMode `protobuf:"varint,7,opt,name=mapping_mode,json=mappingMode,proto3,enum=leapbrush.SpaceInfoProto_MappingMode" json:"mapping_mode,omitempty"`
-	UsingImportedAnchors bool                       `protobuf:"varint,8,opt,name=using_imported_anchors,json=usingImportedAnchors,proto3" json:"using_imported_anchors,omitempty"`
+	// List of anchors currently found by the user.
+	Anchor []*AnchorProto `protobuf:"bytes,3,rep,name=anchor,proto3" json:"anchor,omitempty"`
+	// The pose of the space origin for the space localized to by the user. The RGB mesh from ARCloud uses this origin.
+	TargetSpaceOrigin *PoseProto `protobuf:"bytes,4,opt,name=target_space_origin,json=targetSpaceOrigin,proto3" json:"target_space_origin,omitempty"`
+	// The name of the space
+	SpaceName string `protobuf:"bytes,5,opt,name=space_name,json=spaceName,proto3" json:"space_name,omitempty"`
+	// The identifier of the space
+	SpaceId string `protobuf:"bytes,6,opt,name=space_id,json=spaceId,proto3" json:"space_id,omitempty"`
+	// The current mapping mode: ARCloud or OnDevice
+	MappingMode SpaceInfoProto_MappingMode `protobuf:"varint,7,opt,name=mapping_mode,json=mappingMode,proto3,enum=leapbrush.SpaceInfoProto_MappingMode" json:"mapping_mode,omitempty"`
+	// Whether the client is using imported anchors vs. real found spatial anchors. In the case of imported anchors,
+	// the uses is remotely joining another session.
+	UsingImportedAnchors bool `protobuf:"varint,8,opt,name=using_imported_anchors,json=usingImportedAnchors,proto3" json:"using_imported_anchors,omitempty"`
 }
 
 func (x *SpaceInfoProto) Reset() {
@@ -837,20 +856,33 @@ func (x *SpaceInfoProto) GetUsingImportedAnchors() bool {
 	return false
 }
 
+// BrushStrokeProto contains data for a brush stroke, consisting of metadata and a list of pose transforms for
+// the points that make up the brush stroke
 type BrushStrokeProto struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id             string                     `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	UserName       string                     `protobuf:"bytes,2,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
-	AnchorId       string                     `protobuf:"bytes,3,opt,name=anchor_id,json=anchorId,proto3" json:"anchor_id,omitempty"`
-	Type           BrushStrokeProto_BrushType `protobuf:"varint,7,opt,name=type,proto3,enum=leapbrush.BrushStrokeProto_BrushType" json:"type,omitempty"`
-	BrushPose      []*PoseProto               `protobuf:"bytes,4,rep,name=brush_pose,json=brushPose,proto3" json:"brush_pose,omitempty"`
-	StartIndex     int32                      `protobuf:"varint,5,opt,name=start_index,json=startIndex,proto3" json:"start_index,omitempty"`
-	StrokeColorRgb uint32                     `protobuf:"varint,6,opt,name=stroke_color_rgb,json=strokeColorRgb,proto3" json:"stroke_color_rgb,omitempty"`
-	FillColorRgba  uint32                     `protobuf:"varint,8,opt,name=fill_color_rgba,json=fillColorRgba,proto3" json:"fill_color_rgba,omitempty"`
-	FillDimmerA    uint32                     `protobuf:"varint,9,opt,name=fill_dimmer_a,json=fillDimmerA,proto3" json:"fill_dimmer_a,omitempty"`
+	// Identifier for this brush stroke instance
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The user identifier for the creator of this brush stroke
+	UserName string `protobuf:"bytes,2,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
+	// The identifier for the spatial anchor closest to this brush stroke when it was created
+	AnchorId string `protobuf:"bytes,3,opt,name=anchor_id,json=anchorId,proto3" json:"anchor_id,omitempty"`
+	// The type of brush stroke
+	Type BrushStrokeProto_BrushType `protobuf:"varint,7,opt,name=type,proto3,enum=leapbrush.BrushStrokeProto_BrushType" json:"type,omitempty"`
+	// A list of poses that make up the points of this brush stroke (or the poses being modified as part of an
+	// incremental update).
+	BrushPose []*PoseProto `protobuf:"bytes,4,rep,name=brush_pose,json=brushPose,proto3" json:"brush_pose,omitempty"`
+	// The start index for the current brush pose list, in the case of incremental updates to an existing brush stroke
+	StartIndex int32 `protobuf:"varint,5,opt,name=start_index,json=startIndex,proto3" json:"start_index,omitempty"`
+	// The color of the brush stroke (optional for incremental updates)
+	StrokeColorRgb uint32 `protobuf:"varint,6,opt,name=stroke_color_rgb,json=strokeColorRgb,proto3" json:"stroke_color_rgb,omitempty"`
+	// The fill color of the brush stroke (optional for incremental updates)
+	FillColorRgba uint32 `protobuf:"varint,8,opt,name=fill_color_rgba,json=fillColorRgba,proto3" json:"fill_color_rgba,omitempty"`
+	// The alpha value between 0 and 255 for the segmented dimmer fill of this brush stroke (optional for incremental
+	// updates)
+	FillDimmerA uint32 `protobuf:"varint,9,opt,name=fill_dimmer_a,json=fillDimmerA,proto3" json:"fill_dimmer_a,omitempty"`
 }
 
 func (x *BrushStrokeProto) Reset() {
@@ -948,16 +980,22 @@ func (x *BrushStrokeProto) GetFillDimmerA() uint32 {
 	return 0
 }
 
+// ExternalModelProto represents a new or updated 3D model
 type ExternalModelProto struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id                 string          `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	FileName           string          `protobuf:"bytes,2,opt,name=file_name,json=fileName,proto3" json:"file_name,omitempty"`
-	AnchorId           string          `protobuf:"bytes,3,opt,name=anchor_id,json=anchorId,proto3" json:"anchor_id,omitempty"`
-	Transform          *TransformProto `protobuf:"bytes,6,opt,name=transform,proto3" json:"transform,omitempty"`
-	ModifiedByUserName string          `protobuf:"bytes,5,opt,name=modified_by_user_name,json=modifiedByUserName,proto3" json:"modified_by_user_name,omitempty"`
+	// The identifier of this 3D model instance.
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The file name for this 3D model.
+	FileName string `protobuf:"bytes,2,opt,name=file_name,json=fileName,proto3" json:"file_name,omitempty"`
+	// The anchor id for the closest spatial anchor when this 3D model was created.
+	AnchorId string `protobuf:"bytes,3,opt,name=anchor_id,json=anchorId,proto3" json:"anchor_id,omitempty"`
+	// The current transform of this 3D model relative to the provided spatial anchor.
+	Transform *TransformProto `protobuf:"bytes,6,opt,name=transform,proto3" json:"transform,omitempty"`
+	// The last user identifier to modify this 3D model.
+	ModifiedByUserName string `protobuf:"bytes,5,opt,name=modified_by_user_name,json=modifiedByUserName,proto3" json:"modified_by_user_name,omitempty"`
 }
 
 func (x *ExternalModelProto) Reset() {
@@ -1027,12 +1065,15 @@ func (x *ExternalModelProto) GetModifiedByUserName() string {
 	return ""
 }
 
+// RegisterDeviceRequest contains the initialization data for a device registering for updates with the server
 type RegisterDeviceRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserName   string `protobuf:"bytes,1,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
+	// The user identifier
+	UserName string `protobuf:"bytes,1,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
+	// The version string for the client
 	AppVersion string `protobuf:"bytes,2,opt,name=app_version,json=appVersion,proto3" json:"app_version,omitempty"`
 }
 
@@ -1082,6 +1123,7 @@ func (x *RegisterDeviceRequest) GetAppVersion() string {
 	return ""
 }
 
+// BrushStrokeAddRequest represents a single brush stroke to be added or modified
 type BrushStrokeAddRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1129,6 +1171,7 @@ func (x *BrushStrokeAddRequest) GetBrushStroke() *BrushStrokeProto {
 	return nil
 }
 
+// BrushStrokeRemoveRequest identifies a single brush stroke to be removed
 type BrushStrokeRemoveRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1184,6 +1227,7 @@ func (x *BrushStrokeRemoveRequest) GetAnchorId() string {
 	return ""
 }
 
+// ExternalModelAddRequest represents a single 3D model to be added or modified
 type ExternalModelAddRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1231,6 +1275,7 @@ func (x *ExternalModelAddRequest) GetModel() *ExternalModelProto {
 	return nil
 }
 
+// ExternalModelRemoveRequest identifies a single 3D model to be removed
 type ExternalModelRemoveRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1286,6 +1331,7 @@ func (x *ExternalModelRemoveRequest) GetAnchorId() string {
 	return ""
 }
 
+// QueryUsersRequest contains request parameters for an rpc to list users connected to the server
 type QueryUsersRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1324,11 +1370,13 @@ func (*QueryUsersRequest) Descriptor() ([]byte, []int) {
 	return file_leap_brush_api_proto_rawDescGZIP(), []int{15}
 }
 
+// QueryUsersResponse contains the results list for currently connected users.
 type QueryUsersResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+	// List of users connected to the server.
 	Results []*QueryUsersResponse_Result `protobuf:"bytes,1,rep,name=results,proto3" json:"results,omitempty"`
 }
 
@@ -1371,12 +1419,15 @@ func (x *QueryUsersResponse) GetResults() []*QueryUsersResponse_Result {
 	return nil
 }
 
+// ServerInfoProto contians information about the server
 type ServerInfoProto struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+	// The version string for the server
 	ServerVersion string `protobuf:"bytes,1,opt,name=server_version,json=serverVersion,proto3" json:"server_version,omitempty"`
+	// The minimum version string required for connecting to this server.
 	MinAppVersion string `protobuf:"bytes,2,opt,name=min_app_version,json=minAppVersion,proto3" json:"min_app_version,omitempty"`
 }
 
@@ -1426,17 +1477,24 @@ func (x *ServerInfoProto) GetMinAppVersion() string {
 	return ""
 }
 
+// ServerStateResponse contains a single response from the server containing state updates.
 type ServerStateResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserState           []*UserStateProto             `protobuf:"bytes,1,rep,name=user_state,json=userState,proto3" json:"user_state,omitempty"`
-	BrushStrokeAdd      []*BrushStrokeAddRequest      `protobuf:"bytes,2,rep,name=brush_stroke_add,json=brushStrokeAdd,proto3" json:"brush_stroke_add,omitempty"`
-	BrushStrokeRemove   []*BrushStrokeRemoveRequest   `protobuf:"bytes,3,rep,name=brush_stroke_remove,json=brushStrokeRemove,proto3" json:"brush_stroke_remove,omitempty"`
-	ExternalModelAdd    []*ExternalModelAddRequest    `protobuf:"bytes,4,rep,name=external_model_add,json=externalModelAdd,proto3" json:"external_model_add,omitempty"`
+	// Optional list of user states that have changed since last update
+	UserState []*UserStateProto `protobuf:"bytes,1,rep,name=user_state,json=userState,proto3" json:"user_state,omitempty"`
+	// Optional list of brush strokes that have been added or modified since last update.
+	BrushStrokeAdd []*BrushStrokeAddRequest `protobuf:"bytes,2,rep,name=brush_stroke_add,json=brushStrokeAdd,proto3" json:"brush_stroke_add,omitempty"`
+	// Optional list of brush strokes that have been removed since last update.
+	BrushStrokeRemove []*BrushStrokeRemoveRequest `protobuf:"bytes,3,rep,name=brush_stroke_remove,json=brushStrokeRemove,proto3" json:"brush_stroke_remove,omitempty"`
+	// Optional list of 3D models that have been added or modified since last update.
+	ExternalModelAdd []*ExternalModelAddRequest `protobuf:"bytes,4,rep,name=external_model_add,json=externalModelAdd,proto3" json:"external_model_add,omitempty"`
+	// Optional list of 3D models that have been removed since last update.
 	ExternalModelRemove []*ExternalModelRemoveRequest `protobuf:"bytes,5,rep,name=external_model_remove,json=externalModelRemove,proto3" json:"external_model_remove,omitempty"`
-	ServerInfo          *ServerInfoProto              `protobuf:"bytes,6,opt,name=server_info,json=serverInfo,proto3" json:"server_info,omitempty"`
+	// Optional information about the server
+	ServerInfo *ServerInfoProto `protobuf:"bytes,6,opt,name=server_info,json=serverInfo,proto3" json:"server_info,omitempty"`
 }
 
 func (x *ServerStateResponse) Reset() {
@@ -1513,21 +1571,25 @@ func (x *ServerStateResponse) GetServerInfo() *ServerInfoProto {
 	return nil
 }
 
+// UpdateDeviceRequest contains a single state update from a connected client
 type UpdateDeviceRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserState         *UserStateProto           `protobuf:"bytes,1,opt,name=user_state,json=userState,proto3" json:"user_state,omitempty"`
-	SpaceInfo         *SpaceInfoProto           `protobuf:"bytes,2,opt,name=space_info,json=spaceInfo,proto3" json:"space_info,omitempty"`
-	Echo              bool                      `protobuf:"varint,3,opt,name=echo,proto3" json:"echo,omitempty"`
-	BrushStrokeAdd    *BrushStrokeAddRequest    `protobuf:"bytes,4,opt,name=brush_stroke_add,json=brushStrokeAdd,proto3" json:"brush_stroke_add,omitempty"`
+	// Optional updates to the users state if changed since last update.
+	UserState *UserStateProto `protobuf:"bytes,1,opt,name=user_state,json=userState,proto3" json:"user_state,omitempty"`
+	// Optional updates to the users localized space if changed since last update.
+	SpaceInfo *SpaceInfoProto `protobuf:"bytes,2,opt,name=space_info,json=spaceInfo,proto3" json:"space_info,omitempty"`
+	// Whether the client requests echoing of changes it makes (e.g. to test server round trips)
+	Echo bool `protobuf:"varint,3,opt,name=echo,proto3" json:"echo,omitempty"`
+	// Optional information about a brush stroke information that was added or updated since last update.
+	BrushStrokeAdd *BrushStrokeAddRequest `protobuf:"bytes,4,opt,name=brush_stroke_add,json=brushStrokeAdd,proto3" json:"brush_stroke_add,omitempty"`
+	// Optional brush stroke information for a brush stroke that was removed since last update.
 	BrushStrokeRemove *BrushStrokeRemoveRequest `protobuf:"bytes,5,opt,name=brush_stroke_remove,json=brushStrokeRemove,proto3" json:"brush_stroke_remove,omitempty"`
-	// Deprecated: Last used 2022-08-01-v1
-	//
-	// Deprecated: Do not use.
-	QueryUsersRequest   *QueryUsersRequest          `protobuf:"bytes,6,opt,name=query_users_request,json=queryUsersRequest,proto3" json:"query_users_request,omitempty"`
-	ExternalModelAdd    *ExternalModelAddRequest    `protobuf:"bytes,7,opt,name=external_model_add,json=externalModelAdd,proto3" json:"external_model_add,omitempty"`
+	// Optional information about a 3D model that was added or updated since last update.
+	ExternalModelAdd *ExternalModelAddRequest `protobuf:"bytes,7,opt,name=external_model_add,json=externalModelAdd,proto3" json:"external_model_add,omitempty"`
+	// Optional 3D model information for a 3D model that was removed since last update.
 	ExternalModelRemove *ExternalModelRemoveRequest `protobuf:"bytes,8,opt,name=external_model_remove,json=externalModelRemove,proto3" json:"external_model_remove,omitempty"`
 }
 
@@ -1598,14 +1660,6 @@ func (x *UpdateDeviceRequest) GetBrushStrokeRemove() *BrushStrokeRemoveRequest {
 	return nil
 }
 
-// Deprecated: Do not use.
-func (x *UpdateDeviceRequest) GetQueryUsersRequest() *QueryUsersRequest {
-	if x != nil {
-		return x.QueryUsersRequest
-	}
-	return nil
-}
-
 func (x *UpdateDeviceRequest) GetExternalModelAdd() *ExternalModelAddRequest {
 	if x != nil {
 		return x.ExternalModelAdd
@@ -1620,15 +1674,12 @@ func (x *UpdateDeviceRequest) GetExternalModelRemove() *ExternalModelRemoveReque
 	return nil
 }
 
+// UpdateDeviceResponse contains the response for an UpdateDeviceRequest. Server updates are sent back via the
+// RegisterAndListen api instead.
 type UpdateDeviceResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
-
-	// Deprecated: Last used 2022-08-01-v1
-	//
-	// Deprecated: Do not use.
-	QueryUsersResponse *QueryUsersResponse `protobuf:"bytes,1,opt,name=query_users_response,json=queryUsersResponse,proto3" json:"query_users_response,omitempty"`
 }
 
 func (x *UpdateDeviceResponse) Reset() {
@@ -1663,20 +1714,15 @@ func (*UpdateDeviceResponse) Descriptor() ([]byte, []int) {
 	return file_leap_brush_api_proto_rawDescGZIP(), []int{20}
 }
 
-// Deprecated: Do not use.
-func (x *UpdateDeviceResponse) GetQueryUsersResponse() *QueryUsersResponse {
-	if x != nil {
-		return x.QueryUsersResponse
-	}
-	return nil
-}
-
+// RpcRequest contains a single generic RPC sent from a client
 type RpcRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserName          string             `protobuf:"bytes,1,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
+	// The user identifier for the user sending the request.
+	UserName string `protobuf:"bytes,1,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
+	// Optional query for the list of connected users.
 	QueryUsersRequest *QueryUsersRequest `protobuf:"bytes,2,opt,name=query_users_request,json=queryUsersRequest,proto3" json:"query_users_request,omitempty"`
 }
 
@@ -1726,11 +1772,13 @@ func (x *RpcRequest) GetQueryUsersRequest() *QueryUsersRequest {
 	return nil
 }
 
+// RpcResponse contains the response for the generic Rpc api
 type RpcResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+	// Optional response to the QueryUsersRequest if provided in RpcRequest
 	QueryUsersResponse *QueryUsersResponse `protobuf:"bytes,1,opt,name=query_users_response,json=queryUsersResponse,proto3" json:"query_users_response,omitempty"`
 }
 
@@ -1778,10 +1826,14 @@ type QueryUsersResponse_Result struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserName        string                     `protobuf:"bytes,1,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
-	SpaceInfo       *SpaceInfoProto            `protobuf:"bytes,2,opt,name=space_info,json=spaceInfo,proto3" json:"space_info,omitempty"`
-	UserDisplayName string                     `protobuf:"bytes,3,opt,name=user_display_name,json=userDisplayName,proto3" json:"user_display_name,omitempty"`
-	DeviceType      *UserStateProto_DeviceType `protobuf:"varint,4,opt,name=device_type,json=deviceType,proto3,enum=leapbrush.UserStateProto_DeviceType,oneof" json:"device_type,omitempty"`
+	// User identifier
+	UserName string `protobuf:"bytes,1,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
+	// The space information for this user.
+	SpaceInfo *SpaceInfoProto `protobuf:"bytes,2,opt,name=space_info,json=spaceInfo,proto3" json:"space_info,omitempty"`
+	// The display name for this user.
+	UserDisplayName string `protobuf:"bytes,3,opt,name=user_display_name,json=userDisplayName,proto3" json:"user_display_name,omitempty"`
+	// The device type for this user.
+	DeviceType *UserStateProto_DeviceType `protobuf:"varint,4,opt,name=device_type,json=deviceType,proto3,enum=leapbrush.UserStateProto_DeviceType,oneof" json:"device_type,omitempty"`
 }
 
 func (x *QueryUsersResponse_Result) Reset() {
@@ -2079,7 +2131,7 @@ var file_leap_brush_api_proto_rawDesc = []byte{
 	0x5f, 0x69, 0x6e, 0x66, 0x6f, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x6c, 0x65,
 	0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49, 0x6e,
 	0x66, 0x6f, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x52, 0x0a, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49,
-	0x6e, 0x66, 0x6f, 0x22, 0xbd, 0x04, 0x0a, 0x13, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65,
+	0x6e, 0x66, 0x6f, 0x22, 0xeb, 0x03, 0x0a, 0x13, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65,
 	0x76, 0x69, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x38, 0x0a, 0x0a, 0x75,
 	0x73, 0x65, 0x72, 0x5f, 0x73, 0x74, 0x61, 0x74, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
 	0x19, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x55, 0x73, 0x65, 0x72,
@@ -2099,69 +2151,54 @@ var file_leap_brush_api_proto_rawDesc = []byte{
 	0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x42, 0x72, 0x75, 0x73, 0x68, 0x53, 0x74,
 	0x72, 0x6f, 0x6b, 0x65, 0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
 	0x74, 0x52, 0x11, 0x62, 0x72, 0x75, 0x73, 0x68, 0x53, 0x74, 0x72, 0x6f, 0x6b, 0x65, 0x52, 0x65,
-	0x6d, 0x6f, 0x76, 0x65, 0x12, 0x50, 0x0a, 0x13, 0x71, 0x75, 0x65, 0x72, 0x79, 0x5f, 0x75, 0x73,
-	0x65, 0x72, 0x73, 0x5f, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x18, 0x06, 0x20, 0x01, 0x28,
+	0x6d, 0x6f, 0x76, 0x65, 0x12, 0x50, 0x0a, 0x12, 0x65, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c,
+	0x5f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x61, 0x64, 0x64, 0x18, 0x07, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x22, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x45, 0x78, 0x74,
+	0x65, 0x72, 0x6e, 0x61, 0x6c, 0x4d, 0x6f, 0x64, 0x65, 0x6c, 0x41, 0x64, 0x64, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x52, 0x10, 0x65, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x4d, 0x6f,
+	0x64, 0x65, 0x6c, 0x41, 0x64, 0x64, 0x12, 0x59, 0x0a, 0x15, 0x65, 0x78, 0x74, 0x65, 0x72, 0x6e,
+	0x61, 0x6c, 0x5f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x72, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x18,
+	0x08, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x25, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73,
+	0x68, 0x2e, 0x45, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x4d, 0x6f, 0x64, 0x65, 0x6c, 0x52,
+	0x65, 0x6d, 0x6f, 0x76, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x13, 0x65, 0x78,
+	0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x4d, 0x6f, 0x64, 0x65, 0x6c, 0x52, 0x65, 0x6d, 0x6f, 0x76,
+	0x65, 0x22, 0x16, 0x0a, 0x14, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x76, 0x69, 0x63,
+	0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x77, 0x0a, 0x0a, 0x52, 0x70, 0x63,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1b, 0x0a, 0x09, 0x75, 0x73, 0x65, 0x72, 0x5f,
+	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72,
+	0x4e, 0x61, 0x6d, 0x65, 0x12, 0x4c, 0x0a, 0x13, 0x71, 0x75, 0x65, 0x72, 0x79, 0x5f, 0x75, 0x73,
+	0x65, 0x72, 0x73, 0x5f, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28,
 	0x0b, 0x32, 0x1c, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x51, 0x75,
-	0x65, 0x72, 0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x42,
-	0x02, 0x18, 0x01, 0x52, 0x11, 0x71, 0x75, 0x65, 0x72, 0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x50, 0x0a, 0x12, 0x65, 0x78, 0x74, 0x65, 0x72, 0x6e,
-	0x61, 0x6c, 0x5f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x61, 0x64, 0x64, 0x18, 0x07, 0x20, 0x01,
-	0x28, 0x0b, 0x32, 0x22, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x45,
-	0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x4d, 0x6f, 0x64, 0x65, 0x6c, 0x41, 0x64, 0x64, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x10, 0x65, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c,
-	0x4d, 0x6f, 0x64, 0x65, 0x6c, 0x41, 0x64, 0x64, 0x12, 0x59, 0x0a, 0x15, 0x65, 0x78, 0x74, 0x65,
-	0x72, 0x6e, 0x61, 0x6c, 0x5f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x5f, 0x72, 0x65, 0x6d, 0x6f, 0x76,
-	0x65, 0x18, 0x08, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x25, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72,
-	0x75, 0x73, 0x68, 0x2e, 0x45, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x4d, 0x6f, 0x64, 0x65,
-	0x6c, 0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x13,
-	0x65, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x4d, 0x6f, 0x64, 0x65, 0x6c, 0x52, 0x65, 0x6d,
-	0x6f, 0x76, 0x65, 0x22, 0x6b, 0x0a, 0x14, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x76,
-	0x69, 0x63, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x53, 0x0a, 0x14, 0x71,
-	0x75, 0x65, 0x72, 0x79, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x5f, 0x72, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x6c, 0x65, 0x61, 0x70,
-	0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x55, 0x73, 0x65, 0x72, 0x73,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x02, 0x18, 0x01, 0x52, 0x12, 0x71, 0x75,
-	0x65, 0x72, 0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x22, 0x77, 0x0a, 0x0a, 0x52, 0x70, 0x63, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1b,
-	0x0a, 0x09, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x4c, 0x0a, 0x13, 0x71,
-	0x75, 0x65, 0x72, 0x79, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x5f, 0x72, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62,
-	0x72, 0x75, 0x73, 0x68, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x11, 0x71, 0x75, 0x65, 0x72, 0x79, 0x55, 0x73, 0x65,
-	0x72, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x5e, 0x0a, 0x0b, 0x52, 0x70, 0x63,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x4f, 0x0a, 0x14, 0x71, 0x75, 0x65, 0x72,
-	0x79, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x5f, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75,
-	0x73, 0x68, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x52, 0x12, 0x71, 0x75, 0x65, 0x72, 0x79, 0x55, 0x73, 0x65, 0x72,
-	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xd2, 0x02, 0x0a, 0x0c, 0x4c, 0x65,
-	0x61, 0x70, 0x42, 0x72, 0x75, 0x73, 0x68, 0x41, 0x70, 0x69, 0x12, 0x59, 0x0a, 0x11, 0x52, 0x65,
-	0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x41, 0x6e, 0x64, 0x4c, 0x69, 0x73, 0x74, 0x65, 0x6e, 0x12,
-	0x20, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x52, 0x65, 0x67, 0x69,
-	0x73, 0x74, 0x65, 0x72, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x1a, 0x1e, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x53, 0x65,
-	0x72, 0x76, 0x65, 0x72, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x22, 0x00, 0x30, 0x01, 0x12, 0x54, 0x0a, 0x0c, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44,
-	0x65, 0x76, 0x69, 0x63, 0x65, 0x12, 0x1e, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73,
-	0x68, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73,
-	0x68, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x03, 0x88, 0x02, 0x01, 0x12, 0x59, 0x0a, 0x12, 0x55,
-	0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x53, 0x74, 0x72, 0x65, 0x61,
-	0x6d, 0x12, 0x1e, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x55, 0x70,
-	0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x1a, 0x1f, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x55, 0x70,
-	0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x12, 0x36, 0x0a, 0x03, 0x52, 0x70, 0x63, 0x12, 0x15, 0x2e,
-	0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x52, 0x70, 0x63, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68,
-	0x2e, 0x52, 0x70, 0x63, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x48,
-	0x5a, 0x30, 0x67, 0x69, 0x74, 0x6c, 0x61, 0x62, 0x2e, 0x6d, 0x61, 0x67, 0x69, 0x63, 0x6c, 0x65,
-	0x61, 0x70, 0x2e, 0x69, 0x6f, 0x2f, 0x67, 0x68, 0x61, 0x7a, 0x65, 0x6e, 0x2f, 0x6c, 0x65, 0x61,
-	0x70, 0x2d, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x2f, 0x61,
-	0x70, 0x69, 0xaa, 0x02, 0x13, 0x4d, 0x61, 0x67, 0x69, 0x63, 0x4c, 0x65, 0x61, 0x70, 0x2e, 0x4c,
-	0x65, 0x61, 0x70, 0x42, 0x72, 0x75, 0x73, 0x68, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x72, 0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52,
+	0x11, 0x71, 0x75, 0x65, 0x72, 0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x22, 0x5e, 0x0a, 0x0b, 0x52, 0x70, 0x63, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x4f, 0x0a, 0x14, 0x71, 0x75, 0x65, 0x72, 0x79, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x73,
+	0x5f, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x1d, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x51, 0x75, 0x65, 0x72,
+	0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x52, 0x12,
+	0x71, 0x75, 0x65, 0x72, 0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x32, 0xfc, 0x01, 0x0a, 0x0c, 0x4c, 0x65, 0x61, 0x70, 0x42, 0x72, 0x75, 0x73, 0x68,
+	0x41, 0x70, 0x69, 0x12, 0x59, 0x0a, 0x11, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x41,
+	0x6e, 0x64, 0x4c, 0x69, 0x73, 0x74, 0x65, 0x6e, 0x12, 0x20, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62,
+	0x72, 0x75, 0x73, 0x68, 0x2e, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x44, 0x65, 0x76,
+	0x69, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1e, 0x2e, 0x6c, 0x65, 0x61,
+	0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x53, 0x74, 0x61,
+	0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x30, 0x01, 0x12, 0x59,
+	0x0a, 0x12, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x53, 0x74,
+	0x72, 0x65, 0x61, 0x6d, 0x12, 0x1e, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68,
+	0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68,
+	0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x12, 0x36, 0x0a, 0x03, 0x52, 0x70, 0x63,
+	0x12, 0x15, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2e, 0x52, 0x70, 0x63,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x6c, 0x65, 0x61, 0x70, 0x62, 0x72,
+	0x75, 0x73, 0x68, 0x2e, 0x52, 0x70, 0x63, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
+	0x00, 0x42, 0x48, 0x5a, 0x30, 0x67, 0x69, 0x74, 0x6c, 0x61, 0x62, 0x2e, 0x6d, 0x61, 0x67, 0x69,
+	0x63, 0x6c, 0x65, 0x61, 0x70, 0x2e, 0x69, 0x6f, 0x2f, 0x67, 0x68, 0x61, 0x7a, 0x65, 0x6e, 0x2f,
+	0x6c, 0x65, 0x61, 0x70, 0x2d, 0x62, 0x72, 0x75, 0x73, 0x68, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x65,
+	0x72, 0x2f, 0x61, 0x70, 0x69, 0xaa, 0x02, 0x13, 0x4d, 0x61, 0x67, 0x69, 0x63, 0x4c, 0x65, 0x61,
+	0x70, 0x2e, 0x4c, 0x65, 0x61, 0x70, 0x42, 0x72, 0x75, 0x73, 0x68, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2241,27 +2278,23 @@ var file_leap_brush_api_proto_depIdxs = []int32{
 	12, // 28: leapbrush.UpdateDeviceRequest.space_info:type_name -> leapbrush.SpaceInfoProto
 	16, // 29: leapbrush.UpdateDeviceRequest.brush_stroke_add:type_name -> leapbrush.BrushStrokeAddRequest
 	17, // 30: leapbrush.UpdateDeviceRequest.brush_stroke_remove:type_name -> leapbrush.BrushStrokeRemoveRequest
-	20, // 31: leapbrush.UpdateDeviceRequest.query_users_request:type_name -> leapbrush.QueryUsersRequest
-	18, // 32: leapbrush.UpdateDeviceRequest.external_model_add:type_name -> leapbrush.ExternalModelAddRequest
-	19, // 33: leapbrush.UpdateDeviceRequest.external_model_remove:type_name -> leapbrush.ExternalModelRemoveRequest
-	21, // 34: leapbrush.UpdateDeviceResponse.query_users_response:type_name -> leapbrush.QueryUsersResponse
-	20, // 35: leapbrush.RpcRequest.query_users_request:type_name -> leapbrush.QueryUsersRequest
-	21, // 36: leapbrush.RpcResponse.query_users_response:type_name -> leapbrush.QueryUsersResponse
-	12, // 37: leapbrush.QueryUsersResponse.Result.space_info:type_name -> leapbrush.SpaceInfoProto
-	2,  // 38: leapbrush.QueryUsersResponse.Result.device_type:type_name -> leapbrush.UserStateProto.DeviceType
-	15, // 39: leapbrush.LeapBrushApi.RegisterAndListen:input_type -> leapbrush.RegisterDeviceRequest
-	24, // 40: leapbrush.LeapBrushApi.UpdateDevice:input_type -> leapbrush.UpdateDeviceRequest
-	24, // 41: leapbrush.LeapBrushApi.UpdateDeviceStream:input_type -> leapbrush.UpdateDeviceRequest
-	26, // 42: leapbrush.LeapBrushApi.Rpc:input_type -> leapbrush.RpcRequest
-	23, // 43: leapbrush.LeapBrushApi.RegisterAndListen:output_type -> leapbrush.ServerStateResponse
-	25, // 44: leapbrush.LeapBrushApi.UpdateDevice:output_type -> leapbrush.UpdateDeviceResponse
-	25, // 45: leapbrush.LeapBrushApi.UpdateDeviceStream:output_type -> leapbrush.UpdateDeviceResponse
-	27, // 46: leapbrush.LeapBrushApi.Rpc:output_type -> leapbrush.RpcResponse
-	43, // [43:47] is the sub-list for method output_type
-	39, // [39:43] is the sub-list for method input_type
-	39, // [39:39] is the sub-list for extension type_name
-	39, // [39:39] is the sub-list for extension extendee
-	0,  // [0:39] is the sub-list for field type_name
+	18, // 31: leapbrush.UpdateDeviceRequest.external_model_add:type_name -> leapbrush.ExternalModelAddRequest
+	19, // 32: leapbrush.UpdateDeviceRequest.external_model_remove:type_name -> leapbrush.ExternalModelRemoveRequest
+	20, // 33: leapbrush.RpcRequest.query_users_request:type_name -> leapbrush.QueryUsersRequest
+	21, // 34: leapbrush.RpcResponse.query_users_response:type_name -> leapbrush.QueryUsersResponse
+	12, // 35: leapbrush.QueryUsersResponse.Result.space_info:type_name -> leapbrush.SpaceInfoProto
+	2,  // 36: leapbrush.QueryUsersResponse.Result.device_type:type_name -> leapbrush.UserStateProto.DeviceType
+	15, // 37: leapbrush.LeapBrushApi.RegisterAndListen:input_type -> leapbrush.RegisterDeviceRequest
+	24, // 38: leapbrush.LeapBrushApi.UpdateDeviceStream:input_type -> leapbrush.UpdateDeviceRequest
+	26, // 39: leapbrush.LeapBrushApi.Rpc:input_type -> leapbrush.RpcRequest
+	23, // 40: leapbrush.LeapBrushApi.RegisterAndListen:output_type -> leapbrush.ServerStateResponse
+	25, // 41: leapbrush.LeapBrushApi.UpdateDeviceStream:output_type -> leapbrush.UpdateDeviceResponse
+	27, // 42: leapbrush.LeapBrushApi.Rpc:output_type -> leapbrush.RpcResponse
+	40, // [40:43] is the sub-list for method output_type
+	37, // [37:40] is the sub-list for method input_type
+	37, // [37:37] is the sub-list for extension type_name
+	37, // [37:37] is the sub-list for extension extendee
+	0,  // [0:37] is the sub-list for field type_name
 }
 
 func init() { file_leap_brush_api_proto_init() }

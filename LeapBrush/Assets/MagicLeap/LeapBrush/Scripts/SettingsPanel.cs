@@ -5,6 +5,9 @@ using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// The settings panel UI.
+    /// </summary>
     public class SettingsPanel : MonoBehaviour
     {
         public bool IsShowHeadsets => _showHeadsetsToggle.IsOn;
@@ -107,6 +110,19 @@ namespace MagicLeap.LeapBrush
             _delayedButtonHandler = gameObject.AddComponent<DelayedButtonHandler>();
         }
 
+        public void Init()
+        {
+            // TODO: it would be cleaner to create a settings manager class that was separate
+            // from UI logic
+
+            _showControllersToggle.On();
+
+#if !UNITY_ANDROID
+            _showHeadsetsToggle.On();
+            _showSpaceMeshToggle.On();
+#endif
+        }
+
         private void Start()
         {
             _showSpatialAnchorsToggle.Events.On.AddListener(OnToggleShowAnchors);
@@ -130,17 +146,12 @@ namespace MagicLeap.LeapBrush
             _settingsBackButton.Events.OnSelect.AddListener(OnSettingsBackButtonSelected);
             _clearAllContentButton.Events.OnSelect.AddListener(OnClearAllContentButtonSelected);
 
-            _showControllersToggle.On();
-
             _joinSessionButton.Events.OnSelect.AddListener(OnJoinSessionButtonSelected);
             _leaveSessionButton.Events.OnSelect.AddListener(OnLeaveSessionButtonSelected);
             _leaveSessionButton.gameObject.SetActive(false);
 
 #if UNITY_ANDROID
             _showFloorGridToggle.gameObject.SetActive(false);
-#else
-            _showHeadsetsToggle.On();
-            _showSpaceMeshToggle.On();
 #endif
 
 #if UNITY_ANDROID && !UNITY_EDITOR

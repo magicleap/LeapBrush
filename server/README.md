@@ -2,10 +2,16 @@
 
 ## Run
 
+### Mac, Linux
+
 - `go run cmd/leapbrush-server/*.go`
 
     - `--help` for usage
     - Add `--verbose` for verbose logging
+
+### Windows PowerShell
+
+- `Start-Process -Wait -NoNewWindow -FilePath "C:\Program Files\Go\bin\go.exe" -ArgumentList (@('run') + @(get-item cmd\leapbrush-server\*.go))`
 
 ## Run the test client
 

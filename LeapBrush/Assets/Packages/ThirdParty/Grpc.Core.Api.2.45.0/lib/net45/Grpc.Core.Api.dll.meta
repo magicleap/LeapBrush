@@ -12,6 +12,24 @@ PluginImporter:
   validateReferences: 1
   platformData:
   - first:
+      : Any
+    second:
+      enabled: 0
+      settings:
+        Exclude Android: 1
+        Exclude Editor: 0
+        Exclude Linux64: 0
+        Exclude OSXUniversal: 0
+        Exclude Win: 0
+        Exclude Win64: 0
+  - first:
+      Android: Android
+    second:
+      enabled: 0
+      settings:
+        AndroidSharedLibraryType: Executable
+        CPU: ARMv7
+  - first:
       Any: 
     second:
       enabled: 1
@@ -19,9 +37,35 @@ PluginImporter:
   - first:
       Editor: Editor
     second:
-      enabled: 0
+      enabled: 1
       settings:
+        CPU: AnyCPU
         DefaultValueInitialized: true
+        OS: AnyOS
+  - first:
+      Standalone: Linux64
+    second:
+      enabled: 1
+      settings:
+        CPU: x86_64
+  - first:
+      Standalone: OSXUniversal
+    second:
+      enabled: 1
+      settings:
+        CPU: None
+  - first:
+      Standalone: Win
+    second:
+      enabled: 1
+      settings:
+        CPU: x86
+  - first:
+      Standalone: Win64
+    second:
+      enabled: 1
+      settings:
+        CPU: x86_64
   - first:
       Windows Store Apps: WindowsStoreApps
     second:
@@ -31,3 +75,9 @@ PluginImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+
+# In accordance with Item 4.b of the Apache License 2.0, Magic Leap,
+# Inc. provides the following prominent notice that as of 03/20/2023
+# Magic Leap, Inc. modified Grpc.Core.Api.2.45 as it appears within
+# this distribution so as to remove Android platform for Unity within
+# Grpc.Core.Api.2.45.0/lib/net45/Grpc.Core.Api.dll.meta.

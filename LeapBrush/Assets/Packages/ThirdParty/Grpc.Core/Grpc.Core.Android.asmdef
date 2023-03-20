@@ -1,0 +1,24 @@
+{
+    "name": "Grpc.Core.Android",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b1b91992b76b04135b6078b8fd6607a6"
+    ],
+    "includePlatforms": [
+        "Android"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "Unity",
+            "expression": "0",
+            "define": "NET45"
+        }
+    ],
+    "noEngineReferences": false
+}

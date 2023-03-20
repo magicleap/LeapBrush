@@ -3,11 +3,14 @@ using System.Text;
 using MagicLeap.DesignToolkit.Actions;
 using MagicLeap.DesignToolkit.Keyboard;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// UI Panel allowing the user to select their name and confirm the space to use before
+    /// continuing on to drawing.
+    /// </summary>
     public class StartPanel : MonoBehaviour
     {
         public event Action OnContinueSelected;

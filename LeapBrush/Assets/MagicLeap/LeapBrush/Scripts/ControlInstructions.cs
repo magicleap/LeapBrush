@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// UI attached to the user's Controller pose to give them instructions about how to use
+    /// each button, the touchpad, etc. Dynamically changes based on context.
+    /// </summary>
     public class ControlInstructions : MonoBehaviour
     {
         [Serializable]

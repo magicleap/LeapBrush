@@ -1,0 +1,10 @@
+The android-x64 variant in this dir was built manually using the following (grpc project at git tag v1.45.0)
+
+cd third_party/grpc/src/csharp/experimental
+
+export ANDROID_SDK_PATH=/path/to/AndroidSDK
+export ANDROID_NDK_PATH="$ANDROID_SDK_PATH/ndk/24.0.8215888"
+export ANDROID_SDK_CMAKE="$ANDROID_SDK_PATH/cmake/3.22.1/bin/cmake"
+export ANDROID_ABI=x86_64
+
+./build_native_ext_for_android.sh

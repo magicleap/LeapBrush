@@ -1,4 +1,4 @@
-#if UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN
+#if UNITY_STANDALONE_OSX
 #define ENABLE_USD
 #endif
 
@@ -28,7 +28,7 @@ namespace MagicLeap.LeapBrush
             }
 #endif
 
-#if UNITY_ANDROID || UNITY_STANDALONE_LINUX
+#if UNITY_ANDROID || UNITY_STANDALONE_LINUX || UNITY_STANDALONE_WIN
             if (GUILayout.Button("Export converted prefab as UnityBundles..."))
             {
                 HandleExportPrefabAsUnityBundles(spaceMeshManager);
@@ -194,6 +194,8 @@ namespace MagicLeap.LeapBrush
             BuildBundleForPlatform(BuildTarget.Android, usdPath, ConvertedPrefabName);
 #elif UNITY_STANDALONE_LINUX
             BuildBundleForPlatform(BuildTarget.StandaloneLinux64, usdPath, ConvertedPrefabName);
+#elif UNITY_STANDALONE_WIN
+            BuildBundleForPlatform(BuildTarget.StandaloneWindows64, usdPath, ConvertedPrefabName);
 #else
             throw new Exception("Unexpected platform");
 #endif
@@ -210,6 +212,9 @@ namespace MagicLeap.LeapBrush
                     break;
                 case BuildTarget.StandaloneLinux64:
                     bundleExtension = SpaceMeshManager.Linux64BundleExtension;
+                    break;
+                case BuildTarget.StandaloneWindows64:
+                    bundleExtension = SpaceMeshManager.Windows64BundleExtension;
                     break;
                 default:
                     throw new Exception("Unexpected build target " + buildTarget);

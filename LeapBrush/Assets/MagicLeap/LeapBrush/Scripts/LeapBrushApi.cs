@@ -90,33 +90,28 @@ namespace MagicLeap.LeapBrush {
             "YWxfbW9kZWxfYWRkGAQgAygLMiIubGVhcGJydXNoLkV4dGVybmFsTW9kZWxB",
             "ZGRSZXF1ZXN0EkQKFWV4dGVybmFsX21vZGVsX3JlbW92ZRgFIAMoCzIlLmxl",
             "YXBicnVzaC5FeHRlcm5hbE1vZGVsUmVtb3ZlUmVxdWVzdBIvCgtzZXJ2ZXJf",
-            "aW5mbxgGIAEoCzIaLmxlYXBicnVzaC5TZXJ2ZXJJbmZvUHJvdG8ixAMKE1Vw",
+            "aW5mbxgGIAEoCzIaLmxlYXBicnVzaC5TZXJ2ZXJJbmZvUHJvdG8ihQMKE1Vw",
             "ZGF0ZURldmljZVJlcXVlc3QSLQoKdXNlcl9zdGF0ZRgBIAEoCzIZLmxlYXBi",
             "cnVzaC5Vc2VyU3RhdGVQcm90bxItCgpzcGFjZV9pbmZvGAIgASgLMhkubGVh",
             "cGJydXNoLlNwYWNlSW5mb1Byb3RvEgwKBGVjaG8YAyABKAgSOgoQYnJ1c2hf",
             "c3Ryb2tlX2FkZBgEIAEoCzIgLmxlYXBicnVzaC5CcnVzaFN0cm9rZUFkZFJl",
             "cXVlc3QSQAoTYnJ1c2hfc3Ryb2tlX3JlbW92ZRgFIAEoCzIjLmxlYXBicnVz",
-            "aC5CcnVzaFN0cm9rZVJlbW92ZVJlcXVlc3QSPQoTcXVlcnlfdXNlcnNfcmVx",
-            "dWVzdBgGIAEoCzIcLmxlYXBicnVzaC5RdWVyeVVzZXJzUmVxdWVzdEICGAES",
-            "PgoSZXh0ZXJuYWxfbW9kZWxfYWRkGAcgASgLMiIubGVhcGJydXNoLkV4dGVy",
-            "bmFsTW9kZWxBZGRSZXF1ZXN0EkQKFWV4dGVybmFsX21vZGVsX3JlbW92ZRgI",
-            "IAEoCzIlLmxlYXBicnVzaC5FeHRlcm5hbE1vZGVsUmVtb3ZlUmVxdWVzdCJX",
-            "ChRVcGRhdGVEZXZpY2VSZXNwb25zZRI/ChRxdWVyeV91c2Vyc19yZXNwb25z",
-            "ZRgBIAEoCzIdLmxlYXBicnVzaC5RdWVyeVVzZXJzUmVzcG9uc2VCAhgBIloK",
-            "ClJwY1JlcXVlc3QSEQoJdXNlcl9uYW1lGAEgASgJEjkKE3F1ZXJ5X3VzZXJz",
-            "X3JlcXVlc3QYAiABKAsyHC5sZWFwYnJ1c2guUXVlcnlVc2Vyc1JlcXVlc3Qi",
-            "SgoLUnBjUmVzcG9uc2USOwoUcXVlcnlfdXNlcnNfcmVzcG9uc2UYASABKAsy",
-            "HS5sZWFwYnJ1c2guUXVlcnlVc2Vyc1Jlc3BvbnNlMtICCgxMZWFwQnJ1c2hB",
-            "cGkSWQoRUmVnaXN0ZXJBbmRMaXN0ZW4SIC5sZWFwYnJ1c2guUmVnaXN0ZXJE",
-            "ZXZpY2VSZXF1ZXN0Gh4ubGVhcGJydXNoLlNlcnZlclN0YXRlUmVzcG9uc2Ui",
-            "ADABElQKDFVwZGF0ZURldmljZRIeLmxlYXBicnVzaC5VcGRhdGVEZXZpY2VS",
-            "ZXF1ZXN0Gh8ubGVhcGJydXNoLlVwZGF0ZURldmljZVJlc3BvbnNlIgOIAgES",
-            "WQoSVXBkYXRlRGV2aWNlU3RyZWFtEh4ubGVhcGJydXNoLlVwZGF0ZURldmlj",
-            "ZVJlcXVlc3QaHy5sZWFwYnJ1c2guVXBkYXRlRGV2aWNlUmVzcG9uc2UiACgB",
-            "EjYKA1JwYxIVLmxlYXBicnVzaC5ScGNSZXF1ZXN0GhYubGVhcGJydXNoLlJw",
-            "Y1Jlc3BvbnNlIgBCSFowZ2l0bGFiLm1hZ2ljbGVhcC5pby9naGF6ZW4vbGVh",
-            "cC1icnVzaC9zZXJ2ZXIvYXBpqgITTWFnaWNMZWFwLkxlYXBCcnVzaGIGcHJv",
-            "dG8z"));
+            "aC5CcnVzaFN0cm9rZVJlbW92ZVJlcXVlc3QSPgoSZXh0ZXJuYWxfbW9kZWxf",
+            "YWRkGAcgASgLMiIubGVhcGJydXNoLkV4dGVybmFsTW9kZWxBZGRSZXF1ZXN0",
+            "EkQKFWV4dGVybmFsX21vZGVsX3JlbW92ZRgIIAEoCzIlLmxlYXBicnVzaC5F",
+            "eHRlcm5hbE1vZGVsUmVtb3ZlUmVxdWVzdCIWChRVcGRhdGVEZXZpY2VSZXNw",
+            "b25zZSJaCgpScGNSZXF1ZXN0EhEKCXVzZXJfbmFtZRgBIAEoCRI5ChNxdWVy",
+            "eV91c2Vyc19yZXF1ZXN0GAIgASgLMhwubGVhcGJydXNoLlF1ZXJ5VXNlcnNS",
+            "ZXF1ZXN0IkoKC1JwY1Jlc3BvbnNlEjsKFHF1ZXJ5X3VzZXJzX3Jlc3BvbnNl",
+            "GAEgASgLMh0ubGVhcGJydXNoLlF1ZXJ5VXNlcnNSZXNwb25zZTL8AQoMTGVh",
+            "cEJydXNoQXBpElkKEVJlZ2lzdGVyQW5kTGlzdGVuEiAubGVhcGJydXNoLlJl",
+            "Z2lzdGVyRGV2aWNlUmVxdWVzdBoeLmxlYXBicnVzaC5TZXJ2ZXJTdGF0ZVJl",
+            "c3BvbnNlIgAwARJZChJVcGRhdGVEZXZpY2VTdHJlYW0SHi5sZWFwYnJ1c2gu",
+            "VXBkYXRlRGV2aWNlUmVxdWVzdBofLmxlYXBicnVzaC5VcGRhdGVEZXZpY2VS",
+            "ZXNwb25zZSIAKAESNgoDUnBjEhUubGVhcGJydXNoLlJwY1JlcXVlc3QaFi5s",
+            "ZWFwYnJ1c2guUnBjUmVzcG9uc2UiAEJIWjBnaXRsYWIubWFnaWNsZWFwLmlv",
+            "L2doYXplbi9sZWFwLWJydXNoL3NlcnZlci9hcGmqAhNNYWdpY0xlYXAuTGVh",
+            "cEJydXNoYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -139,8 +134,8 @@ namespace MagicLeap.LeapBrush {
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.QueryUsersResponse), global::MagicLeap.LeapBrush.QueryUsersResponse.Parser, new[]{ "Results" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.QueryUsersResponse.Types.Result), global::MagicLeap.LeapBrush.QueryUsersResponse.Types.Result.Parser, new[]{ "UserName", "SpaceInfo", "UserDisplayName", "DeviceType" }, new[]{ "DeviceType" }, null, null, null)}),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.ServerInfoProto), global::MagicLeap.LeapBrush.ServerInfoProto.Parser, new[]{ "ServerVersion", "MinAppVersion" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.ServerStateResponse), global::MagicLeap.LeapBrush.ServerStateResponse.Parser, new[]{ "UserState", "BrushStrokeAdd", "BrushStrokeRemove", "ExternalModelAdd", "ExternalModelRemove", "ServerInfo" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.UpdateDeviceRequest), global::MagicLeap.LeapBrush.UpdateDeviceRequest.Parser, new[]{ "UserState", "SpaceInfo", "Echo", "BrushStrokeAdd", "BrushStrokeRemove", "QueryUsersRequest", "ExternalModelAdd", "ExternalModelRemove" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.UpdateDeviceResponse), global::MagicLeap.LeapBrush.UpdateDeviceResponse.Parser, new[]{ "QueryUsersResponse" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.UpdateDeviceRequest), global::MagicLeap.LeapBrush.UpdateDeviceRequest.Parser, new[]{ "UserState", "SpaceInfo", "Echo", "BrushStrokeAdd", "BrushStrokeRemove", "ExternalModelAdd", "ExternalModelRemove" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.UpdateDeviceResponse), global::MagicLeap.LeapBrush.UpdateDeviceResponse.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.RpcRequest), global::MagicLeap.LeapBrush.RpcRequest.Parser, new[]{ "UserName", "QueryUsersRequest" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::MagicLeap.LeapBrush.RpcResponse), global::MagicLeap.LeapBrush.RpcResponse.Parser, new[]{ "QueryUsersResponse" }, null, null, null, null)
           }));
@@ -1549,6 +1544,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "user_name" field.</summary>
     public const int UserNameFieldNumber = 1;
     private string userName_ = "";
+    /// <summary>
+    /// User identifier
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string UserName {
@@ -1561,6 +1559,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "anchor_id" field.</summary>
     public const int AnchorIdFieldNumber = 2;
     private string anchorId_ = "";
+    /// <summary>
+    /// Anchor id for the spatial anchor closest to the user
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string AnchorId {
@@ -1573,6 +1574,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "head_pose" field.</summary>
     public const int HeadPoseFieldNumber = 5;
     private global::MagicLeap.LeapBrush.PoseProto headPose_;
+    /// <summary>
+    /// Pose for the user's Headset relative to the closest spatial anchor
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.PoseProto HeadPose {
@@ -1585,6 +1589,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "control_pose" field.</summary>
     public const int ControlPoseFieldNumber = 6;
     private global::MagicLeap.LeapBrush.PoseProto controlPose_;
+    /// <summary>
+    /// Pose for the user's Controller relative to the closest spatial anchor
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.PoseProto ControlPose {
@@ -1597,6 +1604,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "tool_state" field.</summary>
     public const int ToolStateFieldNumber = 7;
     private global::MagicLeap.LeapBrush.UserStateProto.Types.ToolState toolState_ = global::MagicLeap.LeapBrush.UserStateProto.Types.ToolState.Menu;
+    /// <summary>
+    /// Current tool being used by the user
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.UserStateProto.Types.ToolState ToolState {
@@ -1609,6 +1619,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "tool_color_rgb" field.</summary>
     public const int ToolColorRgbFieldNumber = 8;
     private uint toolColorRgb_;
+    /// <summary>
+    /// The color of the tool in use
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public uint ToolColorRgb {
@@ -1621,6 +1634,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "tool_length" field.</summary>
     public const int ToolLengthFieldNumber = 9;
     private float toolLength_;
+    /// <summary>
+    /// The length in meters of the tool being used (e.g. the length of the laser pointer)
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public float ToolLength {
@@ -1633,6 +1649,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "user_display_name" field.</summary>
     public const int UserDisplayNameFieldNumber = 10;
     private string userDisplayName_ = "";
+    /// <summary>
+    /// The user's display name
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string UserDisplayName {
@@ -1645,6 +1664,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "device_type" field.</summary>
     public const int DeviceTypeFieldNumber = 11;
     private global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType deviceType_;
+    /// <summary>
+    /// The type of device that this client is running on
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType DeviceType {
@@ -1670,6 +1692,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "headset_battery" field.</summary>
     public const int HeadsetBatteryFieldNumber = 12;
     private global::MagicLeap.LeapBrush.BatteryStatusProto headsetBattery_;
+    /// <summary>
+    /// The status of the headset or companion computer's battery
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.BatteryStatusProto HeadsetBattery {
@@ -2076,6 +2101,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// AnchorProto contains an anchor's id and metadata
+  /// </summary>
   public sealed partial class AnchorProto : pb::IMessage<AnchorProto>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -2311,6 +2339,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// SpaceInfoProto contains information about the space that the user is localized to
+  /// </summary>
   public sealed partial class SpaceInfoProto : pb::IMessage<SpaceInfoProto>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -2365,6 +2396,9 @@ namespace MagicLeap.LeapBrush {
     private static readonly pb::FieldCodec<global::MagicLeap.LeapBrush.AnchorProto> _repeated_anchor_codec
         = pb::FieldCodec.ForMessage(26, global::MagicLeap.LeapBrush.AnchorProto.Parser);
     private readonly pbc::RepeatedField<global::MagicLeap.LeapBrush.AnchorProto> anchor_ = new pbc::RepeatedField<global::MagicLeap.LeapBrush.AnchorProto>();
+    /// <summary>
+    /// List of anchors currently found by the user.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::MagicLeap.LeapBrush.AnchorProto> Anchor {
@@ -2374,6 +2408,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "target_space_origin" field.</summary>
     public const int TargetSpaceOriginFieldNumber = 4;
     private global::MagicLeap.LeapBrush.PoseProto targetSpaceOrigin_;
+    /// <summary>
+    /// The pose of the space origin for the space localized to by the user. The RGB mesh from ARCloud uses this origin.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.PoseProto TargetSpaceOrigin {
@@ -2386,6 +2423,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "space_name" field.</summary>
     public const int SpaceNameFieldNumber = 5;
     private string spaceName_ = "";
+    /// <summary>
+    /// The name of the space
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string SpaceName {
@@ -2398,6 +2438,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "space_id" field.</summary>
     public const int SpaceIdFieldNumber = 6;
     private string spaceId_ = "";
+    /// <summary>
+    /// The identifier of the space
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string SpaceId {
@@ -2410,6 +2453,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "mapping_mode" field.</summary>
     public const int MappingModeFieldNumber = 7;
     private global::MagicLeap.LeapBrush.SpaceInfoProto.Types.MappingMode mappingMode_ = global::MagicLeap.LeapBrush.SpaceInfoProto.Types.MappingMode.OnDevice;
+    /// <summary>
+    /// The current mapping mode: ARCloud or OnDevice
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.SpaceInfoProto.Types.MappingMode MappingMode {
@@ -2422,6 +2468,10 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "using_imported_anchors" field.</summary>
     public const int UsingImportedAnchorsFieldNumber = 8;
     private bool usingImportedAnchors_;
+    /// <summary>
+    /// Whether the client is using imported anchors vs. real found spatial anchors. In the case of imported anchors,
+    /// the uses is remotely joining another session.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool UsingImportedAnchors {
@@ -2696,6 +2746,10 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// BrushStrokeProto contains data for a brush stroke, consisting of metadata and a list of pose transforms for
+  /// the points that make up the brush stroke
+  /// </summary>
   public sealed partial class BrushStrokeProto : pb::IMessage<BrushStrokeProto>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -2751,6 +2805,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "id" field.</summary>
     public const int IdFieldNumber = 1;
     private string id_ = "";
+    /// <summary>
+    /// Identifier for this brush stroke instance
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Id {
@@ -2763,6 +2820,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "user_name" field.</summary>
     public const int UserNameFieldNumber = 2;
     private string userName_ = "";
+    /// <summary>
+    /// The user identifier for the creator of this brush stroke
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string UserName {
@@ -2775,6 +2835,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "anchor_id" field.</summary>
     public const int AnchorIdFieldNumber = 3;
     private string anchorId_ = "";
+    /// <summary>
+    /// The identifier for the spatial anchor closest to this brush stroke when it was created
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string AnchorId {
@@ -2787,6 +2850,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "type" field.</summary>
     public const int TypeFieldNumber = 7;
     private global::MagicLeap.LeapBrush.BrushStrokeProto.Types.BrushType type_ = global::MagicLeap.LeapBrush.BrushStrokeProto.Types.BrushType.Scribble;
+    /// <summary>
+    /// The type of brush stroke
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.BrushStrokeProto.Types.BrushType Type {
@@ -2801,6 +2867,10 @@ namespace MagicLeap.LeapBrush {
     private static readonly pb::FieldCodec<global::MagicLeap.LeapBrush.PoseProto> _repeated_brushPose_codec
         = pb::FieldCodec.ForMessage(34, global::MagicLeap.LeapBrush.PoseProto.Parser);
     private readonly pbc::RepeatedField<global::MagicLeap.LeapBrush.PoseProto> brushPose_ = new pbc::RepeatedField<global::MagicLeap.LeapBrush.PoseProto>();
+    /// <summary>
+    /// A list of poses that make up the points of this brush stroke (or the poses being modified as part of an
+    /// incremental update).
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::MagicLeap.LeapBrush.PoseProto> BrushPose {
@@ -2810,6 +2880,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "start_index" field.</summary>
     public const int StartIndexFieldNumber = 5;
     private int startIndex_;
+    /// <summary>
+    /// The start index for the current brush pose list, in the case of incremental updates to an existing brush stroke
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int StartIndex {
@@ -2822,6 +2895,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "stroke_color_rgb" field.</summary>
     public const int StrokeColorRgbFieldNumber = 6;
     private uint strokeColorRgb_;
+    /// <summary>
+    /// The color of the brush stroke (optional for incremental updates)
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public uint StrokeColorRgb {
@@ -2834,6 +2910,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "fill_color_rgba" field.</summary>
     public const int FillColorRgbaFieldNumber = 8;
     private uint fillColorRgba_;
+    /// <summary>
+    /// The fill color of the brush stroke (optional for incremental updates)
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public uint FillColorRgba {
@@ -2846,6 +2925,10 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "fill_dimmer_a" field.</summary>
     public const int FillDimmerAFieldNumber = 9;
     private uint fillDimmerA_;
+    /// <summary>
+    /// The alpha value between 0 and 255 for the segmented dimmer fill of this brush stroke (optional for incremental
+    /// updates)
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public uint FillDimmerA {
@@ -3183,6 +3266,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// ExternalModelProto represents a new or updated 3D model
+  /// </summary>
   public sealed partial class ExternalModelProto : pb::IMessage<ExternalModelProto>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -3234,6 +3320,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "id" field.</summary>
     public const int IdFieldNumber = 1;
     private string id_ = "";
+    /// <summary>
+    /// The identifier of this 3D model instance.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Id {
@@ -3246,6 +3335,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "file_name" field.</summary>
     public const int FileNameFieldNumber = 2;
     private string fileName_ = "";
+    /// <summary>
+    /// The file name for this 3D model.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string FileName {
@@ -3258,6 +3350,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "anchor_id" field.</summary>
     public const int AnchorIdFieldNumber = 3;
     private string anchorId_ = "";
+    /// <summary>
+    /// The anchor id for the closest spatial anchor when this 3D model was created.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string AnchorId {
@@ -3270,6 +3365,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "transform" field.</summary>
     public const int TransformFieldNumber = 6;
     private global::MagicLeap.LeapBrush.TransformProto transform_;
+    /// <summary>
+    /// The current transform of this 3D model relative to the provided spatial anchor.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.TransformProto Transform {
@@ -3282,6 +3380,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "modified_by_user_name" field.</summary>
     public const int ModifiedByUserNameFieldNumber = 5;
     private string modifiedByUserName_ = "";
+    /// <summary>
+    /// The last user identifier to modify this 3D model.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ModifiedByUserName {
@@ -3529,6 +3630,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// RegisterDeviceRequest contains the initialization data for a device registering for updates with the server
+  /// </summary>
   public sealed partial class RegisterDeviceRequest : pb::IMessage<RegisterDeviceRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -3577,6 +3681,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "user_name" field.</summary>
     public const int UserNameFieldNumber = 1;
     private string userName_ = "";
+    /// <summary>
+    /// The user identifier
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string UserName {
@@ -3589,6 +3696,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "app_version" field.</summary>
     public const int AppVersionFieldNumber = 2;
     private string appVersion_ = "";
+    /// <summary>
+    /// The version string for the client
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string AppVersion {
@@ -3755,6 +3865,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// BrushStrokeAddRequest represents a single brush stroke to be added or modified
+  /// </summary>
   public sealed partial class BrushStrokeAddRequest : pb::IMessage<BrushStrokeAddRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -3953,6 +4066,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// BrushStrokeRemoveRequest identifies a single brush stroke to be removed
+  /// </summary>
   public sealed partial class BrushStrokeRemoveRequest : pb::IMessage<BrushStrokeRemoveRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -4179,6 +4295,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// ExternalModelAddRequest represents a single 3D model to be added or modified
+  /// </summary>
   public sealed partial class ExternalModelAddRequest : pb::IMessage<ExternalModelAddRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -4377,6 +4496,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// ExternalModelRemoveRequest identifies a single 3D model to be removed
+  /// </summary>
   public sealed partial class ExternalModelRemoveRequest : pb::IMessage<ExternalModelRemoveRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -4603,6 +4725,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// QueryUsersRequest contains request parameters for an rpc to list users connected to the server
+  /// </summary>
   public sealed partial class QueryUsersRequest : pb::IMessage<QueryUsersRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -4755,6 +4880,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// QueryUsersResponse contains the results list for currently connected users.
+  /// </summary>
   public sealed partial class QueryUsersResponse : pb::IMessage<QueryUsersResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -4804,6 +4932,9 @@ namespace MagicLeap.LeapBrush {
     private static readonly pb::FieldCodec<global::MagicLeap.LeapBrush.QueryUsersResponse.Types.Result> _repeated_results_codec
         = pb::FieldCodec.ForMessage(10, global::MagicLeap.LeapBrush.QueryUsersResponse.Types.Result.Parser);
     private readonly pbc::RepeatedField<global::MagicLeap.LeapBrush.QueryUsersResponse.Types.Result> results_ = new pbc::RepeatedField<global::MagicLeap.LeapBrush.QueryUsersResponse.Types.Result>();
+    /// <summary>
+    /// List of users connected to the server.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::MagicLeap.LeapBrush.QueryUsersResponse.Types.Result> Results {
@@ -4988,6 +5119,9 @@ namespace MagicLeap.LeapBrush {
         /// <summary>Field number for the "user_name" field.</summary>
         public const int UserNameFieldNumber = 1;
         private string userName_ = "";
+        /// <summary>
+        /// User identifier
+        /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public string UserName {
@@ -5000,6 +5134,9 @@ namespace MagicLeap.LeapBrush {
         /// <summary>Field number for the "space_info" field.</summary>
         public const int SpaceInfoFieldNumber = 2;
         private global::MagicLeap.LeapBrush.SpaceInfoProto spaceInfo_;
+        /// <summary>
+        /// The space information for this user.
+        /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public global::MagicLeap.LeapBrush.SpaceInfoProto SpaceInfo {
@@ -5012,6 +5149,9 @@ namespace MagicLeap.LeapBrush {
         /// <summary>Field number for the "user_display_name" field.</summary>
         public const int UserDisplayNameFieldNumber = 3;
         private string userDisplayName_ = "";
+        /// <summary>
+        /// The display name for this user.
+        /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public string UserDisplayName {
@@ -5024,6 +5164,9 @@ namespace MagicLeap.LeapBrush {
         /// <summary>Field number for the "device_type" field.</summary>
         public const int DeviceTypeFieldNumber = 4;
         private global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType deviceType_;
+        /// <summary>
+        /// The device type for this user.
+        /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public global::MagicLeap.LeapBrush.UserStateProto.Types.DeviceType DeviceType {
@@ -5265,6 +5408,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// ServerInfoProto contians information about the server
+  /// </summary>
   public sealed partial class ServerInfoProto : pb::IMessage<ServerInfoProto>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -5313,6 +5459,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "server_version" field.</summary>
     public const int ServerVersionFieldNumber = 1;
     private string serverVersion_ = "";
+    /// <summary>
+    /// The version string for the server
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string ServerVersion {
@@ -5325,6 +5474,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "min_app_version" field.</summary>
     public const int MinAppVersionFieldNumber = 2;
     private string minAppVersion_ = "";
+    /// <summary>
+    /// The minimum version string required for connecting to this server.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string MinAppVersion {
@@ -5491,6 +5643,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// ServerStateResponse contains a single response from the server containing state updates.
+  /// </summary>
   public sealed partial class ServerStateResponse : pb::IMessage<ServerStateResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -5545,6 +5700,9 @@ namespace MagicLeap.LeapBrush {
     private static readonly pb::FieldCodec<global::MagicLeap.LeapBrush.UserStateProto> _repeated_userState_codec
         = pb::FieldCodec.ForMessage(10, global::MagicLeap.LeapBrush.UserStateProto.Parser);
     private readonly pbc::RepeatedField<global::MagicLeap.LeapBrush.UserStateProto> userState_ = new pbc::RepeatedField<global::MagicLeap.LeapBrush.UserStateProto>();
+    /// <summary>
+    /// Optional list of user states that have changed since last update
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::MagicLeap.LeapBrush.UserStateProto> UserState {
@@ -5556,6 +5714,9 @@ namespace MagicLeap.LeapBrush {
     private static readonly pb::FieldCodec<global::MagicLeap.LeapBrush.BrushStrokeAddRequest> _repeated_brushStrokeAdd_codec
         = pb::FieldCodec.ForMessage(18, global::MagicLeap.LeapBrush.BrushStrokeAddRequest.Parser);
     private readonly pbc::RepeatedField<global::MagicLeap.LeapBrush.BrushStrokeAddRequest> brushStrokeAdd_ = new pbc::RepeatedField<global::MagicLeap.LeapBrush.BrushStrokeAddRequest>();
+    /// <summary>
+    /// Optional list of brush strokes that have been added or modified since last update.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::MagicLeap.LeapBrush.BrushStrokeAddRequest> BrushStrokeAdd {
@@ -5567,6 +5728,9 @@ namespace MagicLeap.LeapBrush {
     private static readonly pb::FieldCodec<global::MagicLeap.LeapBrush.BrushStrokeRemoveRequest> _repeated_brushStrokeRemove_codec
         = pb::FieldCodec.ForMessage(26, global::MagicLeap.LeapBrush.BrushStrokeRemoveRequest.Parser);
     private readonly pbc::RepeatedField<global::MagicLeap.LeapBrush.BrushStrokeRemoveRequest> brushStrokeRemove_ = new pbc::RepeatedField<global::MagicLeap.LeapBrush.BrushStrokeRemoveRequest>();
+    /// <summary>
+    /// Optional list of brush strokes that have been removed since last update.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::MagicLeap.LeapBrush.BrushStrokeRemoveRequest> BrushStrokeRemove {
@@ -5578,6 +5742,9 @@ namespace MagicLeap.LeapBrush {
     private static readonly pb::FieldCodec<global::MagicLeap.LeapBrush.ExternalModelAddRequest> _repeated_externalModelAdd_codec
         = pb::FieldCodec.ForMessage(34, global::MagicLeap.LeapBrush.ExternalModelAddRequest.Parser);
     private readonly pbc::RepeatedField<global::MagicLeap.LeapBrush.ExternalModelAddRequest> externalModelAdd_ = new pbc::RepeatedField<global::MagicLeap.LeapBrush.ExternalModelAddRequest>();
+    /// <summary>
+    /// Optional list of 3D models that have been added or modified since last update.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::MagicLeap.LeapBrush.ExternalModelAddRequest> ExternalModelAdd {
@@ -5589,6 +5756,9 @@ namespace MagicLeap.LeapBrush {
     private static readonly pb::FieldCodec<global::MagicLeap.LeapBrush.ExternalModelRemoveRequest> _repeated_externalModelRemove_codec
         = pb::FieldCodec.ForMessage(42, global::MagicLeap.LeapBrush.ExternalModelRemoveRequest.Parser);
     private readonly pbc::RepeatedField<global::MagicLeap.LeapBrush.ExternalModelRemoveRequest> externalModelRemove_ = new pbc::RepeatedField<global::MagicLeap.LeapBrush.ExternalModelRemoveRequest>();
+    /// <summary>
+    /// Optional list of 3D models that have been removed since last update.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::MagicLeap.LeapBrush.ExternalModelRemoveRequest> ExternalModelRemove {
@@ -5598,6 +5768,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "server_info" field.</summary>
     public const int ServerInfoFieldNumber = 6;
     private global::MagicLeap.LeapBrush.ServerInfoProto serverInfo_;
+    /// <summary>
+    /// Optional information about the server
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.ServerInfoProto ServerInfo {
@@ -5819,6 +5992,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// UpdateDeviceRequest contains a single state update from a connected client
+  /// </summary>
   public sealed partial class UpdateDeviceRequest : pb::IMessage<UpdateDeviceRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -5858,7 +6034,6 @@ namespace MagicLeap.LeapBrush {
       echo_ = other.echo_;
       brushStrokeAdd_ = other.brushStrokeAdd_ != null ? other.brushStrokeAdd_.Clone() : null;
       brushStrokeRemove_ = other.brushStrokeRemove_ != null ? other.brushStrokeRemove_.Clone() : null;
-      queryUsersRequest_ = other.queryUsersRequest_ != null ? other.queryUsersRequest_.Clone() : null;
       externalModelAdd_ = other.externalModelAdd_ != null ? other.externalModelAdd_.Clone() : null;
       externalModelRemove_ = other.externalModelRemove_ != null ? other.externalModelRemove_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -5873,6 +6048,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "user_state" field.</summary>
     public const int UserStateFieldNumber = 1;
     private global::MagicLeap.LeapBrush.UserStateProto userState_;
+    /// <summary>
+    /// Optional updates to the users state if changed since last update.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.UserStateProto UserState {
@@ -5885,6 +6063,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "space_info" field.</summary>
     public const int SpaceInfoFieldNumber = 2;
     private global::MagicLeap.LeapBrush.SpaceInfoProto spaceInfo_;
+    /// <summary>
+    /// Optional updates to the users localized space if changed since last update.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.SpaceInfoProto SpaceInfo {
@@ -5897,6 +6078,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "echo" field.</summary>
     public const int EchoFieldNumber = 3;
     private bool echo_;
+    /// <summary>
+    /// Whether the client requests echoing of changes it makes (e.g. to test server round trips)
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Echo {
@@ -5909,6 +6093,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "brush_stroke_add" field.</summary>
     public const int BrushStrokeAddFieldNumber = 4;
     private global::MagicLeap.LeapBrush.BrushStrokeAddRequest brushStrokeAdd_;
+    /// <summary>
+    /// Optional information about a brush stroke information that was added or updated since last update.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.BrushStrokeAddRequest BrushStrokeAdd {
@@ -5921,6 +6108,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "brush_stroke_remove" field.</summary>
     public const int BrushStrokeRemoveFieldNumber = 5;
     private global::MagicLeap.LeapBrush.BrushStrokeRemoveRequest brushStrokeRemove_;
+    /// <summary>
+    /// Optional brush stroke information for a brush stroke that was removed since last update.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.BrushStrokeRemoveRequest BrushStrokeRemove {
@@ -5930,25 +6120,12 @@ namespace MagicLeap.LeapBrush {
       }
     }
 
-    /// <summary>Field number for the "query_users_request" field.</summary>
-    public const int QueryUsersRequestFieldNumber = 6;
-    private global::MagicLeap.LeapBrush.QueryUsersRequest queryUsersRequest_;
-    /// <summary>
-    /// Deprecated: Last used 2022-08-01-v1
-    /// </summary>
-    [global::System.ObsoleteAttribute]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::MagicLeap.LeapBrush.QueryUsersRequest QueryUsersRequest {
-      get { return queryUsersRequest_; }
-      set {
-        queryUsersRequest_ = value;
-      }
-    }
-
     /// <summary>Field number for the "external_model_add" field.</summary>
     public const int ExternalModelAddFieldNumber = 7;
     private global::MagicLeap.LeapBrush.ExternalModelAddRequest externalModelAdd_;
+    /// <summary>
+    /// Optional information about a 3D model that was added or updated since last update.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.ExternalModelAddRequest ExternalModelAdd {
@@ -5961,6 +6138,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "external_model_remove" field.</summary>
     public const int ExternalModelRemoveFieldNumber = 8;
     private global::MagicLeap.LeapBrush.ExternalModelRemoveRequest externalModelRemove_;
+    /// <summary>
+    /// Optional 3D model information for a 3D model that was removed since last update.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.ExternalModelRemoveRequest ExternalModelRemove {
@@ -5990,7 +6170,6 @@ namespace MagicLeap.LeapBrush {
       if (Echo != other.Echo) return false;
       if (!object.Equals(BrushStrokeAdd, other.BrushStrokeAdd)) return false;
       if (!object.Equals(BrushStrokeRemove, other.BrushStrokeRemove)) return false;
-      if (!object.Equals(QueryUsersRequest, other.QueryUsersRequest)) return false;
       if (!object.Equals(ExternalModelAdd, other.ExternalModelAdd)) return false;
       if (!object.Equals(ExternalModelRemove, other.ExternalModelRemove)) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -6005,7 +6184,6 @@ namespace MagicLeap.LeapBrush {
       if (Echo != false) hash ^= Echo.GetHashCode();
       if (brushStrokeAdd_ != null) hash ^= BrushStrokeAdd.GetHashCode();
       if (brushStrokeRemove_ != null) hash ^= BrushStrokeRemove.GetHashCode();
-      if (queryUsersRequest_ != null) hash ^= QueryUsersRequest.GetHashCode();
       if (externalModelAdd_ != null) hash ^= ExternalModelAdd.GetHashCode();
       if (externalModelRemove_ != null) hash ^= ExternalModelRemove.GetHashCode();
       if (_unknownFields != null) {
@@ -6046,10 +6224,6 @@ namespace MagicLeap.LeapBrush {
         output.WriteRawTag(42);
         output.WriteMessage(BrushStrokeRemove);
       }
-      if (queryUsersRequest_ != null) {
-        output.WriteRawTag(50);
-        output.WriteMessage(QueryUsersRequest);
-      }
       if (externalModelAdd_ != null) {
         output.WriteRawTag(58);
         output.WriteMessage(ExternalModelAdd);
@@ -6088,10 +6262,6 @@ namespace MagicLeap.LeapBrush {
         output.WriteRawTag(42);
         output.WriteMessage(BrushStrokeRemove);
       }
-      if (queryUsersRequest_ != null) {
-        output.WriteRawTag(50);
-        output.WriteMessage(QueryUsersRequest);
-      }
       if (externalModelAdd_ != null) {
         output.WriteRawTag(58);
         output.WriteMessage(ExternalModelAdd);
@@ -6124,9 +6294,6 @@ namespace MagicLeap.LeapBrush {
       }
       if (brushStrokeRemove_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(BrushStrokeRemove);
-      }
-      if (queryUsersRequest_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(QueryUsersRequest);
       }
       if (externalModelAdd_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(ExternalModelAdd);
@@ -6172,12 +6339,6 @@ namespace MagicLeap.LeapBrush {
           BrushStrokeRemove = new global::MagicLeap.LeapBrush.BrushStrokeRemoveRequest();
         }
         BrushStrokeRemove.MergeFrom(other.BrushStrokeRemove);
-      }
-      if (other.queryUsersRequest_ != null) {
-        if (queryUsersRequest_ == null) {
-          QueryUsersRequest = new global::MagicLeap.LeapBrush.QueryUsersRequest();
-        }
-        QueryUsersRequest.MergeFrom(other.QueryUsersRequest);
       }
       if (other.externalModelAdd_ != null) {
         if (externalModelAdd_ == null) {
@@ -6238,13 +6399,6 @@ namespace MagicLeap.LeapBrush {
             input.ReadMessage(BrushStrokeRemove);
             break;
           }
-          case 50: {
-            if (queryUsersRequest_ == null) {
-              QueryUsersRequest = new global::MagicLeap.LeapBrush.QueryUsersRequest();
-            }
-            input.ReadMessage(QueryUsersRequest);
-            break;
-          }
           case 58: {
             if (externalModelAdd_ == null) {
               ExternalModelAdd = new global::MagicLeap.LeapBrush.ExternalModelAddRequest();
@@ -6306,13 +6460,6 @@ namespace MagicLeap.LeapBrush {
             input.ReadMessage(BrushStrokeRemove);
             break;
           }
-          case 50: {
-            if (queryUsersRequest_ == null) {
-              QueryUsersRequest = new global::MagicLeap.LeapBrush.QueryUsersRequest();
-            }
-            input.ReadMessage(QueryUsersRequest);
-            break;
-          }
           case 58: {
             if (externalModelAdd_ == null) {
               ExternalModelAdd = new global::MagicLeap.LeapBrush.ExternalModelAddRequest();
@@ -6334,6 +6481,10 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// UpdateDeviceResponse contains the response for an UpdateDeviceRequest. Server updates are sent back via the
+  /// RegisterAndListen api instead.
+  /// </summary>
   public sealed partial class UpdateDeviceResponse : pb::IMessage<UpdateDeviceResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -6368,7 +6519,6 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public UpdateDeviceResponse(UpdateDeviceResponse other) : this() {
-      queryUsersResponse_ = other.queryUsersResponse_ != null ? other.queryUsersResponse_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -6376,22 +6526,6 @@ namespace MagicLeap.LeapBrush {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public UpdateDeviceResponse Clone() {
       return new UpdateDeviceResponse(this);
-    }
-
-    /// <summary>Field number for the "query_users_response" field.</summary>
-    public const int QueryUsersResponseFieldNumber = 1;
-    private global::MagicLeap.LeapBrush.QueryUsersResponse queryUsersResponse_;
-    /// <summary>
-    /// Deprecated: Last used 2022-08-01-v1
-    /// </summary>
-    [global::System.ObsoleteAttribute]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::MagicLeap.LeapBrush.QueryUsersResponse QueryUsersResponse {
-      get { return queryUsersResponse_; }
-      set {
-        queryUsersResponse_ = value;
-      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6409,7 +6543,6 @@ namespace MagicLeap.LeapBrush {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(QueryUsersResponse, other.QueryUsersResponse)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -6417,7 +6550,6 @@ namespace MagicLeap.LeapBrush {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (queryUsersResponse_ != null) hash ^= QueryUsersResponse.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -6436,10 +6568,6 @@ namespace MagicLeap.LeapBrush {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (queryUsersResponse_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(QueryUsersResponse);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -6450,10 +6578,6 @@ namespace MagicLeap.LeapBrush {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (queryUsersResponse_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(QueryUsersResponse);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -6464,9 +6588,6 @@ namespace MagicLeap.LeapBrush {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (queryUsersResponse_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(QueryUsersResponse);
-      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -6478,12 +6599,6 @@ namespace MagicLeap.LeapBrush {
     public void MergeFrom(UpdateDeviceResponse other) {
       if (other == null) {
         return;
-      }
-      if (other.queryUsersResponse_ != null) {
-        if (queryUsersResponse_ == null) {
-          QueryUsersResponse = new global::MagicLeap.LeapBrush.QueryUsersResponse();
-        }
-        QueryUsersResponse.MergeFrom(other.QueryUsersResponse);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -6500,13 +6615,6 @@ namespace MagicLeap.LeapBrush {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 10: {
-            if (queryUsersResponse_ == null) {
-              QueryUsersResponse = new global::MagicLeap.LeapBrush.QueryUsersResponse();
-            }
-            input.ReadMessage(QueryUsersResponse);
-            break;
-          }
         }
       }
     #endif
@@ -6522,13 +6630,6 @@ namespace MagicLeap.LeapBrush {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 10: {
-            if (queryUsersResponse_ == null) {
-              QueryUsersResponse = new global::MagicLeap.LeapBrush.QueryUsersResponse();
-            }
-            input.ReadMessage(QueryUsersResponse);
-            break;
-          }
         }
       }
     }
@@ -6536,6 +6637,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// RpcRequest contains a single generic RPC sent from a client
+  /// </summary>
   public sealed partial class RpcRequest : pb::IMessage<RpcRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -6584,6 +6688,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "user_name" field.</summary>
     public const int UserNameFieldNumber = 1;
     private string userName_ = "";
+    /// <summary>
+    /// The user identifier for the user sending the request.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string UserName {
@@ -6596,6 +6703,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "query_users_request" field.</summary>
     public const int QueryUsersRequestFieldNumber = 2;
     private global::MagicLeap.LeapBrush.QueryUsersRequest queryUsersRequest_;
+    /// <summary>
+    /// Optional query for the list of connected users.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.QueryUsersRequest QueryUsersRequest {
@@ -6771,6 +6881,9 @@ namespace MagicLeap.LeapBrush {
 
   }
 
+  /// <summary>
+  /// RpcResponse contains the response for the generic Rpc api
+  /// </summary>
   public sealed partial class RpcResponse : pb::IMessage<RpcResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -6818,6 +6931,9 @@ namespace MagicLeap.LeapBrush {
     /// <summary>Field number for the "query_users_response" field.</summary>
     public const int QueryUsersResponseFieldNumber = 1;
     private global::MagicLeap.LeapBrush.QueryUsersResponse queryUsersResponse_;
+    /// <summary>
+    /// Optional response to the QueryUsersRequest if provided in RpcRequest
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::MagicLeap.LeapBrush.QueryUsersResponse QueryUsersResponse {

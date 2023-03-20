@@ -6,6 +6,9 @@ using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap
 {
+    /// <summary>
+    /// Utilities for working with Protocol Buffers in the Leap Brush api.
+    /// </summary>
     public class ProtoUtils
     {
         public static bool EpsilonEquals(Transform transform, TransformProto transformProto)

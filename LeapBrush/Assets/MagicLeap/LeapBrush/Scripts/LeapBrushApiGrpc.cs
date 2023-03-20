@@ -8,6 +8,9 @@
 using grpc = global::Grpc.Core;
 
 namespace MagicLeap.LeapBrush {
+  /// <summary>
+  /// LeapBrushApi contains the definition for the leap brush grpc service
+  /// </summary>
   public static partial class LeapBrushApi
   {
     static readonly string __ServiceName = "leapbrush.LeapBrushApi";
@@ -67,14 +70,6 @@ namespace MagicLeap.LeapBrush {
         __Marshaller_leapbrush_ServerStateResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::MagicLeap.LeapBrush.UpdateDeviceRequest, global::MagicLeap.LeapBrush.UpdateDeviceResponse> __Method_UpdateDevice = new grpc::Method<global::MagicLeap.LeapBrush.UpdateDeviceRequest, global::MagicLeap.LeapBrush.UpdateDeviceResponse>(
-        grpc::MethodType.Unary,
-        __ServiceName,
-        "UpdateDevice",
-        __Marshaller_leapbrush_UpdateDeviceRequest,
-        __Marshaller_leapbrush_UpdateDeviceResponse);
-
-    [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Method<global::MagicLeap.LeapBrush.UpdateDeviceRequest, global::MagicLeap.LeapBrush.UpdateDeviceResponse> __Method_UpdateDeviceStream = new grpc::Method<global::MagicLeap.LeapBrush.UpdateDeviceRequest, global::MagicLeap.LeapBrush.UpdateDeviceResponse>(
         grpc::MethodType.ClientStreaming,
         __ServiceName,
@@ -100,24 +95,39 @@ namespace MagicLeap.LeapBrush {
     [grpc::BindServiceMethod(typeof(LeapBrushApi), "BindService")]
     public abstract partial class LeapBrushApiBase
     {
+      /// <summary>
+      /// Rpc to register with the server and listen for a stream of server state updates. This rpc remains streaming
+      /// for the duration of the client's connection.
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="responseStream">Used for sending responses back to the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>A task indicating completion of the handler.</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual global::System.Threading.Tasks.Task RegisterAndListen(global::MagicLeap.LeapBrush.RegisterDeviceRequest request, grpc::IServerStreamWriter<global::MagicLeap.LeapBrush.ServerStateResponse> responseStream, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task<global::MagicLeap.LeapBrush.UpdateDeviceResponse> UpdateDevice(global::MagicLeap.LeapBrush.UpdateDeviceRequest request, grpc::ServerCallContext context)
-      {
-        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
-      }
-
+      /// <summary>
+      /// Rpc to send a stream of updates from the device to the server. This rpc remains streaming for the duration
+      /// of the client's connection.
+      /// </summary>
+      /// <param name="requestStream">Used for reading requests from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual global::System.Threading.Tasks.Task<global::MagicLeap.LeapBrush.UpdateDeviceResponse> UpdateDeviceStream(grpc::IAsyncStreamReader<global::MagicLeap.LeapBrush.UpdateDeviceRequest> requestStream, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
+      /// <summary>
+      /// Generic rpc request from the client.
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual global::System.Threading.Tasks.Task<global::MagicLeap.LeapBrush.RpcResponse> Rpc(global::MagicLeap.LeapBrush.RpcRequest request, grpc::ServerCallContext context)
       {
@@ -153,61 +163,99 @@ namespace MagicLeap.LeapBrush {
       {
       }
 
+      /// <summary>
+      /// Rpc to register with the server and listen for a stream of server state updates. This rpc remains streaming
+      /// for the duration of the client's connection.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual grpc::AsyncServerStreamingCall<global::MagicLeap.LeapBrush.ServerStateResponse> RegisterAndListen(global::MagicLeap.LeapBrush.RegisterDeviceRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return RegisterAndListen(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
+      /// <summary>
+      /// Rpc to register with the server and listen for a stream of server state updates. This rpc remains streaming
+      /// for the duration of the client's connection.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual grpc::AsyncServerStreamingCall<global::MagicLeap.LeapBrush.ServerStateResponse> RegisterAndListen(global::MagicLeap.LeapBrush.RegisterDeviceRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncServerStreamingCall(__Method_RegisterAndListen, null, options, request);
       }
-      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::MagicLeap.LeapBrush.UpdateDeviceResponse UpdateDevice(global::MagicLeap.LeapBrush.UpdateDeviceRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
-      {
-        return UpdateDevice(request, new grpc::CallOptions(headers, deadline, cancellationToken));
-      }
-      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::MagicLeap.LeapBrush.UpdateDeviceResponse UpdateDevice(global::MagicLeap.LeapBrush.UpdateDeviceRequest request, grpc::CallOptions options)
-      {
-        return CallInvoker.BlockingUnaryCall(__Method_UpdateDevice, null, options, request);
-      }
-      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::MagicLeap.LeapBrush.UpdateDeviceResponse> UpdateDeviceAsync(global::MagicLeap.LeapBrush.UpdateDeviceRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
-      {
-        return UpdateDeviceAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
-      }
-      [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::MagicLeap.LeapBrush.UpdateDeviceResponse> UpdateDeviceAsync(global::MagicLeap.LeapBrush.UpdateDeviceRequest request, grpc::CallOptions options)
-      {
-        return CallInvoker.AsyncUnaryCall(__Method_UpdateDevice, null, options, request);
-      }
+      /// <summary>
+      /// Rpc to send a stream of updates from the device to the server. This rpc remains streaming for the duration
+      /// of the client's connection.
+      /// </summary>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual grpc::AsyncClientStreamingCall<global::MagicLeap.LeapBrush.UpdateDeviceRequest, global::MagicLeap.LeapBrush.UpdateDeviceResponse> UpdateDeviceStream(grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return UpdateDeviceStream(new grpc::CallOptions(headers, deadline, cancellationToken));
       }
+      /// <summary>
+      /// Rpc to send a stream of updates from the device to the server. This rpc remains streaming for the duration
+      /// of the client's connection.
+      /// </summary>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual grpc::AsyncClientStreamingCall<global::MagicLeap.LeapBrush.UpdateDeviceRequest, global::MagicLeap.LeapBrush.UpdateDeviceResponse> UpdateDeviceStream(grpc::CallOptions options)
       {
         return CallInvoker.AsyncClientStreamingCall(__Method_UpdateDeviceStream, null, options);
       }
+      /// <summary>
+      /// Generic rpc request from the client.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual global::MagicLeap.LeapBrush.RpcResponse Rpc(global::MagicLeap.LeapBrush.RpcRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return Rpc(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
+      /// <summary>
+      /// Generic rpc request from the client.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual global::MagicLeap.LeapBrush.RpcResponse Rpc(global::MagicLeap.LeapBrush.RpcRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_Rpc, null, options, request);
       }
+      /// <summary>
+      /// Generic rpc request from the client.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual grpc::AsyncUnaryCall<global::MagicLeap.LeapBrush.RpcResponse> RpcAsync(global::MagicLeap.LeapBrush.RpcRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return RpcAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
+      /// <summary>
+      /// Generic rpc request from the client.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
       public virtual grpc::AsyncUnaryCall<global::MagicLeap.LeapBrush.RpcResponse> RpcAsync(global::MagicLeap.LeapBrush.RpcRequest request, grpc::CallOptions options)
       {
@@ -228,7 +276,6 @@ namespace MagicLeap.LeapBrush {
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_RegisterAndListen, serviceImpl.RegisterAndListen)
-          .AddMethod(__Method_UpdateDevice, serviceImpl.UpdateDevice)
           .AddMethod(__Method_UpdateDeviceStream, serviceImpl.UpdateDeviceStream)
           .AddMethod(__Method_Rpc, serviceImpl.Rpc).Build();
     }
@@ -241,7 +288,6 @@ namespace MagicLeap.LeapBrush {
     public static void BindService(grpc::ServiceBinderBase serviceBinder, LeapBrushApiBase serviceImpl)
     {
       serviceBinder.AddMethod(__Method_RegisterAndListen, serviceImpl == null ? null : new grpc::ServerStreamingServerMethod<global::MagicLeap.LeapBrush.RegisterDeviceRequest, global::MagicLeap.LeapBrush.ServerStateResponse>(serviceImpl.RegisterAndListen));
-      serviceBinder.AddMethod(__Method_UpdateDevice, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::MagicLeap.LeapBrush.UpdateDeviceRequest, global::MagicLeap.LeapBrush.UpdateDeviceResponse>(serviceImpl.UpdateDevice));
       serviceBinder.AddMethod(__Method_UpdateDeviceStream, serviceImpl == null ? null : new grpc::ClientStreamingServerMethod<global::MagicLeap.LeapBrush.UpdateDeviceRequest, global::MagicLeap.LeapBrush.UpdateDeviceResponse>(serviceImpl.UpdateDeviceStream));
       serviceBinder.AddMethod(__Method_Rpc, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::MagicLeap.LeapBrush.RpcRequest, global::MagicLeap.LeapBrush.RpcResponse>(serviceImpl.Rpc));
     }

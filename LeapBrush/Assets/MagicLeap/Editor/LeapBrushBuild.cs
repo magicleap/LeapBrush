@@ -51,7 +51,9 @@ namespace MagicLeap
                 PlayerSettings.SetScriptingBackend(
                     BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
             }
+#if UNITY_STANDALONE_OSX
             UnityEditor.OSXStandalone.UserBuildSettings.architecture = OSArchitecture.x64;
+#endif
 
             BuildPlayerOptions buildPlayerOptions = new();
             buildPlayerOptions.scenes = new string[1];
@@ -123,6 +125,32 @@ namespace MagicLeap
                             ".DS_Store",
                             "LeapBrush_BurstDebugInformation_DoNotShip/*",
                             "LeapBrush_BackUpThisFolder_ButDontShipItWithYourGame/*"
+                        });
+                }
+            }
+            else if (buildTarget == BuildTarget.StandaloneWindows64)
+            {
+                string windowsParentDir = Path.Join(outputDirWithVersion,
+                    "LeapBrush-Windows-" + versionString);
+                if (!Directory.Exists(windowsParentDir))
+                {
+                    Directory.CreateDirectory(windowsParentDir);
+                }
+                buildPlayerOptions.locationPathName =
+                    Path.Join(windowsParentDir, "LeapBrush.exe");
+
+                report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+
+                if (report.summary.result == BuildResult.Succeeded)
+                {
+                    CreateZip(Path.Join(outputDirWithVersion,
+                            "LeapBrush-Windows-" + versionString + ".zip"),
+                        ".",
+                        windowsParentDir,
+                        new[]
+                        {
+                            ".DS_Store",
+                            "LeapBrush_BurstDebugInformation_DoNotShip/*",
                         });
                 }
             }

@@ -1,4 +1,4 @@
-#if UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN
+#if UNITY_STANDALONE_OSX
 #define ENABLE_USD
 #endif
 
@@ -18,6 +18,9 @@ using USD.NET;
 
 namespace MagicLeap
 {
+    /// <summary>
+    /// Manager for displaying a visualization of the Space RGG mesh if present.
+    /// </summary>
     public class SpaceMeshManager : MonoBehaviour
     {
         [FormerlySerializedAs("_material")]
@@ -43,6 +46,7 @@ namespace MagicLeap
 
         public const string AndroidBundleExtension = ".android.unitybundle";
         public const string Linux64BundleExtension = ".linux64.unitybundle";
+        public const string Windows64BundleExtension = ".windows64.unitybundle";
 
         private class TextureLoadRequest
         {
@@ -228,8 +232,8 @@ namespace MagicLeap
                     meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
                 }
 
-                // TODO: Determine why meshes are coming in with -90 x-axis rotation.
-                usdSceneRoot.transform.localRotation = Quaternion.identity;
+                // TODO: Determine why meshes are needing a 180 degree X-axis rotation
+                usdSceneRoot.transform.localRotation = Quaternion.Euler(180, 0, 0);
 
                 SpaceMeshContainer.SetActive(_isShown);
 
@@ -257,7 +261,9 @@ namespace MagicLeap
 #if UNITY_ANDROID
                 string bundleExtension = SpaceMeshManager.AndroidBundleExtension;
 #elif UNITY_STANDALONE_LINUX
-            string bundleExtension = SpaceMeshManager.Linux64BundleExtension;
+                string bundleExtension = SpaceMeshManager.Linux64BundleExtension;
+#elif UNITY_STANDALONE_WIN
+                string bundleExtension = SpaceMeshManager.Windows64BundleExtension;
 #endif
 
                 string meshBundlePath = Path.Join(

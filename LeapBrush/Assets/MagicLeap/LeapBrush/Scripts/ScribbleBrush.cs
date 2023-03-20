@@ -5,11 +5,28 @@ using UnityEngine;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// The scribble brush tool and brush stroke.
+    /// </summary>
+    /// <remarks>
+    /// The scribble brush allows the user to draw while the trigger button is down in a free-form
+    /// drawing mode. Any motion by the controller while drawing will be picked up as new brush
+    /// pose.
+    ///
+    /// <para>The algorithm will only append new brush poses if the user moves the tool
+    /// far enough from the previous pose.
+    /// </para>
+    /// </remarks>
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshCollider))]
     [RequireComponent(typeof(GenericAudioHandler))]
     public class ScribbleBrush : BrushBase
     {
+        /// <summary>
+        /// Event fired when poses have been added to this brush.
+        /// </summary>
+        public event Action OnPosesAdded;
+
         [SerializeField]
         private SoundDefinition _drawStartSound;
 
@@ -28,8 +45,6 @@ namespace MagicLeap.LeapBrush
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
         private static readonly TimeSpan DrawingPausedSoundTimeout = TimeSpan.FromSeconds(0.25f);
-
-        public event Action OnPosesAdded;
 
         private void Awake()
         {
@@ -70,6 +85,7 @@ namespace MagicLeap.LeapBrush
                     _brushControllerTransform.rotation);
                 if ((nextPose.position - lastPose.position).sqrMagnitude >= MinDistanceAddPose * MinDistanceAddPose)
                 {
+                    // The new pose is far enough away from the previous pose: Add a new brush pose.
                     _poses.Add(nextPose);
                     RebuildMesh(_poses);
 
@@ -78,6 +94,9 @@ namespace MagicLeap.LeapBrush
             }
             else if (_brushControllerTransform != null)
             {
+                // The user is not drawing currently but this is the scribble brush tool visual
+                // -- move the brush to the expected transform.
+
                 transform.SetPositionAndRotation(_brushControllerTransform.position,
                     _brushControllerTransform.rotation);
             }
@@ -157,6 +176,7 @@ namespace MagicLeap.LeapBrush
 
         public override void OnTriggerButtonDown()
         {
+            // Start drawing when the trigger button is pressed down.
             StartDrawing();
         }
 
@@ -164,10 +184,15 @@ namespace MagicLeap.LeapBrush
         {
             if (_drawing)
             {
+                // Stop drawing when the trigger button is released.
                 StopDrawing();
             }
         }
 
+        /// <summary>
+        /// Replace the current poses with a simple list which visualizes a drawing tip. This
+        /// is displayed so the user knows where the drawing will start if they initiate a drawing.
+        /// </summary>
         private void ApplyDrawingTipPoses()
         {
             _poses.Clear();
@@ -175,6 +200,10 @@ namespace MagicLeap.LeapBrush
             _poses.Add(Pose.identity);
         }
 
+        /// <summary>
+        /// Rebuild the current mesh of this brush stroke with an updated set of poses.
+        /// </summary>
+        /// <param name="poses">The new poses to use for the mesh.</param>
         private void RebuildMesh(IList<Pose> poses)
         {
             var mesh = GetComponent<MeshFilter>().mesh;
@@ -184,6 +213,8 @@ namespace MagicLeap.LeapBrush
             {
                 return;
             }
+
+            // Create a ribbon strip connecting the poses that make up the brush stroke.
 
             var vertices = new Vector3[poses.Count * 2];
             var triangles = new int[poses.Count * 6 - 6];

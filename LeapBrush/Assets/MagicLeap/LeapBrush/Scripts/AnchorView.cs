@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// A rendering for a Spatial Anchor for the user's interest.
+    /// </summary>
     public class AnchorView : MonoBehaviour
     {
         [SerializeField, Tooltip("Game object holding the status text")]

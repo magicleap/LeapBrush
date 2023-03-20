@@ -2,6 +2,9 @@ using System;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// Utility for working with version strings.
+    /// </summary>
     public class VersionUtil
     {
         public static bool IsGreatorOrEqual(string version1, string version2)

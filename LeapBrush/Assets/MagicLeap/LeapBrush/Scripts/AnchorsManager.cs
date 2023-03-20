@@ -6,13 +6,17 @@ using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// Manager for Spatial Anchor game objects. Spatial Anchors are periodically queried and
+    /// kept in sync.
+    /// </summary>
     public class AnchorsManager : MonoBehaviour
     {
-        [SerializeField]
+        [SerializeField, Tooltip("The parent node where anchor game objects should be added.")]
         private GameObject _anchorContainer;
 
         [SerializeField, Tooltip("The anchor prefab.")]
-        private GameObject _anchorPrefab = null;
+        private GameObject _anchorPrefab;
 
         private const float AnchorsUpdateDelaySeconds = .1f;
 

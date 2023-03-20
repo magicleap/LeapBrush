@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// Popup showing a list of users connected to the server who could be joined.
+    /// </summary>
     public class JoinUserPopup : MonoBehaviour
     {
         public event Action<QueryUsersResponse.Types.Result> OnJoinUserSessionRemotelySelected;

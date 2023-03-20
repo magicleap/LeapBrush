@@ -4,6 +4,10 @@ using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// Wrapper for the MLAnchors api to support a few additional use cases, e.g. Anchor poses
+    /// being imported from another user.
+    /// </summary>
     public class AnchorsApi : MonoBehaviour
     {
         private static AnchorsApi _instance;
@@ -28,8 +32,14 @@ namespace MagicLeap.LeapBrush
             /// </summary>
             public string SpaceName;
 
+            /// <summary>
+            /// If localized, the identifier of the space.
+            /// </summary>
             public string SpaceId;
 
+            /// <summary>
+            /// The space origin for the purposes of 3D mesh alignment, etc.
+            /// </summary>
             public Pose TargetSpaceOriginPose;
 
             public LocalizationInfo(MLAnchors.LocalizationStatus localizationStatus, MLAnchors.MappingMode mappingMode,
@@ -90,6 +100,9 @@ namespace MagicLeap.LeapBrush
             public abstract MLResult Publish();
         }
 
+        /// <summary>
+        /// A virtual anchor that was imported from a remote user.
+        /// </summary>
         [Serializable]
         public class ImportedAnchor : Anchor
         {

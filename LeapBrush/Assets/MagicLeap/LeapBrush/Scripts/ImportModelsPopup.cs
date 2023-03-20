@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// Popup UI to select a 3D model to load from the current list of available models.
+    /// </summary>
     public class ImportModelsPopup : MonoBehaviour
     {
         public event Action<External3DModelManager.ModelInfo> OnPlaceNewExternal3DModel;

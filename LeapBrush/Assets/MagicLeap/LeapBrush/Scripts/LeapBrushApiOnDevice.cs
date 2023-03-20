@@ -9,6 +9,9 @@ using UnityEngine;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// Implementation of the leap brush api for use against a local on-device database.
+    /// </summary>
     public class LeapBrushApiOnDevice : LeapBrushApiBase
     {
         private static readonly Regex ValidIdRegex = new (@"^[a-zA-Z0-9_-]+$");
@@ -252,12 +255,14 @@ namespace MagicLeap.LeapBrush
                 _db = db;
             }
 
-            public override UpdateDeviceStream UpdateDeviceStream()
+            public override UpdateDeviceStream UpdateDeviceStream(
+                CancellationToken cancellationToken)
             {
                 return new UpdateDeviceStreamOnDevice(_db, _session, _signalServerStateStream);
             }
 
-            public override ServerStateStream RegisterAndListen(RegisterDeviceRequest request)
+            public override ServerStateStream RegisterAndListen(RegisterDeviceRequest request,
+                CancellationToken cancellationToken)
             {
                 return new ServerStateStreamOnDevice(_db, _session, _signalServerStateStream);
             }
@@ -292,7 +297,8 @@ namespace MagicLeap.LeapBrush
                 _signalServerStateStream = signalServerStateStream;
             }
 
-            public override void Write(UpdateDeviceRequest request)
+            public override void Write(UpdateDeviceRequest request,
+                CancellationToken cancellationToken)
             {
                 if (request.BrushStrokeAdd != null)
                 {

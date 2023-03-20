@@ -32,6 +32,7 @@ func main() {
 	grpcServer := grpc.NewServer()
 	pb.RegisterLeapBrushApiServer(grpcServer, &server)
 
+	// Deprecated: last used by client v47-2023-02-09
 	grpcWebServer := grpcweb.WrapServer(grpcServer)
 
 	webServer := &http.Server{Addr: fmt.Sprintf(":%d", *grpcWebPort), Handler: grpcWebServer}

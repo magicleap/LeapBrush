@@ -5,6 +5,10 @@ using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// Manager for checking the latest state of map localization. Periodically checks the
+    /// state and fires events when it changes.
+    /// </summary>
     public class SpaceLocalizationManager : MonoBehaviour
     {
         public AnchorsApi.LocalizationInfo LocalizationInfo => _localizationInfo;

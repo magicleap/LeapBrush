@@ -6,6 +6,10 @@ namespace MagicLeap.LeapBrush.Scripts
 {
     namespace MagicLeap.LeapBrush
     {
+        /// <summary>
+        /// Provides additional controller simulation when running the app from the unity
+        /// editor or a desktop computer.
+        /// </summary>
         [RequireComponent(typeof(ControllerInput))]
         public class AdditionalControllerInputSimulation : MonoBehaviour
         {

@@ -4,15 +4,11 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using Grpc.Core;
-using MagicLeap.DesignToolkit.Actions;
 using MagicLeap.DesignToolkit.Audio;
 using MagicLeap.DesignToolkit.Input.Controller;
 using MagicLeap.DesignToolkit.Keyboard;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Localization.Components;
-using UnityEngine.Localization.SmartFormat.PersistentVariables;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.MagicLeap;
 using TransformExtensions = Unity.XR.CoreUtils.TransformExtensions;
@@ -23,42 +19,22 @@ using System.IO;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// The main LeapBrush application.
+    /// </summary>
+    /// <remarks>
+    /// Contains the startup and shutdown logic, brush-stroke and network events handling,
+    /// error monitoring, and main panels and application flow control.
+    /// </remarks>
     [RequireComponent(typeof(AnchorsManager))]
     [RequireComponent(typeof(SpaceMeshManager))]
+    [RequireComponent(typeof(ServerConnectionManager))]
     public class LeapBrush : MonoBehaviour
     {
-        [SerializeField, Tooltip("The text used to display status information.")]
-        private TMP_Text _statusText;
-
-        [Tooltip("Enable to receive back user state from the server")]
-        private bool _serverEcho = false;
-
-        [SerializeField]
-        private string _defaultServerUrl;
-
-        [SerializeField]
-        private string _minServerVersion = ".2";
-
-        [SerializeField]
-        private GameObject _otherUserControllerPrefab;
-
-        [SerializeField]
-        private GameObject _otherUserWearablePrefab;
+        [Header("UI Panels and Popups")]
 
         [SerializeField]
         private GameObject _mainMenu;
-
-        [SerializeField]
-        private ScribbleBrush _scribbleBrushTool;
-
-        [SerializeField]
-        private PolyBrush _polyBrushTool;
-
-        [SerializeField]
-        private EraserTool _eraserTool;
-
-        [SerializeField]
-        private Transform _toolBasePose;
 
         [SerializeField]
         private StartPanel _startPanel;
@@ -82,58 +58,7 @@ namespace MagicLeap.LeapBrush
         private ServerTooOldPanel _serverTooOldPanel;
 
         [SerializeField]
-        private GameObject _rayAndCursor;
-
-        [SerializeField]
-        private GameObject _spaceOriginAxis;
-
-        [SerializeField]
-        private TMP_Text _startDescriptionText;
-
-        [SerializeField]
-        private TMP_Text _notConnectedDescriptionText;
-
-        [SerializeField]
-        private Interactable _changeUserNameButton;
-
-        [SerializeField]
-        private Interactable _openSpacesAppButton;
-
-        [SerializeField]
-        private Interactable _chooseServerButton;
-
-        [SerializeField]
-        private Interactable _drawSoloButton;
-
-        [SerializeField]
         private DrawSoloAreYourSurePopup _drawSoloAreYourSurePopup;
-
-        [SerializeField]
-        private Interactable _drawSoloCancelButton;
-
-        [SerializeField]
-        private Interactable _drawSoloContinueButton;
-
-        [SerializeField]
-        private Interactable _scribbleBrushButton;
-
-        [SerializeField]
-        private Interactable _colorPaletteButton;
-
-        [SerializeField]
-        private Interactable _polyBrushButton;
-
-        [SerializeField]
-        private Interactable _eraserToolButton;
-
-        [SerializeField]
-        private Interactable _laserPointerButton;
-
-        [SerializeField]
-        private Interactable _importModelButton;
-
-        [SerializeField]
-        private Interactable _settingsButton;
 
         [SerializeField]
         private ImportModelsPopup _importModelPopup;
@@ -147,11 +72,25 @@ namespace MagicLeap.LeapBrush
         [SerializeField]
         private KeyboardManager _keyboardManager;
 
-        [SerializeField]
-        private FloorGrid _floorGrid;
+        [Header("Tools")]
 
         [SerializeField]
-        private ControlInstructions _controlInstructions;
+        private ScribbleBrush _scribbleBrushTool;
+
+        [SerializeField]
+        private PolyBrush _polyBrushTool;
+
+        [SerializeField]
+        private EraserTool _eraserTool;
+
+        [SerializeField, Tooltip(
+             "The base pose for tools that can have a relative offset from the Controller")]
+        private Transform _toolBasePose;
+
+        [SerializeField, Tooltip("The laser pointer ray and cursor game object")]
+        private GameObject _rayAndCursor;
+
+        [Header("Sounds")]
 
         [SerializeField]
         private SoundDefinition _eraseSound;
@@ -162,9 +101,30 @@ namespace MagicLeap.LeapBrush
         [SerializeField]
         private GameObject _oneoffSpatialSoundBehaviorPrefab;
 
+        [Header("Miscellaneous")]
+
+        [SerializeField, Tooltip("The text used to display status information.")]
+        private TMP_Text _statusText;
+
+        [SerializeField, Tooltip("Prefab to use for other user Controllers being displayed")]
+        private GameObject _otherUserControllerPrefab;
+
+        [SerializeField, Tooltip(
+             "Prefab to use for other user Headsets (Wearables) being displayed")]
+        private GameObject _otherUserWearablePrefab;
+
+        [SerializeField]
+        private GameObject _spaceOriginAxis;
+
+        [SerializeField]
+        private FloorGrid _floorGrid;
+
+        [SerializeField]
+        private ControlInstructions _controlInstructions;
+
         private System.Random _random = new();
-        private Thread _uploadThread;
-        private Thread _downloadThread;
+        private UploadThread _uploadThread;
+        private DownloadThread _downloadThread;
         private IEnumerator _updateStatusTextCoroutine;
         private SpaceLocalizationManager _localizationManager;
         private AnchorsManager _anchorsManager;
@@ -172,43 +132,26 @@ namespace MagicLeap.LeapBrush
         private External3DModelManager _external3dModelManager;
         private DelayedButtonHandler _delayedButtonHandler;
         private BrushColorManager _brushColorManager;
+        private ServerConnectionManager _serverConnectionManager;
         private CancellationTokenSource _shutDownTokenSource = new();
         private Dictionary<string, OtherUserWearable> _otherUserWearables = new();
         private Dictionary<string, OtherUserController> _otherUserControllers = new();
         private Dictionary<string, BrushBase> _brushStrokeMap = new();
         private Dictionary<string, External3DModel> _externalModelMap = new();
         private IEnumerator _maybeCreateAnchorAfterLocalizationWithDelayCoroutine;
-        private LeapBrushApiFactory _leapBrushApiFactory = new();
         private ServerInfoProto _serverInfo;
         private bool _appTooOld;
         private bool _serverTooOld;
-
-        private object _lock = new();
         private string _userName;
         private string _userDisplayName;
-        private string _appVersion;
-        private SpaceInfoProto _spaceInfo = new();
         private string _headClosestAnchorId;
-        private Pose _controlPoseRelativeToAnchor = Pose.identity;
-        private Pose _headPoseRelativeToAnchor = Pose.identity;
-        private bool _serverEchoEnabled;
-        private bool _lastServerUploadOk;
-        private bool _lastServerDownloadOk;
-        private string _persistentDataPath;
-        private BrushStrokeProto _currentBrushStroke;
-        private UserStateProto.Types.ToolState _currentToolState;
-        private Color32 _currentToolColor;
-        private BatteryStatusProto _batteryStatus = new();
-        private LinkedList<BrushStrokeProto> _brushStrokesToUpload = new();
-        private LinkedList<BrushStrokeRemoveRequest> _brushStrokesToRemove = new();
-        private Dictionary<string, ExternalModelProto> _externalModelsToUpdate = new();
-        private LinkedList<ExternalModelRemoveRequest> _externalModelsToRemove = new();
+        private string _appVersion;
         private LeapBrushApiBase.LeapBrushClient _leapBrushClient;
         private bool _drawSolo;
 
-        private object _serverUrlLock = new();
-        private string _serverUrl;
-
+        /// <summary>
+        /// Enumeration of tools that user can select.
+        /// </summary>
         private enum Tool
         {
             Eraser,
@@ -225,14 +168,15 @@ namespace MagicLeap.LeapBrush
         private string _cameraFollowUserName;
 
         private const float StatusTextUpdateDelaySeconds = .1f;
-        private const float MinServerUpdateIntervalSeconds = .03f;
-        private const float ServerPingIntervalSeconds = 2.0f;
         private static readonly Vector3 ServerEchoPositionOffset = new(0.1f, 0, 0);
         private static readonly Vector3 ServerEchoWearablePositionOffset = new(.5f, 0, 0);
         private static readonly TimeSpan OtherUserControllerExpirationAge = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan OtherUserWearableExpirationAge = TimeSpan.FromSeconds(5);
         private static readonly Vector3 External3DModelRelativeStartPosition = new(0, 0, 1.5f);
 
+        /// <summary>
+        /// Unity lifecycle for the LeapBrush component first initializing
+        /// </summary>
         private void Awake()
         {
             Application.logMessageReceived += OnLogMessageReceived;
@@ -242,12 +186,16 @@ namespace MagicLeap.LeapBrush
             _spaceMeshManager = GetComponent<SpaceMeshManager>();
             _external3dModelManager = GetComponent<External3DModelManager>();
             _brushColorManager = GetComponent<BrushColorManager>();
+            _serverConnectionManager = GetComponent<ServerConnectionManager>();
 
             _delayedButtonHandler = gameObject.AddComponent<DelayedButtonHandler>();
 
             SanityCheckValidAppExecution();
         }
 
+        /// <summary>
+        /// Unity lifecycle for the LeapBrush component first starting
+        /// </summary>
         private void Start()
         {
 #if UNITY_ANDROID
@@ -256,16 +204,10 @@ namespace MagicLeap.LeapBrush
 
             _camera = Camera.main;
 
-            lock (_lock)
-            {
-                // TODO(ghazen): Use a server-provided session identifier.
-                _userName = "U" + _random.Next(1, 1000000);
-                _userDisplayName = "User " +  _random.Next(1, 10000);
-                _persistentDataPath = Application.persistentDataPath;
-                _appVersion = Application.version;
-            }
-
-            ThreadDispatcher.ScheduleWork(StartServerConnectionsOnWorkerThread);
+            // TODO(ghazen): Use a server-provided session identifier.
+            _userName = "U" + _random.Next(1, 1000000);
+            _userDisplayName = "User " +  _random.Next(1, 10000);
+            _appVersion = Application.version;
 
             _updateStatusTextCoroutine = UpdateStatusTextPeriodically();
             StartCoroutine(_updateStatusTextCoroutine);
@@ -277,6 +219,7 @@ namespace MagicLeap.LeapBrush
             ControllerInput.Instance.Events.OnTriggerUp += OnTriggerButtonUp;
             ControllerInput.Instance.Events.OnTouchDelta += OnTouchDelta;
 
+            _settingsPanel.Init();
             _settingsPanel.OnShowHeadsetsChanged += OnShowHeadsetsChanged;
             _settingsPanel.OnShowControllersChanged += OnShowControllersChanged;
             _settingsPanel.OnClearAllContentSelected += OnClearAllContentSelected;
@@ -291,27 +234,24 @@ namespace MagicLeap.LeapBrush
             _polyBrushTool.OnDrawingCompleted += OnPolyBrushDrawingCompleted;
             _eraserTool.OnTriggerEnterEvent += OnEraserCollisionTrigger;
 
-            _scribbleBrushButton.Events.OnSelect.AddListener(OnScribbleBrushToolSelected);
-            _colorPaletteButton.Events.OnSelect.AddListener(OnColorPaletteSelected);
-            _polyBrushButton.Events.OnSelect.AddListener(OnPolyBrushToolSelected);
-            _eraserToolButton.Events.OnSelect.AddListener(OnEraserToolSelected);
-            _laserPointerButton.Events.OnSelect.AddListener(OnLaserPointerSelected);
-            _importModelButton.Events.OnSelect.AddListener(OnImportModelButtonSelected);
-            _settingsButton.Events.OnSelect.AddListener(OnSettingsButtonSelected);
-            _openSpacesAppButton.Events.OnSelect.AddListener(OnStartSpacesAppButtonSelected);
-            _chooseServerButton.Events.OnSelect.AddListener(OnChooseServerButtonSelected);
-            _drawSoloButton.Events.OnSelect.AddListener(OnDrawSoloButtonSelected);
-            _drawSoloContinueButton.Events.OnSelect.AddListener(OnDrawSoloContinueButtonSelected);
-            _drawSoloCancelButton.Events.OnSelect.AddListener(OnDrawSoloCancelButtonSelected);
+            _mainPanel.OnScribbleBrushToolSelected += OnScribbleBrushToolSelected;
+            _mainPanel.OnColorPaletteSelected += OnColorPaletteSelected;
+            _mainPanel.OnPolyBrushToolSelected += OnPolyBrushToolSelected;
+            _mainPanel.OnEraserToolSelected += OnEraserToolSelected;
+            _mainPanel.OnLaserPointerSelected += OnLaserPointerSelected;
+            _mainPanel.OnImportModelSelected += OnImportModelSelected;
+            _mainPanel.OnSettingsSelected += OnSettingsSelected;
 
             _external3dModelManager.OnModelsListUpdated += OnExternal3DModelsListUpdated;
             _importModelPopup.OnPlaceNewExternal3DModel += OnPlaceNewExternal3DModel;
 
-#if !UNITY_ANDROID
-            _floorGrid.gameObject.SetActive(true);
-#endif
+            _notConnectedPanel.OnChooseServerSelected += OnChooseServerSelected;
+            _notConnectedPanel.OnDrawSoloSelected += OnDrawSoloSelected;
+
+            _drawSoloAreYourSurePopup.OnConfirmSelected += OnDrawSoloConfirmButtonSelected;
 
 #if !UNITY_ANDROID
+            _floorGrid.gameObject.SetActive(true);
             ControllerInput.Instance.gameObject.SetActive(true);
 #endif
 
@@ -321,8 +261,14 @@ namespace MagicLeap.LeapBrush
             _brushColorManager.OnBrushColorsChanged += UpdateUserBrushColors;
 
             LoadUserDisplayName();
+
+            _serverConnectionManager.OnServerUrlChanged += OnServerUrlChanged;
+            _serverConnectionManager.LoadServerUrl();
         }
 
+        /// <summary>
+        /// Unity lifecycle method run every render frame.
+        /// </summary>
         private void Update()
         {
             if (_cameraFollowUserName != null)
@@ -335,98 +281,105 @@ namespace MagicLeap.LeapBrush
                 }
             }
 
-            bool drawSolo;
+            UpdateUploadThread();
+            UpdatePanelVisibility();
 
-            lock (_lock)
+            MaybeExpireOtherUserControls();
+            MaybeExpireOtherUserWearables();
+
+            ThreadDispatcher.DispatchAll();
+        }
+
+        /// <summary>
+        /// Update the server upload thread with the latest state information, e.g. the user's
+        /// Controller and Headset poses.
+        /// </summary>
+        private void UpdateUploadThread()
+        {
+            if (_uploadThread == null)
             {
-                Transform controlTransform = ControllerInput.Instance.transform;
-                Vector3 controlPosition = controlTransform.position;
-                Vector3 headPosition = _camera.transform.position;
-
-                _spaceInfo.SpaceId = _localizationManager.LocalizationInfo.SpaceId ?? "";
-                _spaceInfo.SpaceName = _localizationManager.LocalizationInfo.SpaceName ?? "";
-                _spaceInfo.MappingMode =  ProtoUtils.ToProto(
-                    _localizationManager.LocalizationInfo.MappingMode);
-                _spaceInfo.TargetSpaceOrigin = ProtoUtils.ToProto(
-                    _localizationManager.LocalizationInfo.TargetSpaceOriginPose);
-                _spaceInfo.UsingImportedAnchors = _anchorsManager.IsUsingImportedAnchors;
-
-                AnchorsApi.Anchor anchorClosestToHead = null;
-                _headClosestAnchorId = null;
-                float minHeadToAnchorDistanceSqr = Mathf.Infinity;
-                if (_spaceInfo.Anchor.Count > _anchorsManager.Anchors.Length)
-                {
-                    _spaceInfo.Anchor.Clear();
-                }
-
-                for (int i = 0; i < _anchorsManager.Anchors.Length; ++i)
-                {
-                    AnchorsApi.Anchor anchor = _anchorsManager.Anchors[i];
-
-                    if (i >= _spaceInfo.Anchor.Count)
-                    {
-                        _spaceInfo.Anchor.Add(new AnchorProto());
-                    }
-
-                    AnchorProto anchorProto = _spaceInfo.Anchor[i];
-                    anchorProto.Id = anchor.Id;
-                    anchorProto.Pose = ProtoUtils.ToProto(anchor.Pose);
-
-                    float headDistanceToAnchorSqr =
-                        (anchor.Pose.position - headPosition).sqrMagnitude;
-                    if (headDistanceToAnchorSqr < minHeadToAnchorDistanceSqr)
-                    {
-                        anchorClosestToHead = anchor;
-                        minHeadToAnchorDistanceSqr = headDistanceToAnchorSqr;
-                    }
-                }
-
-                _batteryStatus.Level = (uint) Mathf.RoundToInt(
-                    Mathf.Clamp01(SystemInfo.batteryLevel) * 100);
-                _batteryStatus.State = ProtoUtils.ToProto(SystemInfo.batteryStatus);
-
-                GameObject anchorClosestToHeadGameObject = null;
-                if (anchorClosestToHead != null)
-                {
-                    _anchorsManager.TryGetAnchorGameObject(anchorClosestToHead.Id, out anchorClosestToHeadGameObject);
-                }
-
-                if (_cameraFollowUserName == null)
-                {
-                    if (anchorClosestToHeadGameObject != null)
-                    {
-                        _headClosestAnchorId = anchorClosestToHead.Id;
-                        _headPoseRelativeToAnchor = anchorClosestToHeadGameObject.transform
-                            .InverseTransformPose(new Pose(headPosition, _camera.transform.rotation));
-                        _controlPoseRelativeToAnchor = anchorClosestToHeadGameObject.transform
-                            .InverseTransformPose(new Pose(controlPosition, controlTransform.rotation));
-                    }
-                    else
-                    {
-                        _headClosestAnchorId = null;
-                        _headPoseRelativeToAnchor = Pose.identity;
-                        _controlPoseRelativeToAnchor = Pose.identity;
-                    }
-                }
-
-                _serverEchoEnabled = _serverEcho;
-
-                if (_mainMenu.activeSelf || _keyboardManager.gameObject.activeSelf)
-                {
-                    _currentToolState = UserStateProto.Types.ToolState.Menu;
-                }
-                else
-                {
-                    _currentToolState = ToProto(_currentTool);
-                }
-
-                _currentToolColor = _brushColorManager.StrokeColor;
-
-                drawSolo = _drawSolo;
+                return;
             }
 
+            Transform controlTransform = ControllerInput.Instance.transform;
+            Vector3 controlPosition = controlTransform.position;
+            Vector3 headPosition = _camera.transform.position;
+
+            _uploadThread.SetSpaceInfo(_localizationManager.LocalizationInfo,
+                _anchorsManager.IsUsingImportedAnchors, _anchorsManager.Anchors);
+
+            // Determine which Anchor is closest to the user's head currently.
+            AnchorsApi.Anchor anchorClosestToHead = null;
+            float minHeadToAnchorDistanceSqr = Mathf.Infinity;
+            for (int i = 0; i < _anchorsManager.Anchors.Length; ++i)
+            {
+                AnchorsApi.Anchor anchor = _anchorsManager.Anchors[i];
+
+                float headDistanceToAnchorSqr =
+                    (anchor.Pose.position - headPosition).sqrMagnitude;
+                if (headDistanceToAnchorSqr < minHeadToAnchorDistanceSqr)
+                {
+                    anchorClosestToHead = anchor;
+                    minHeadToAnchorDistanceSqr = headDistanceToAnchorSqr;
+                }
+            }
+
+            GameObject anchorClosestToHeadGameObject = null;
+            if (anchorClosestToHead != null)
+            {
+                _anchorsManager.TryGetAnchorGameObject(anchorClosestToHead.Id, out anchorClosestToHeadGameObject);
+            }
+
+            if (_cameraFollowUserName == null && anchorClosestToHeadGameObject != null)
+            {
+                // The camera is not set to follow a particular remote user and a closest anchor
+                // was found, update the upload thread with the closest anchor, Headset and
+                // Controller poses. These poses are relative to the anchor pose.
+                _headClosestAnchorId = anchorClosestToHead.Id;
+                _uploadThread.SetHeadPoseRelativeToAnchor(
+                    anchorClosestToHeadGameObject.transform
+                    .InverseTransformPose(new Pose(headPosition, _camera.transform.rotation)));
+                _uploadThread.SetControlPoseRelativeToAnchor(
+                    anchorClosestToHeadGameObject.transform
+                    .InverseTransformPose(
+                        new Pose(controlPosition, controlTransform.rotation)));
+            }
+            else
+            {
+                _headClosestAnchorId = null;
+                _uploadThread.SetHeadPoseRelativeToAnchor(Pose.identity);
+                _uploadThread.SetControlPoseRelativeToAnchor(Pose.identity);
+            }
+
+            _uploadThread.SetHeadClosestAnchorId(_headClosestAnchorId);
+            _uploadThread.SetBatteryStatus(SystemInfo.batteryLevel, SystemInfo.batteryStatus);
+            _uploadThread.SetServerEchoEnabled(_serverConnectionManager.ServerEcho);
+            _uploadThread.SetUserDisplayName(_userDisplayName);
+
+            if (_mainMenu.activeSelf || _keyboardManager.gameObject.activeSelf)
+            {
+                // The menu is being shown to the user -- advertise that the user is using
+                // the menu instead of a normal tool.
+                _uploadThread.SetCurrentToolState(UserStateProto.Types.ToolState.Menu,
+                    _brushColorManager.StrokeColor);
+            }
+            else
+            {
+                _uploadThread.SetCurrentToolState(ToProto(_currentTool),
+                    _brushColorManager.StrokeColor);
+            }
+        }
+
+        /// <summary>
+        /// Update which panels and UI should be shown.
+        /// </summary>
+        private void UpdatePanelVisibility()
+        {
             if (_appTooOld || _serverTooOld)
             {
+                // The application and server are not incompatible. Show an error panel indicating
+                // the issue.
+
                 if (_appTooOld)
                 {
                     _appTooOldPanel.gameObject.SetActive(true);
@@ -441,10 +394,14 @@ namespace MagicLeap.LeapBrush
                 _mainPanel.gameObject.SetActive(false);
                 _settingsPanel.Hide();
                 _keyboardManager.gameObject.SetActive(false);
-                _drawSoloAreYourSurePopup.gameObject.SetActive(false);
+                _drawSoloAreYourSurePopup.Hide();
             }
-            else if ((!_lastServerDownloadOk || !_lastServerUploadOk) && !drawSolo)
+            else if (((!_downloadThread?.LastDownloadOk ?? false)
+                      || (!_uploadThread?.LastUploadOk ?? false)) && !_drawSolo)
             {
+                // The server and client appear to have been disconnected, show the not connected
+                // panel.
+
                 if (!_keyboardManager.gameObject.activeSelf)
                 {
                     _notConnectedPanel.gameObject.SetActive(true);
@@ -460,20 +417,27 @@ namespace MagicLeap.LeapBrush
                        (string.IsNullOrEmpty(_localizationManager.LocalizationInfo.SpaceName) &&
                         string.IsNullOrEmpty(_localizationManager.LocalizationInfo.SpaceId)))
             {
+                // The ML2 client doesn't appear to have localized to a space yet. Show the not
+                // localized panel which helps them open the Spaces tool to select or create a
+                // space.
+
                 _notConnectedPanel.gameObject.SetActive(false);
                 _notLocalizedPanel.gameObject.SetActive(true);
                 _startPanel.Hide();
                 _mainPanel.gameObject.SetActive(false);
                 _settingsPanel.Hide();
                 _keyboardManager.gameObject.SetActive(false);
-                _drawSoloAreYourSurePopup.gameObject.SetActive(false);
+                _drawSoloAreYourSurePopup.Hide();
             }
 #endif
             else
             {
+                // Proceed to the start or main panel depending on if the user has continued through
+                // yet.
+
                 _notConnectedPanel.gameObject.SetActive(false);
                 _notLocalizedPanel.gameObject.SetActive(false);
-                _drawSoloAreYourSurePopup.gameObject.SetActive(false);
+                _drawSoloAreYourSurePopup.Hide();
                 if (!_settingsPanel.isActiveAndEnabled && !_keyboardManager.gameObject.activeSelf)
                 {
                     if (_continuedPastStartPanel)
@@ -483,24 +447,17 @@ namespace MagicLeap.LeapBrush
                     }
                     else
                     {
-                        string userDisplayName;
-                        lock (_lock)
-                        {
-                            userDisplayName = _userDisplayName;
-                        }
-
-                        _startPanel.Show(userDisplayName);
+                        _startPanel.Show(_userDisplayName);
                         _mainPanel.gameObject.SetActive(false);
                     }
                 }
             }
-
-            MaybeExpireOtherUserControls();
-            MaybeExpireOtherUserWearables();
-
-            ThreadDispatcher.DispatchAll();
         }
 
+        /// <summary>
+        /// Sanity check that the current app is in a valid state. Throw an exception and quit
+        /// if not.
+        /// </summary>
         private void SanityCheckValidAppExecution()
         {
             if (RuntimeInformation.ProcessArchitecture != Architecture.X64)
@@ -530,6 +487,10 @@ namespace MagicLeap.LeapBrush
             Application.Quit(-1);
         }
 
+        /// <summary>
+        /// Look for other user's Controls that haven't had their poses updated recently, and
+        /// remove them when found.
+        /// </summary>
         private void MaybeExpireOtherUserControls()
         {
             List<string> userNamesToRemove = null;
@@ -575,6 +536,10 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Look for other user's Headsets (Wearables) that haven't had their poses updated
+        /// recently, and remove them when found.
+        /// </summary>
         private void MaybeExpireOtherUserWearables()
         {
             List<string> userNamesToRemove = null;
@@ -622,6 +587,9 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Unity lifecycle event for this component being destroyed.
+        /// </summary>
         private void OnDestroy()
         {
             ControllerInput.Instance.Events.OnMenuUp -= OnMenuButtonDown;
@@ -629,6 +597,7 @@ namespace MagicLeap.LeapBrush
             ControllerInput.Instance.Events.OnTriggerUp -= OnTriggerButtonUp;
 
             StopServerConnections();
+            ThreadDispatcher.DispatchAllAndShutdown();
 
             StopCoroutine(_updateStatusTextCoroutine);
             if (_maybeCreateAnchorAfterLocalizationWithDelayCoroutine != null)
@@ -650,6 +619,9 @@ namespace MagicLeap.LeapBrush
             Application.logMessageReceived -= OnLogMessageReceived;
         }
 
+        /// <summary>
+        /// Update the tool colors to match the user's color selection in the Palette menu.
+        /// </summary>
         private void UpdateUserBrushColors()
         {
             _scribbleBrushTool.SetColors(
@@ -660,6 +632,9 @@ namespace MagicLeap.LeapBrush
                 _brushColorManager.FillDimmerAlpha);
         }
 
+        /// <summary>
+        /// Try to load the last saved user display name from application storage.
+        /// </summary>
         private void LoadUserDisplayName()
         {
 #if !UNITY_EDITOR
@@ -689,6 +664,10 @@ namespace MagicLeap.LeapBrush
 #endif
         }
 
+        /// <summary>
+        /// Try to persist an updated user display name choice to application data storage.
+        /// </summary>
+        /// <param name="userDisplayName">The new user display name to save.</param>
         private static void SaveUserDisplayName(string userDisplayName)
         {
 #if !UNITY_EDITOR
@@ -713,20 +692,10 @@ namespace MagicLeap.LeapBrush
 #endif
         }
 
-        private void UpdateNotConnectedDescriptionText()
-        {
-            LocalizeStringEvent textLocalized =
-                _notConnectedDescriptionText.GetComponent<LocalizeStringEvent>();
-
-            lock (_serverUrlLock)
-            {
-                ((StringVariable) textLocalized.StringReference["ServerHostAndPort"]).Value
-                    = _serverUrl;
-            }
-
-            textLocalized.StringReference.RefreshString();
-        }
-
+        /// <summary>
+        /// Handler for a collision between the eraser 3D model and another scene object.
+        /// </summary>
+        /// <param name="collider">The collider that intersected with the eraser.</param>
         private void OnEraserCollisionTrigger(Collider collider)
         {
             var collidedBrush = collider.GetComponentInParent<BrushBase>();
@@ -737,12 +706,7 @@ namespace MagicLeap.LeapBrush
                 PlayOneoffSpatialSound(_eraseSound, collider.gameObject.transform.position);
                 Destroy(collidedBrush.gameObject);
 
-                lock (_lock)
-                {
-                    _brushStrokesToRemove.AddLast(
-                        new BrushStrokeRemoveRequest {Id = collidedBrush.Id, AnchorId = collidedBrush.AnchorId});
-                }
-
+                _uploadThread.RemoveBrushStroke(collidedBrush.Id, collidedBrush.AnchorId);
                 return;
             }
 
@@ -754,14 +718,15 @@ namespace MagicLeap.LeapBrush
                 PlayOneoffSpatialSound(_eraseSound, collider.gameObject.transform.position);
                 Destroy(externalModel.gameObject);
 
-                lock (_lock)
-                {
-                    _externalModelsToRemove.AddLast(
-                        new ExternalModelRemoveRequest() {Id = externalModel.Id, AnchorId = externalModel.AnchorId});
-                }
+                _uploadThread.RemoveExternalModel(externalModel.Id, externalModel.AnchorId);
             }
         }
 
+        /// <summary>
+        /// Play a oneoff spatial sound at a particular location.
+        /// </summary>
+        /// <param name="soundDefinition">The sound definition for the sound to play.</param>
+        /// <param name="position">The world position where the sound should play.</param>
         private void PlayOneoffSpatialSound(SoundDefinition soundDefinition, Vector3 position)
         {
             OneoffSpatialSoundBehavior oneoffSoundBehavior = Instantiate(
@@ -771,6 +736,10 @@ namespace MagicLeap.LeapBrush
             oneoffSoundBehavior.transform.position = position;
         }
 
+        /// <summary>
+        /// Handler for map localization changes. The user may have lost or regained localization.
+        /// </summary>
+        /// <param name="info">The updated localization info.</param>
         private void OnLocalizationInfoChanged(AnchorsApi.LocalizationInfo info)
         {
             if (info.LocalizationStatus == MLAnchors.LocalizationStatus.Localized)
@@ -794,6 +763,9 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Handler for the user tapping the menu button on their Controller.
+        /// </summary>
         private void OnMenuButtonDown()
         {
             if (_continuedPastStartPanel)
@@ -806,6 +778,9 @@ namespace MagicLeap.LeapBrush
             UpdateActiveTool();
         }
 
+        /// <summary>
+        /// Handler for the user pushing the trigger button down on their Controller.
+        /// </summary>
         private void OnTriggerButtonDown()
         {
             BrushBase brushTool = GetActiveBrushTool();
@@ -815,6 +790,9 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Handler for the user releasing the trigger button on their Controller.
+        /// </summary>
         private void OnTriggerButtonUp()
         {
             BrushBase brushTool = GetActiveBrushTool();
@@ -824,6 +802,10 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Handler for the user swiping on the Controller's touchpad
+        /// </summary>
+        /// <param name="touchDelta">The 2D delta of the swipe</param>
         private void OnTouchDelta(Vector2 touchDelta)
         {
             BrushBase brushTool = GetActiveBrushTool();
@@ -835,104 +817,109 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Handler for new poses being added to the scribble brush tool while drawing.
+        /// </summary>
         private void OnScribbleBrushStrokePosesAdded()
         {
-            if (_currentBrushStroke == null)
+            // Hold the upload thread lock while manipulating _uploadThread.CurrentBrushStroke
+            lock (_uploadThread.Lock)
             {
-                if (!_anchorsManager.TryGetAnchorGameObject(_headClosestAnchorId, out _))
+                if (_uploadThread.CurrentBrushStroke == null)
                 {
-                    return;
-                }
+                    if (!_anchorsManager.TryGetAnchorGameObject(_headClosestAnchorId, out _))
+                    {
+                        return;
+                    }
 
-                BrushStrokeProto brushStrokeProto = new BrushStrokeProto
-                {
-                    Id = "B" + _random.Next(0, Int32.MaxValue),
-                    AnchorId = _headClosestAnchorId,
-                    StrokeColorRgb = ColorUtils.ToRgbaUint(_brushColorManager.StrokeColor),
-                };
+                    BrushStrokeProto brushStrokeProto = new BrushStrokeProto
+                    {
+                        Id = "B" + _random.Next(0, Int32.MaxValue),
+                        AnchorId = _headClosestAnchorId,
+                        StrokeColorRgb = ColorUtils.ToRgbaUint(_brushColorManager.StrokeColor),
+                    };
 
-                brushStrokeProto.Type = BrushStrokeProto.Types.BrushType.Scribble;
-
-                lock (_lock)
-                {
+                    brushStrokeProto.Type = BrushStrokeProto.Types.BrushType.Scribble;
                     brushStrokeProto.UserName = _userName;
-                    _currentBrushStroke = brushStrokeProto;
+                    _uploadThread.CurrentBrushStroke = brushStrokeProto;
+
+                    _brushColorManager.SetManuallySelected();
                 }
 
-                _brushColorManager.SetManuallySelected();
-            }
-
-            if (_anchorsManager.TryGetAnchorGameObject(
-                    _currentBrushStroke.AnchorId, out GameObject anchorGameObject))
-            {
-                Transform anchorTransform = anchorGameObject.transform;
-
-                lock (_lock)
+                if (_anchorsManager.TryGetAnchorGameObject(
+                        _uploadThread.CurrentBrushStroke.AnchorId, out GameObject anchorGameObject))
                 {
+                    Transform anchorTransform = anchorGameObject.transform;
+
                     int brushStrokeStartIndex =
-                        _currentBrushStroke.StartIndex + _currentBrushStroke.BrushPose.Count;
+                        _uploadThread.CurrentBrushStroke.StartIndex
+                        + _uploadThread.CurrentBrushStroke.BrushPose.Count;
                     for (int i = brushStrokeStartIndex; i < _scribbleBrushTool.Poses.Count; ++i)
                     {
-                        _currentBrushStroke.BrushPose.Add(ProtoUtils.ToProto(
+                        _uploadThread.CurrentBrushStroke.BrushPose.Add(ProtoUtils.ToProto(
                             anchorTransform.InverseTransformPose(_scribbleBrushTool.Poses[i])));
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Handler for new poses being added to the polygon brush while drawing.
+        /// </summary>
+        /// <param name="startIndex">The start index from where poses were modified.</param>
         private void OnPolyBrushStrokePosesUpdated(int startIndex)
         {
-            if (_currentBrushStroke == null)
+            // Hold the upload thread lock while manipulating _uploadThread.CurrentBrushStroke
+            lock (_uploadThread.Lock)
             {
-                if (!_anchorsManager.TryGetAnchorGameObject(_headClosestAnchorId, out _))
+                if (_uploadThread.CurrentBrushStroke == null)
                 {
-                    return;
-                }
-
-                BrushStrokeProto brushStrokeProto = new BrushStrokeProto
-                {
-                    Id = "B" + _random.Next(0, Int32.MaxValue),
-                    AnchorId = _headClosestAnchorId,
-                    StrokeColorRgb = ColorUtils.ToRgbaUint(_brushColorManager.StrokeColor),
-                    FillColorRgba = ColorUtils.ToRgbaUint(_brushColorManager.FillColor),
-                    FillDimmerA = (uint) Math.Round(_brushColorManager.FillDimmerAlpha * 255)
-                };
-
-                brushStrokeProto.Type = BrushStrokeProto.Types.BrushType.Poly;
-
-                lock (_lock)
-                {
-                    brushStrokeProto.UserName = _userName;
-                    _currentBrushStroke = brushStrokeProto;
-                }
-
-                _brushColorManager.SetManuallySelected();
-            }
-
-            GameObject anchorGameObject;
-            if (_anchorsManager.TryGetAnchorGameObject(
-                    _currentBrushStroke.AnchorId, out anchorGameObject))
-            {
-                Transform anchorTransform = anchorGameObject.transform;
-
-                lock (_lock)
-                {
-                    if (_currentBrushStroke.StartIndex >= startIndex)
+                    if (!_anchorsManager.TryGetAnchorGameObject(_headClosestAnchorId, out _))
                     {
-                        _currentBrushStroke.StartIndex = startIndex;
-                        _currentBrushStroke.BrushPose.Clear();
+                        return;
                     }
 
-                    while (startIndex - _currentBrushStroke.StartIndex < _currentBrushStroke.BrushPose.Count)
+                    BrushStrokeProto brushStrokeProto = new BrushStrokeProto
                     {
-                        _currentBrushStroke.BrushPose.RemoveAt(_currentBrushStroke.BrushPose.Count - 1);
+                        Id = "B" + _random.Next(0, Int32.MaxValue),
+                        AnchorId = _headClosestAnchorId,
+                        StrokeColorRgb = ColorUtils.ToRgbaUint(_brushColorManager.StrokeColor),
+                        FillColorRgba = ColorUtils.ToRgbaUint(_brushColorManager.FillColor),
+                        FillDimmerA = (uint) Math.Round(_brushColorManager.FillDimmerAlpha * 255)
+                    };
+
+                    brushStrokeProto.Type = BrushStrokeProto.Types.BrushType.Poly;
+                    brushStrokeProto.UserName = _userName;
+                    _uploadThread.CurrentBrushStroke = brushStrokeProto;
+
+                    _brushColorManager.SetManuallySelected();
+                }
+
+                GameObject anchorGameObject;
+                if (_anchorsManager.TryGetAnchorGameObject(
+                        _uploadThread.CurrentBrushStroke.AnchorId, out anchorGameObject))
+                {
+                    Transform anchorTransform = anchorGameObject.transform;
+
+                    if (_uploadThread.CurrentBrushStroke.StartIndex >= startIndex)
+                    {
+                        _uploadThread.CurrentBrushStroke.StartIndex = startIndex;
+                        _uploadThread.CurrentBrushStroke.BrushPose.Clear();
+                    }
+
+                    while (startIndex - _uploadThread.CurrentBrushStroke.StartIndex
+                           < _uploadThread.CurrentBrushStroke.BrushPose.Count)
+                    {
+                        _uploadThread.CurrentBrushStroke.BrushPose.RemoveAt(
+                            _uploadThread.CurrentBrushStroke.BrushPose.Count - 1);
                     }
 
                     int brushStrokeStartIndex =
-                        _currentBrushStroke.StartIndex + _currentBrushStroke.BrushPose.Count;
+                        _uploadThread.CurrentBrushStroke.StartIndex
+                        + _uploadThread.CurrentBrushStroke.BrushPose.Count;
                     for (int i = brushStrokeStartIndex; i < _polyBrushTool.Poses.Count; ++i)
                     {
-                        _currentBrushStroke.BrushPose.Add(ProtoUtils.ToProto(
+                        _uploadThread.CurrentBrushStroke.BrushPose.Add(ProtoUtils.ToProto(
                             anchorTransform.InverseTransformPose(_polyBrushTool.Poses[i])));
                     }
                 }
@@ -949,13 +936,19 @@ namespace MagicLeap.LeapBrush
             OnBrushDrawingCompleted(_polyBrushTool);
         }
 
+        /// <summary>
+        /// Handler for a brush drawing being completed.
+        /// </summary>
+        /// <param name="brushTool">The brush tool that completed the drawing.</param>
         private void OnBrushDrawingCompleted(BrushBase brushTool)
         {
             BrushStrokeProto brushStrokeProto;
-            lock (_lock)
+            // Hold the upload thread lock while manipulating _uploadThread.CurrentBrushStroke
+            lock (_uploadThread.Lock)
             {
-                brushStrokeProto = _currentBrushStroke;
-                _currentBrushStroke = null;
+                // Pull the current brush stroke from the upload thread and clear it.
+                brushStrokeProto = _uploadThread.CurrentBrushStroke;
+                _uploadThread.CurrentBrushStroke = null;
             }
 
             if (brushStrokeProto == null)
@@ -983,15 +976,9 @@ namespace MagicLeap.LeapBrush
 
             if (brushStrokeProto.StartIndex + brushStrokeProto.BrushPose.Count < 2)
             {
-                lock (_lock)
-                {
-                    _brushStrokesToRemove.AddLast(
-                        new BrushStrokeRemoveRequest
-                        {
-                            Id = brushStrokeProto.Id,
-                            AnchorId = brushStrokeProto.AnchorId
-                        });
-                }
+                // The brush did not create a sufficient number of poses to be a drawing in the end.
+                // Remove the brush stroke.
+                _uploadThread.RemoveBrushStroke(brushStrokeProto.Id, brushStrokeProto.AnchorId);
                 return;
             }
 
@@ -1001,19 +988,21 @@ namespace MagicLeap.LeapBrush
             brushStroke.SetColors(_brushColorManager.StrokeColor, _brushColorManager.FillColor,
                 _brushColorManager.FillDimmerAlpha);
 
-            lock (_lock)
-            {
-                brushStroke.AnchorId = brushStrokeProto.AnchorId;
-                brushStroke.Id = brushStrokeProto.Id;
-                brushStroke.UserName = _userName;
+            brushStroke.AnchorId = brushStrokeProto.AnchorId;
+            brushStroke.Id = brushStrokeProto.Id;
+            brushStroke.UserName = _userName;
 
-                _brushStrokeMap[brushStrokeProto.Id] = brushStroke;
-                brushStroke.OnDestroyed += OnBrushStrokeDestroyed;
+            _brushStrokeMap[brushStrokeProto.Id] = brushStroke;
+            brushStroke.OnDestroyed += OnBrushStrokeDestroyed;
 
-                _brushStrokesToUpload.AddLast(brushStrokeProto);
-            }
+            // Upload the completed brush stroke to the server.
+            _uploadThread.AddBrushStroke(brushStrokeProto);
         }
 
+        /// <summary>
+        /// Handler for a brush stroke object being destroyed.
+        /// </summary>
+        /// <param name="brushStroke">The brush stroke component that was destroyed.</param>
         private void OnBrushStrokeDestroyed(BrushBase brushStroke)
         {
             if (_brushStrokeMap.TryGetValue(brushStroke.Id, out BrushBase existingBrushStroke))
@@ -1025,31 +1014,24 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Handler for the pose of a 3D model being changed.
+        /// </summary>
+        /// <param name="externalModel">The 3D model that had its pose changed.</param>
         private void OnExternalModelTransformChanged(External3DModel externalModel)
         {
             GameObject anchorGameObject;
             if (_anchorsManager.TryGetAnchorGameObject(externalModel.AnchorId, out anchorGameObject))
             {
-                lock (_lock)
-                {
-                    ExternalModelProto modelProto;
-                    if (!_externalModelsToUpdate.TryGetValue(externalModel.Id, out modelProto))
-                    {
-                        modelProto = new ExternalModelProto()
-                        {
-                            Id = externalModel.Id,
-                            AnchorId = externalModel.AnchorId,
-                            FileName = externalModel.FileName,
-                        };
-                        _externalModelsToUpdate[externalModel.Id] = modelProto;
-                    }
-
-                    modelProto.ModifiedByUserName = _userName;
-                    modelProto.Transform = externalModel.TransformProto;
-                }
+                // Update the 3D model pose in the server.
+                _uploadThread.UpdateExternalModel(externalModel.Id,
+                    externalModel.AnchorId, externalModel.FileName, externalModel.TransformProto);
             }
         }
 
+        /// <summary>
+        /// Handler for the user toggling whether other user's Headsets should be displayed.
+        /// </summary>
         private void OnShowHeadsetsChanged()
         {
             foreach (var entry in _otherUserWearables)
@@ -1058,6 +1040,9 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Handler for the user toggling whether other user's Controllers should be displayed.
+        /// </summary>
         private void OnShowControllersChanged()
         {
             foreach (var entry in _otherUserControllers)
@@ -1066,71 +1051,86 @@ namespace MagicLeap.LeapBrush
             }
         }
 
-        public void OnScribbleBrushToolSelected(Interactor interactor)
+        /// <summary>
+        /// Handler for the scribble brush being selected as the current tool.
+        /// </summary>
+        private void OnScribbleBrushToolSelected()
         {
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                _mainMenu.SetActive(false);
+            _mainMenu.SetActive(false);
 
-                _currentTool = Tool.BrushScribble;
-                UpdateActiveTool();
-            });
+            _currentTool = Tool.BrushScribble;
+            UpdateActiveTool();
         }
 
-        public void OnColorPaletteSelected(Interactor interactor)
+        /// <summary>
+        /// Handler for the Color Palette menu being selected to open.
+        /// </summary>
+        private void OnColorPaletteSelected()
         {
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                _colorPickerPopup.Show();
-            });
+            _colorPickerPopup.Show();
         }
 
-        public void OnPolyBrushToolSelected(Interactor interactor)
+        /// <summary>
+        /// Handler for the poly brush being selected as the current tool.
+        /// </summary>
+        private void OnPolyBrushToolSelected()
         {
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                _mainMenu.SetActive(false);
+            _mainMenu.SetActive(false);
 
-                _currentTool = Tool.BrushPoly;
-                UpdateActiveTool();
-            });
+            _currentTool = Tool.BrushPoly;
+            UpdateActiveTool();
         }
 
-        public void OnEraserToolSelected(Interactor interactor)
+        /// <summary>
+        /// Handler for the eraser being selected as the current tool.
+        /// </summary>
+        private void OnEraserToolSelected()
         {
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                _mainMenu.SetActive(false);
-                _currentTool = Tool.Eraser;
-                UpdateActiveTool();
-            });
+            _mainMenu.SetActive(false);
+            _currentTool = Tool.Eraser;
+            UpdateActiveTool();
         }
 
-        public void OnLaserPointerSelected(Interactor interactor)
+        /// <summary>
+        /// Handler for the laser pointer being selected as the current tool.
+        /// </summary>
+        private void OnLaserPointerSelected()
         {
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                _mainMenu.SetActive(false);
-                _currentTool = Tool.Laser;
-                UpdateActiveTool();
-            });
+            _mainMenu.SetActive(false);
+            _currentTool = Tool.Laser;
+            UpdateActiveTool();
         }
 
-        public void OnImportModelButtonSelected(Interactor interactor)
+        /// <summary>
+        /// Handler for the import model popup to be displayed.
+        /// </summary>
+        private void OnImportModelSelected()
         {
             _external3dModelManager.RefreshModelList();
-
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                _importModelPopup.Show();
-            });
+            _importModelPopup.Show();
         }
 
-        public void OnExternal3DModelsListUpdated()
+        /// <summary>
+        /// Handler for the settings menu to be displayed.
+        /// </summary>
+        private void OnSettingsSelected()
+        {
+            _settingsPanel.Show(_userName, _leapBrushClient);
+            _mainPanel.gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        /// Handler for the list of external 3D models being refreshed.
+        /// </summary>
+        private void OnExternal3DModelsListUpdated()
         {
             _importModelPopup.OnExternal3DModelsListUpdated(_external3dModelManager.Models);
         }
 
+        /// <summary>
+        /// Handler for the user placing a new 3D model.
+        /// </summary>
+        /// <param name="modelInfo">The information about the 3D model to place.</param>
         private void OnPlaceNewExternal3DModel(External3DModelManager.ModelInfo modelInfo)
         {
             _importModelPopup.Hide();
@@ -1160,37 +1160,18 @@ namespace MagicLeap.LeapBrush
                     Quaternion.LookRotation(modelLookDir.normalized, Vector3.up));
                 TransformExtensions.SetWorldPose(externalModel.transform, modelPose);
 
-                lock (_lock)
-                {
-                    _externalModelsToUpdate[externalModel.Id] = new ExternalModelProto
-                    {
-                        Id = externalModel.Id,
-                        AnchorId = externalModel.AnchorId,
-                        FileName = modelInfo.FileName,
-                        ModifiedByUserName = _userName,
-                        Transform = ProtoUtils.ToProto(externalModel.transform)
-                    };
-                }
+                _uploadThread.UpdateExternalModel(externalModel.Id, externalModel.AnchorId,
+                    modelInfo.FileName, ProtoUtils.ToProto(externalModel.transform));
             }
         }
 
-        public void OnSettingsButtonSelected(Interactor interactor)
-        {
-            string userName;
-            lock (_lock)
-            {
-                userName = _userName;
-            }
-
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                _settingsPanel.Show(userName, _leapBrushClient);
-                _mainPanel.gameObject.SetActive(false);
-            });
-        }
-
+        /// <summary>
+        /// Handler for the user deciding to join another user remotely.
+        /// </summary>
+        /// <param name="userResult">The user information for the user to be joined.</param>
         private void OnJoinUserSessionRemotelySelected(QueryUsersResponse.Types.Result userResult)
         {
+            // Import the anchors from the selected user into the Anchor Manager.
             var anchors = new AnchorsApi.Anchor[userResult.SpaceInfo.Anchor.Count];
             for (int i = 0; i < anchors.Length; i++)
             {
@@ -1224,36 +1205,24 @@ namespace MagicLeap.LeapBrush
             });
         }
 
+        /// <summary>
+        /// Handler for the user picking to clear all brushes and 3d models at the current
+        /// location.
+        /// </summary>
         private void OnClearAllContentSelected()
         {
             foreach (var entry in _brushStrokeMap)
             {
                 Destroy(entry.Value.gameObject);
 
-                lock (_lock)
-                {
-                    _brushStrokesToRemove.AddLast(
-                        new BrushStrokeRemoveRequest
-                        {
-                            Id = entry.Value.Id,
-                            AnchorId = entry.Value.AnchorId
-                        });
-                }
+                _uploadThread.RemoveBrushStroke(entry.Value.Id, entry.Value.AnchorId);
             }
 
             foreach (var entry in _externalModelMap)
             {
                 Destroy(entry.Value.gameObject);
 
-                lock (_lock)
-                {
-                    _externalModelsToRemove.AddLast(
-                        new ExternalModelRemoveRequest()
-                        {
-                            Id = entry.Value.Id,
-                            AnchorId = entry.Value.AnchorId
-                        });
-                }
+                _uploadThread.RemoveExternalModel(entry.Value.Id, entry.Value.AnchorId);
             }
         }
 
@@ -1262,6 +1231,9 @@ namespace MagicLeap.LeapBrush
             _mainPanel.gameObject.SetActive(true);
         }
 
+        /// <summary>
+        /// Handler for the user selecting to continue past the start panel.
+        /// </summary>
         private void OnStartPanelContinueSelected()
         {
             _continuedPastStartPanel = true;
@@ -1270,11 +1242,19 @@ namespace MagicLeap.LeapBrush
             _anchorsManager.SetContentShown(true);
         }
 
+        /// <summary>
+        /// Handler for a new user display name being picked.
+        /// </summary>
+        /// <param name="userDisplayName">The updated display name</param>
         private void OnSetUserDisplayName(string userDisplayName)
         {
             SetUserDisplayName(userDisplayName);
         }
 
+        /// <summary>
+        /// Set the new user display name
+        /// </summary>
+        /// <param name="userDisplayName">The updated display name</param>
         private void SetUserDisplayName(string userDisplayName)
         {
             if (string.IsNullOrWhiteSpace(userDisplayName))
@@ -1282,31 +1262,26 @@ namespace MagicLeap.LeapBrush
                 return;
             }
 
-            lock (_lock)
-            {
-                _userDisplayName = userDisplayName;
-            }
+            _userDisplayName = userDisplayName;
 
             SaveUserDisplayName(userDisplayName);
             _startPanel.OnUserDisplayNameChanged(userDisplayName);
         }
 
-        private void OnChooseServerButtonSelected(Interactor interactor)
+        /// <summary>
+        /// Handler for the user deciding to select a new server. Opens the keyboard for entry.
+        /// </summary>
+        private void OnChooseServerSelected()
         {
             _keyboardManager.gameObject.SetActive(true);
             _keyboardManager.OnKeyboardClose.AddListener(OnChooseServerKeyboardClosed);
             _keyboardManager.PublishKeyEvent.AddListener(OnChooseServerKeyboardKeyPressed);
 
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                lock (_serverUrlLock)
-                {
-                    _keyboardManager.TypedContent = _serverUrl;
-                    _keyboardManager.InputField.text = _serverUrl;
-                }
+            string serverUrl = _serverConnectionManager.ServerUrl;
+            _keyboardManager.TypedContent = serverUrl;
+            _keyboardManager.InputField.text = serverUrl;
 
-                _mainMenu.SetActive(false);
-            });
+            _mainMenu.SetActive(false);
         }
 
         private void OnChooseServerKeyboardKeyPressed(
@@ -1314,7 +1289,8 @@ namespace MagicLeap.LeapBrush
         {
             if (keyType == KeyType.kEnter || keyType == KeyType.kJPEnter)
             {
-                OnNewServerChosen(typedContent.Trim());
+                // The enter key was pressed, accept the new server url.
+                _serverConnectionManager.SetServerUrl(typedContent.Trim());
             }
         }
 
@@ -1323,36 +1299,24 @@ namespace MagicLeap.LeapBrush
             _keyboardManager.PublishKeyEvent.RemoveListener(OnChooseServerKeyboardKeyPressed);
             _keyboardManager.OnKeyboardClose.RemoveListener(OnChooseServerKeyboardClosed);
 
-            OnNewServerChosen(_keyboardManager.TypedContent.Trim());
+            _serverConnectionManager.SetServerUrl(_keyboardManager.TypedContent.Trim());
 
             _keyboardManager.gameObject.SetActive(false);
             _mainMenu.SetActive(true);
         }
 
-        private void OnNewServerChosen(string newServerUrl)
+        private void OnServerUrlChanged(string newServerUrl)
         {
-            if (string.IsNullOrEmpty(newServerUrl))
-            {
-                return;
-            }
+            Debug.LogFormat("Selected the new server {0}", newServerUrl);
 
-            lock (_serverUrlLock)
-            {
-                if (_serverUrl == newServerUrl)
-                {
-                    return;
-                }
-                _serverUrl = newServerUrl;
-            }
-
-            Debug.LogFormat("Selected the new server {0}", _serverUrl);
-
-            SaveServerUrl(_serverUrl);
-            UpdateNotConnectedDescriptionText();
+            _notConnectedPanel.OnServerUrlChanged(newServerUrl);
 
             RestartServerConnections();
         }
 
+        /// <summary>
+        /// Update the visibility of various tools based on UI state.
+        /// </summary>
         private void UpdateActiveTool()
         {
             _scribbleBrushTool.gameObject.SetActive(!_mainMenu.activeSelf && _currentTool == Tool.BrushScribble);
@@ -1391,6 +1355,10 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Get the currently active brush tool.
+        /// </summary>
+        /// <returns>The currently active brush tool or null if a brush is not active</returns>
         private BrushBase GetActiveBrushTool()
         {
             if (_scribbleBrushTool.isActiveAndEnabled)
@@ -1405,45 +1373,33 @@ namespace MagicLeap.LeapBrush
             return null;
         }
 
-        public void OnStartSpacesAppButtonSelected(Interactor interactor)
+        /// <summary>
+        /// Handler for the user picking the draw solo option -- a confirmation dialog is displayed.
+        /// </summary>
+        public void OnDrawSoloSelected()
         {
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                SpacesAppApi.StartApp();
-            });
+            _drawSoloAreYourSurePopup.Show();
         }
 
-        public void OnDrawSoloButtonSelected(Interactor interactor)
+        /// <summary>
+        /// Handler for the user confirming they want to use the draw solo option. Server
+        /// connections are severed and the user is now drawing offline.
+        /// </summary>
+        private void OnDrawSoloConfirmButtonSelected()
         {
-            _drawSoloAreYourSurePopup.gameObject.SetActive(true);
+            _drawSolo = true;
+
+            _settingsPanel.OnDrawSolo();
+            _startPanel.OnDrawSolo();
+
+            RestartServerConnections();
         }
 
-        public void OnDrawSoloContinueButtonSelected(Interactor interactor)
-        {
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                _drawSoloAreYourSurePopup.gameObject.SetActive(false);
-
-                lock (_lock)
-                {
-                    _drawSolo = true;
-                }
-
-                _settingsPanel.OnDrawSolo();
-                _startPanel.OnDrawSolo();
-
-                RestartServerConnections();
-            });
-        }
-
-        public void OnDrawSoloCancelButtonSelected(Interactor interactor)
-        {
-            _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
-            {
-                _drawSoloAreYourSurePopup.gameObject.SetActive(false);
-            });
-        }
-
+        /// <summary>
+        /// Coroutine to wait a brief duration and then attempt to create an anchor for the
+        /// current space. A Space must have at least one anchor in order to persist content.
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator MaybeCreateAnchorAfterLocalizationWithDelay()
         {
             yield return new WaitForSeconds(1.0f);
@@ -1468,6 +1424,9 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Coroutine to periodically up the the status text.
+        /// </summary>
         private IEnumerator UpdateStatusTextPeriodically()
         {
             while (true)
@@ -1478,6 +1437,9 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Refresh the status text display.
+        /// </summary>
         private void UpdateStatusText()
         {
             if (!_statusText.gameObject.activeInHierarchy)
@@ -1485,42 +1447,28 @@ namespace MagicLeap.LeapBrush
                 return;
             }
 
-            string userDisplayName;
-            bool lastServerUploadOk;
-            bool lastServerDownloadOk;
-            bool drawSolo;
-            lock (_lock)
-            {
-                userDisplayName = _userDisplayName;
-                lastServerUploadOk = _lastServerUploadOk;
-                lastServerDownloadOk = _lastServerDownloadOk;
-                drawSolo = _drawSolo;
-            }
-
             string serverUrlAndVersionString;
-            lock (_serverUrlLock)
+            if (_drawSolo)
             {
-                if (drawSolo)
-                {
-                    serverUrlAndVersionString = "<color=#ffa500>Drawing Solo</color>";
-                }
-                else if (_serverInfo != null)
-                {
-                    serverUrlAndVersionString = string.Format(
-                        "{0} (v{1})", _serverUrl, _serverInfo.ServerVersion);
-                }
-                else
-                {
-                    serverUrlAndVersionString = _serverUrl;
-                }
+                serverUrlAndVersionString = "<color=#ffa500>Drawing Solo</color>";
+            }
+            else if (_serverInfo != null)
+            {
+                serverUrlAndVersionString = string.Format(
+                    "{0} (v{1})", _serverConnectionManager.ServerUrl, _serverInfo.ServerVersion);
+            }
+            else
+            {
+                serverUrlAndVersionString = _serverConnectionManager.ServerUrl;
             }
 
             string serverDetailsString;
-            if (drawSolo)
+            if (_drawSolo)
             {
                 serverDetailsString = "<color=#ffa500>Drawing Solo</color>";
             }
-            else if (lastServerDownloadOk && lastServerUploadOk)
+            else if ((_downloadThread?.LastDownloadOk ?? false)
+                     && (_uploadThread?.LastUploadOk ?? false))
             {
                 serverDetailsString = string.Format(
                     "{0}: {1}", serverUrlAndVersionString, "<color=#00ff00>Connected</color>");
@@ -1549,7 +1497,7 @@ namespace MagicLeap.LeapBrush
                 "Server Connection: {2}\n" +
                 "Map Localization: <i>{3}</i>\n",
                 Application.version,
-                userDisplayName,
+                _userDisplayName,
                 serverDetailsString,
                 localizationString);
 
@@ -1570,417 +1518,149 @@ namespace MagicLeap.LeapBrush
             _statusText.text = statusTextBuilder.ToString();
         }
 
-        private void StartServerConnectionsOnWorkerThread()
+        /// <summary>
+        /// Start server connections asynchronously
+        /// </summary>
+        private void StartServerConnections()
         {
-            bool drawSolo;
-            string persistentDataPath;
-            lock (_lock)
-            {
-                drawSolo = _drawSolo;
-                persistentDataPath = _persistentDataPath;
-            }
+            bool drawSolo = _drawSolo;
 
             _shutDownTokenSource = new();
-            _leapBrushClient = _leapBrushApiFactory.Connect(
-                GetOrLoadServerUrl(), drawSolo, persistentDataPath);
 
-            _uploadThread = new Thread(() => UploadThreadBody(
-                _leapBrushClient, _shutDownTokenSource));
-            _uploadThread.Start();
-
-            _downloadThread = new Thread(() => DownloadThreadBody(
-                _leapBrushClient, _shutDownTokenSource));
-            _downloadThread.Start();
-        }
-
-        private void StopServerConnections()
-        {
-            _shutDownTokenSource.Cancel();
-            if (_leapBrushClient != null)
-            {
-                Debug.Log("Shutting down leap brush client channel...");
-                _leapBrushClient.CloseAndWait();
-            }
-
-            if (_uploadThread != null)
-            {
-                Debug.Log("Joining upload thread...");
-                _uploadThread.Join();
-                Debug.Log("Upload thread joined");
-            }
-
-            if (_downloadThread != null)
-            {
-                Debug.Log("Joining download thread...");
-                _downloadThread.Join();
-                Debug.Log("Upload download joined");
-            }
-        }
-
-        private void RestartServerConnections()
-        {
             ThreadDispatcher.ScheduleWork(() =>
             {
-                StopServerConnections();
-                StartServerConnectionsOnWorkerThread();
+                LeapBrushApiBase.LeapBrushClient leapBrushClient =
+                    _serverConnectionManager.Connect(drawSolo);
+
+                ThreadDispatcher.ScheduleMain(() =>
+                {
+                    _leapBrushClient = leapBrushClient;
+
+                    _uploadThread = new UploadThread(
+                        _leapBrushClient, _shutDownTokenSource, _userName);
+                    _uploadThread.Start();
+
+                    _downloadThread = new DownloadThread(
+                        _leapBrushClient, _shutDownTokenSource, _userName, _appVersion);
+                    _downloadThread.OnServerStateReceived += HandleServerStateReceived;
+                    _downloadThread.Start();
+                });
             });
         }
 
-        private void UploadThreadBody(LeapBrushApiBase.LeapBrushClient leapBrushClient,
-            CancellationTokenSource shutDownTokenSource)
+        /// <summary>
+        /// Stop server connections asynchronously.
+        /// </summary>
+        private void StopServerConnections()
         {
-            try
+            _shutDownTokenSource.Cancel();
+
+            LeapBrushApiBase.LeapBrushClient leapBrushClient = _leapBrushClient;
+            UploadThread uploadThread = _uploadThread;
+            DownloadThread downloadThread = _downloadThread;
+
+            ThreadDispatcher.ScheduleWork(() =>
             {
-                LeapBrushApiBase.UpdateDeviceStream updateDeviceStream =
-                    leapBrushClient.UpdateDeviceStream();
-
-                UserStateProto userState = new UserStateProto();
-                lock (_lock)
+                if (leapBrushClient != null)
                 {
-                    userState.UserName = _userName;
-                }
-#if UNITY_ANDROID && !UNITY_EDITOR
-                userState.DeviceType = UserStateProto.Types.DeviceType.MagicLeap;
-#else
-                userState.DeviceType = UserStateProto.Types.DeviceType.DesktopSpectator;
-                #endif
-
-                SpaceInfoProto spaceInfo = new SpaceInfoProto();
-
-                UpdateDeviceRequest updateRequest = new UpdateDeviceRequest();
-                updateRequest.UserState = userState;
-
-                DateTimeOffset lastUpdateTime = DateTimeOffset.MinValue;
-                while (!shutDownTokenSource.IsCancellationRequested)
-                {
-                    TimeSpan sleepTime = (lastUpdateTime + TimeSpan.FromSeconds(MinServerUpdateIntervalSeconds)
-                                          - DateTimeOffset.Now);
-                    if (sleepTime.Milliseconds > 0)
-                    {
-                        Thread.Sleep(sleepTime);
-                    }
-
-                    bool sendUpdate;
-
-                    updateRequest.SpaceInfo = null;
-                    updateRequest.BrushStrokeAdd = null;
-                    updateRequest.BrushStrokeRemove = null;
-                    updateRequest.ExternalModelAdd = null;
-                    updateRequest.ExternalModelRemove = null;
-
-                    lock (_lock)
-                    {
-                        sendUpdate = !_lastServerUploadOk || lastUpdateTime
-                            + TimeSpan.FromSeconds(ServerPingIntervalSeconds) < DateTimeOffset.Now;
-
-                        if (UpdateUserStateGetWasChanged(userState, _userDisplayName, _headClosestAnchorId,
-                                _headPoseRelativeToAnchor, _controlPoseRelativeToAnchor,
-                                _currentToolState, _currentToolColor, _batteryStatus))
-                        {
-                            sendUpdate = true;
-                        }
-
-                        if (!_lastServerUploadOk || UpdateSpaceInfoGetWasChanged(spaceInfo, _spaceInfo))
-                        {
-                            sendUpdate = true;
-                            updateRequest.SpaceInfo = spaceInfo;
-                        }
-
-                        if (updateRequest.Echo != _serverEchoEnabled)
-                        {
-                            sendUpdate = true;
-                            updateRequest.Echo = _serverEchoEnabled;
-                        }
-
-                        if (_currentBrushStroke != null && _currentBrushStroke.BrushPose.Count > 0)
-                        {
-                            sendUpdate = true;
-                            BrushStrokeProto brushStrokeProto = new();
-                            if (_currentBrushStroke.StartIndex == 0)
-                            {
-                                brushStrokeProto.MergeFrom(_currentBrushStroke);
-                            }
-                            else
-                            {
-                                brushStrokeProto.Id = _currentBrushStroke.Id;
-                                brushStrokeProto.AnchorId = _currentBrushStroke.AnchorId;
-                                brushStrokeProto.StartIndex = _currentBrushStroke.StartIndex;
-                                brushStrokeProto.BrushPose.AddRange(_currentBrushStroke.BrushPose);
-                            }
-
-                            updateRequest.BrushStrokeAdd = new BrushStrokeAddRequest {BrushStroke = brushStrokeProto};
-                            _currentBrushStroke.StartIndex += _currentBrushStroke.BrushPose.Count;
-                            _currentBrushStroke.BrushPose.Clear();
-                        }
-                        else if (_brushStrokesToUpload.Count > 0)
-                        {
-                            sendUpdate = true;
-                            updateRequest.BrushStrokeAdd = new BrushStrokeAddRequest {BrushStroke = _brushStrokesToUpload.First.Value};
-                            _brushStrokesToUpload.RemoveFirst();
-                        }
-
-                        if (_brushStrokesToRemove.Count > 0)
-                        {
-                            sendUpdate = true;
-                            updateRequest.BrushStrokeRemove = _brushStrokesToRemove.First.Value;
-                            _brushStrokesToRemove.RemoveFirst();
-                        }
-
-                        if (_externalModelsToUpdate.Count > 0)
-                        {
-                            sendUpdate = true;
-                            string firstModelId = null;
-                            foreach (string modelId in _externalModelsToUpdate.Keys)
-                            {
-                                firstModelId = modelId;
-                                break;
-                            }
-                            updateRequest.ExternalModelAdd = new ExternalModelAddRequest()
-                            {
-                                Model = _externalModelsToUpdate[firstModelId]
-                            };
-                            _externalModelsToUpdate.Remove(firstModelId);
-                        }
-
-                        if (_externalModelsToRemove.Count > 0)
-                        {
-                            sendUpdate = true;
-                            updateRequest.ExternalModelRemove = _externalModelsToRemove.First.Value;
-                            _externalModelsToRemove.RemoveFirst();
-                        }
-                    }
-
-                    if (!sendUpdate)
-                    {
-                        continue;
-                    }
-
-                    lastUpdateTime = DateTimeOffset.Now;
-
-                    try
-                    {
-                        updateDeviceStream.Write(updateRequest);
-
-                        lock (_lock)
-                        {
-                            if (!_lastServerUploadOk)
-                            {
-                                Debug.Log("UpdateDevice started succeeding");
-                            }
-
-                            _lastServerUploadOk = true;
-                        }
-                    }
-                    catch (RpcException e)
-                    {
-                        lock (_lock)
-                        {
-                            if (_lastServerUploadOk)
-                            {
-                                Debug.LogWarning("UpdateDevice started failing: " + e);
-                            }
-
-                            _lastServerUploadOk = false;
-                        }
-                    }
+                    Debug.Log("Shutting down leap brush client channel...");
+                    leapBrushClient.CloseAndWait();
                 }
 
-                Debug.Log("Upload thread: Shutting down");
+                if (uploadThread != null)
+                {
+                    Debug.Log("Joining upload thread...");
+                    uploadThread.Join();
+                    Debug.Log("Upload thread joined");
+                }
+
+                if (downloadThread != null)
+                {
+                    Debug.Log("Joining download thread...");
+                    downloadThread.Join();
+                    Debug.Log("Upload download joined");
+                }
+            });
+        }
+
+        /// <summary>
+        /// Restart server connections.
+        /// </summary>
+        private void RestartServerConnections()
+        {
+            StopServerConnections();
+            StartServerConnections();
+        }
+
+        /// <summary>
+        /// Handle a new update from the server.
+        /// </summary>
+        /// <param name="resp">The server state response received from the server</param>
+        private void HandleServerStateReceived(ServerStateResponse resp)
+        {
+            if (!HandleServerInfo(resp.ServerInfo))
+            {
+                return;
             }
-            catch (Exception e)
+
+            foreach (UserStateProto otherUserState in resp.UserState)
             {
-                Debug.LogException(e);
+                HandleOtherUserStateReceived(otherUserState);
+            }
+
+            foreach (BrushStrokeAddRequest brushAdd in resp.BrushStrokeAdd)
+            {
+                HandleBrushStrokeAddReceived(brushAdd);
+            }
+
+            foreach (BrushStrokeRemoveRequest brushRemove in resp.BrushStrokeRemove)
+            {
+                HandleBrushStrokeRemoveReceived(brushRemove);
+            }
+
+            foreach (ExternalModelAddRequest externalModelAdd in resp.ExternalModelAdd)
+            {
+                HandleExteralModelAddReceived(externalModelAdd);
+            }
+
+            foreach (ExternalModelRemoveRequest externalModelRemove in resp.ExternalModelRemove)
+            {
+                HandlExternalModelRemoveReceived(externalModelRemove);
             }
         }
 
-        private static bool UpdateUserStateGetWasChanged(UserStateProto userState,
-            string userDisplayName, string headClosestAnchorId, Pose headPoseRelativeToAnchor,
-            Pose controlPoseRelativeToAnchor, UserStateProto.Types.ToolState currentToolState,
-            Color32 currentToolColor, BatteryStatusProto batteryStatus)
+        /// <summary>
+        /// Handle the optional server info proto within the server response.
+        /// </summary>
+        /// <param name="serverInfo">The optional server info resp or null if not present</param>
+        /// <returns>
+        /// True if processing of the server response should continue, False if the server version
+        /// is incompatible with the application.
+        /// </returns>
+        private bool HandleServerInfo(ServerInfoProto serverInfo)
         {
-            if (userState.AnchorId.Length > 0 && headClosestAnchorId == null)
+            if (serverInfo != null)
             {
-                userState.AnchorId = "";
-                userState.HeadPose = null;
-                userState.ControlPose = null;
-                return true;
-            }
-            if (userState.AnchorId.Length == 0 && headClosestAnchorId != null)
-            {
-                userState.AnchorId = headClosestAnchorId;
-                userState.HeadPose = ProtoUtils.ToProto(headPoseRelativeToAnchor);
-                userState.ControlPose = ProtoUtils.ToProto(controlPoseRelativeToAnchor);
-                return true;
-            }
-            if (userState.AnchorId.Length == 0 && headClosestAnchorId == null)
-            {
-                return false;
-            }
-
-            uint currentToolColorUint = ColorUtils.ToRgbaUint(currentToolColor);
-
-            if (ProtoUtils.EpsilonEquals(headPoseRelativeToAnchor, userState.HeadPose)
-                && ProtoUtils.EpsilonEquals(controlPoseRelativeToAnchor, userState.ControlPose)
-                && currentToolState == userState.ToolState
-                && currentToolColorUint == userState.ToolColorRgb
-                && userDisplayName == userState.UserDisplayName
-                && batteryStatus.Equals(userState.HeadsetBattery))
-            {
-                return false;
-            }
-
-            userState.AnchorId = headClosestAnchorId;
-            userState.HeadPose = ProtoUtils.ToProto(headPoseRelativeToAnchor);
-            userState.ControlPose = ProtoUtils.ToProto(controlPoseRelativeToAnchor);
-            userState.ToolState = currentToolState;
-            userState.ToolColorRgb = currentToolColorUint;
-            userState.UserDisplayName = userDisplayName;
-            userState.HeadsetBattery = batteryStatus.Clone();
-            return true;
-        }
-
-        private static bool UpdateSpaceInfoGetWasChanged(SpaceInfoProto toSpaceInfo,
-            SpaceInfoProto fromSpaceInfo)
-        {
-            bool modified = false;
-
-            if (toSpaceInfo.SpaceId != fromSpaceInfo.SpaceId ||
-                toSpaceInfo.SpaceName != fromSpaceInfo.SpaceName ||
-                toSpaceInfo.MappingMode != fromSpaceInfo.MappingMode)
-            {
-                modified = true;
-                toSpaceInfo.SpaceId = fromSpaceInfo.SpaceId;
-                toSpaceInfo.SpaceName = fromSpaceInfo.SpaceName;
-                toSpaceInfo.MappingMode = fromSpaceInfo.MappingMode;
-            }
-            if (toSpaceInfo.TargetSpaceOrigin == null || !ProtoUtils.EpsilonEquals(
-                    toSpaceInfo.TargetSpaceOrigin, fromSpaceInfo.TargetSpaceOrigin))
-            {
-                modified = true;
-                toSpaceInfo.TargetSpaceOrigin = fromSpaceInfo.TargetSpaceOrigin;
-            }
-
-            if (toSpaceInfo.UsingImportedAnchors != fromSpaceInfo.UsingImportedAnchors)
-            {
-                modified = true;
-                toSpaceInfo.UsingImportedAnchors = fromSpaceInfo.UsingImportedAnchors;
-            }
-
-            if (toSpaceInfo.Anchor.Count > fromSpaceInfo.Anchor.Count)
-            {
-                modified = true;
-                toSpaceInfo.Anchor.Clear();
-            }
-
-            for (int i = 0; i < fromSpaceInfo.Anchor.Count; ++i)
-            {
-                AnchorProto fromAnchor = fromSpaceInfo.Anchor[i];
-                if (i >= toSpaceInfo.Anchor.Count)
-                {
-                    modified = true;
-                    toSpaceInfo.Anchor.Add(new AnchorProto());
-                }
-                AnchorProto toAnchor = toSpaceInfo.Anchor[i];
-                if (fromAnchor.Id != toAnchor.Id)
-                {
-                    modified = true;
-                    toAnchor.Id = fromAnchor.Id;
-                }
-
-                if (toAnchor.Pose == null
-                    || !ProtoUtils.EpsilonEquals(toAnchor.Pose, fromAnchor.Pose))
-                {
-                    modified = true;
-                    toAnchor.Pose = fromAnchor.Pose;
-                }
-            }
-
-            return modified;
-        }
-
-        private void DownloadThreadBody(LeapBrushApiBase.LeapBrushClient leapBrushClient,
-            CancellationTokenSource shutDownTokenSource)
-        {
-            try
-            {
-                while (!shutDownTokenSource.IsCancellationRequested)
-                {
-                    RegisterDeviceRequest registerDeviceRequest = new RegisterDeviceRequest();
-                    lock (_lock)
-                    {
-                        registerDeviceRequest.UserName = _userName;
-                        registerDeviceRequest.AppVersion = _appVersion;
-                    }
-
-                    using var call = leapBrushClient.RegisterAndListen(registerDeviceRequest);
-
-                    try
-                    {
-                        while (!shutDownTokenSource.IsCancellationRequested)
-                        {
-                            ServerStateResponse resp = call.GetNext(shutDownTokenSource.Token);
-                            lock (_lock)
-                            {
-                                if (!_lastServerDownloadOk)
-                                {
-                                    Debug.Log("Downloads started succeeding");
-                                    _lastServerDownloadOk = true;
-                                }
-                            }
-
-                            ThreadDispatcher.ScheduleMain(() => HandleServerStateOnMainThread(resp));
-                        }
-                    }
-                    catch (RpcException e)
-                    {
-                        lock (_lock)
-                        {
-                            if (_lastServerDownloadOk)
-                            {
-                                Debug.LogWarning("Downloads started failing: " + e);
-                                _lastServerDownloadOk = false;
-                            }
-                        }
-                    }
-
-                    Thread.Sleep(TimeSpan.FromMilliseconds(100));
-                }
-
-                Debug.Log("Download thread: Shutting down");
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
-        }
-
-        private void HandleServerStateOnMainThread(ServerStateResponse resp)
-        {
-            if (resp.ServerInfo != null)
-            {
-                bool drawSolo;
-                lock (_lock)
-                {
-                    drawSolo = _drawSolo;
-                }
-
-                _serverInfo = resp.ServerInfo;
-                if (!VersionUtil.IsGreatorOrEqual(_appVersion, _serverInfo.MinAppVersion) && !_appTooOld)
+                _serverInfo = serverInfo;
+                if (!VersionUtil.IsGreatorOrEqual(_appVersion, _serverInfo.MinAppVersion)
+                    && !_appTooOld)
                 {
                     _appTooOld = true;
                     Debug.LogErrorFormat("Shutting down due to outdated app ({0} < {1})",
                         _appVersion, _serverInfo.MinAppVersion);
                     _shutDownTokenSource.Cancel();
-                    return;
+                    return false;
                 }
-                if (!VersionUtil.IsGreatorOrEqual(_serverInfo.ServerVersion, _minServerVersion)
-                    && !_serverTooOld && !drawSolo)
+                if (!VersionUtil.IsGreatorOrEqual(_serverInfo.ServerVersion,
+                        _serverConnectionManager.MinServerVersion)
+                    && !_serverTooOld && !_drawSolo)
                 {
                     _serverTooOld = true;
                     Debug.LogErrorFormat("Shutting down due to outdated server ({0} < {1})",
-                        _serverInfo.ServerVersion, _minServerVersion);
+                        _serverInfo.ServerVersion,
+                        _serverConnectionManager.MinServerVersion);
                     _shutDownTokenSource.Cancel();
-                    return;
+                    return false;
                 }
 
                 Debug.LogFormat("Server: version {0}, min app version {1}",
@@ -1991,185 +1671,54 @@ namespace MagicLeap.LeapBrush
                 _serverTooOld = true;
                 Debug.LogError("Shutting down due to outdated server (no version found)");
                 _shutDownTokenSource.Cancel();
-                return;
+                return false;
             }
 
-            if (_serverTooOld || _appTooOld)
+            return !_serverTooOld && !_appTooOld;
+        }
+
+        /// <summary>
+        /// Handle an update from another user with their user state.
+        /// </summary>
+        /// <param name="otherUserState">The other user's state that was updated</param>
+        private void HandleOtherUserStateReceived(UserStateProto otherUserState)
+        {
+            if (otherUserState.AnchorId.Length == 0)
             {
                 return;
             }
 
-            foreach (UserStateProto otherUserState in resp.UserState)
+            GameObject anchorGameObject;
+            if (!_anchorsManager.TryGetAnchorGameObject(
+                    otherUserState.AnchorId, out anchorGameObject))
             {
-                if (otherUserState.AnchorId.Length == 0)
-                {
-                    continue;
-                }
-
-                GameObject anchorGameObject;
-                if (!_anchorsManager.TryGetAnchorGameObject(otherUserState.AnchorId, out anchorGameObject))
-                {
-                    continue;
-                }
-
-                bool isServerEcho;
-                lock (_lock)
-                {
-                    isServerEcho = (_serverEcho && otherUserState.UserName == _userName);
-                }
-
-                if (otherUserState.HeadPose != null)
-                {
-                    HandleOtherUserWearableReceived(otherUserState, anchorGameObject, isServerEcho);
-                }
-                if (otherUserState.ControlPose != null)
-                {
-                    HandleOtherUserControllerReceived(otherUserState, anchorGameObject, isServerEcho);
-                }
+                return;
             }
 
-            foreach (BrushStrokeAddRequest brushAdd in resp.BrushStrokeAdd)
+            bool isServerEcho = _serverConnectionManager.ServerEcho
+                                && otherUserState.UserName == _userName;
+
+            if (otherUserState.HeadPose != null)
             {
-                GameObject anchorGameObject;
-                if (!_anchorsManager.TryGetAnchorGameObject(brushAdd.BrushStroke.AnchorId, out anchorGameObject))
-                {
-                    continue;
-                }
-
-                BrushBase brushStroke;
-                _brushStrokeMap.TryGetValue(brushAdd.BrushStroke.Id, out brushStroke);
-
-                bool isServerEcho;
-                lock (_lock)
-                {
-                    if (brushStroke != null)
-                    {
-                        isServerEcho = _serverEcho && brushStroke.UserName == _userName;
-                    }
-                    else
-                    {
-                        isServerEcho = _serverEcho && brushAdd.BrushStroke.UserName == _userName;
-                    }
-                }
-
-                if (brushStroke == null)
-                {
-                    GameObject brushStrokePrefab =
-                        brushAdd.BrushStroke.Type == BrushStrokeProto.Types.BrushType.Poly ?
-                            _polyBrushTool.Prefab : _scribbleBrushTool.Prefab;
-                    brushStroke = Instantiate(brushStrokePrefab, anchorGameObject.transform)
-                        .GetComponent<BrushBase>();
-                    brushStroke.AnchorId = brushAdd.BrushStroke.AnchorId;
-                    brushStroke.Id = brushAdd.BrushStroke.Id;
-                    brushStroke.UserName = brushAdd.BrushStroke.UserName;
-                    brushStroke.IsServerEcho = isServerEcho;
-
-                    Color32 strokeColor = brushAdd.BrushStroke.StrokeColorRgb != 0 ?
-                        ColorUtils.FromRgbaUint(brushAdd.BrushStroke.StrokeColorRgb) :
-                        _brushColorManager.FallbackBrushColor;
-                    Color32 fillColor = brushAdd.BrushStroke.FillColorRgba != 0 ?
-                        ColorUtils.FromRgbaUint(brushAdd.BrushStroke.FillColorRgba) :
-                        Color.clear;
-                    float fillDimmerAlpha = brushAdd.BrushStroke.FillDimmerA != 0 ?
-                        (float) brushAdd.BrushStroke.FillDimmerA / 255 : 0;
-                    brushStroke.SetColors(strokeColor, fillColor, fillDimmerAlpha);
-
-                    if (brushAdd.BrushStroke.StrokeColorRgb != 0 && !isServerEcho)
-                    {
-                        _brushColorManager.OtherUserBrushColorObserved(strokeColor);
-                    }
-
-                    _brushStrokeMap[brushAdd.BrushStroke.Id] = brushStroke;
-                    brushStroke.OnDestroyed += OnBrushStrokeDestroyed;
-                }
-
-                if (isServerEcho == brushStroke.IsServerEcho)
-                {
-                    Pose[] poses = ProtoUtils.FromProto(brushAdd.BrushStroke.BrushPose);
-                    if (isServerEcho)
-                    {
-                        for (int i = 0; i < poses.Length; ++i)
-                        {
-                            poses[i].position += ServerEchoPositionOffset;
-                        }
-                    }
-
-                    brushStroke.SetPosesAndTruncate(brushAdd.BrushStroke.StartIndex, poses, true);
-
-                    foreach (Pose pose in poses)
-                    {
-                        _floorGrid.FoundContentAtPosition(
-                            pose.GetTransformedBy(anchorGameObject.transform).position);
-                    }
-                }
+                HandleOtherUserWearableReceived(otherUserState, anchorGameObject, isServerEcho);
             }
-
-            foreach (BrushStrokeRemoveRequest brushRemove in resp.BrushStrokeRemove)
+            if (otherUserState.ControlPose != null)
             {
-                BrushBase brushStroke;
-                if (_brushStrokeMap.TryGetValue(brushRemove.Id, out brushStroke))
-                {
-                    Debug.Log("Deleting brush stroke " + brushRemove.Id + " from anchor "
-                              + brushRemove.AnchorId);
-                    PlayOneoffSpatialSound(_eraseSound, brushStroke.gameObject.transform.position);
-                    Destroy(brushStroke.gameObject);
-                }
-            }
-
-            foreach (ExternalModelAddRequest externalModelAdd in resp.ExternalModelAdd)
-            {
-                GameObject anchorGameObject;
-                if (!_anchorsManager.TryGetAnchorGameObject(externalModelAdd.Model.AnchorId, out anchorGameObject))
-                {
-                    continue;
-                }
-
-                External3DModel externalModel;
-                if (!_externalModelMap.TryGetValue(externalModelAdd.Model.Id, out externalModel))
-                {
-                    externalModel = _external3dModelManager.LoadModelAsync(
-                        externalModelAdd.Model.FileName, anchorGameObject.transform);
-                    externalModel.Id = externalModelAdd.Model.Id;
-                    externalModel.AnchorId = externalModelAdd.Model.AnchorId;
-                    externalModel.OnTransformChanged += OnExternalModelTransformChanged;
-
-                    _externalModelMap[externalModel.Id] = externalModel;
-                    externalModel.OnDestroyed += () => _externalModelMap.Remove(externalModel.Id);
-                }
-
-                bool isServerEcho;
-                lock (_lock)
-                {
-                    isServerEcho = (_serverEcho && externalModelAdd.Model.ModifiedByUserName == _userName);
-                }
-
-                ProtoUtils.PoseAndScale poseAndScale = ProtoUtils.FromProto(externalModelAdd.Model.Transform);
-
-                if (isServerEcho)
-                {
-                    poseAndScale.Pose.position += ServerEchoPositionOffset;
-                }
-
-                TransformExtensions.SetLocalPose(externalModel.gameObject.transform, poseAndScale.Pose);
-                if (!isServerEcho)
-                {
-                    externalModel.gameObject.transform.localScale = poseAndScale.Scale;
-                }
-            }
-
-            foreach (ExternalModelRemoveRequest externalModelRemove in resp.ExternalModelRemove)
-            {
-                External3DModel externalModel;
-                if (_externalModelMap.TryGetValue(externalModelRemove.Id, out externalModel))
-                {
-                    Debug.Log("Deleting external model " + externalModelRemove.Id + " from anchor "
-                              + externalModelRemove.AnchorId);
-                    PlayOneoffSpatialSound(_eraseSound, externalModel.gameObject.transform.position);
-                    Destroy(externalModel.gameObject);
-                }
+                HandleOtherUserControllerReceived(otherUserState, anchorGameObject, isServerEcho);
             }
         }
 
+        /// <summary>
+        /// Handler another user's Wearable pose being received.
+        /// </summary>
+        /// <param name="otherUserState">The other user's updated state</param>
+        /// <param name="anchorGameObject">
+        /// The anchor game object that the other user's wearable pose is attached to.
+        /// </param>
+        /// <param name="isServerEcho">
+        /// Whether this event was a server echo from the current user. (Useful for testing
+        /// networking).
+        /// </param>
         private void HandleOtherUserWearableReceived(UserStateProto otherUserState,
             GameObject anchorGameObject, bool isServerEcho)
         {
@@ -2179,7 +1728,8 @@ namespace MagicLeap.LeapBrush
             {
                 newlyJoinedUser = true;
                 Debug.Log("Found other user " + otherUserState.UserName);
-                otherUserWearable = Instantiate(_otherUserWearablePrefab, anchorGameObject.transform)
+                otherUserWearable = Instantiate(_otherUserWearablePrefab,
+                        anchorGameObject.transform)
                     .GetComponent<OtherUserWearable>();
                 otherUserWearable.gameObject.SetActive(_settingsPanel.IsShowHeadsets);
 
@@ -2225,13 +1775,26 @@ namespace MagicLeap.LeapBrush
             _floorGrid.FoundContentAtPosition(otherUserWearable.transform.position);
         }
 
+        /// <summary>
+        /// Handler another user's Controller pose being received.
+        /// </summary>
+        /// <param name="otherUserState">The other user's updated state</param>
+        /// <param name="anchorGameObject">
+        /// The anchor game object that the other user's Controller pose is attached to.
+        /// </param>
+        /// <param name="isServerEcho">
+        /// Whether this event was a server echo from the current user. (Useful for testing
+        /// networking).
+        /// </param>
         private void HandleOtherUserControllerReceived(UserStateProto otherUserState,
             GameObject anchorGameObject, bool isServerEcho)
         {
             OtherUserController otherUserController;
-            if (!_otherUserControllers.TryGetValue(otherUserState.UserName, out otherUserController))
+            if (!_otherUserControllers.TryGetValue(otherUserState.UserName,
+                    out otherUserController))
             {
-                otherUserController = Instantiate(_otherUserControllerPrefab, anchorGameObject.transform)
+                otherUserController = Instantiate(_otherUserControllerPrefab,
+                        anchorGameObject.transform)
                     .GetComponent<OtherUserController>();
                 otherUserController.gameObject.SetActive(_settingsPanel.IsShowControllers);
 
@@ -2245,7 +1808,8 @@ namespace MagicLeap.LeapBrush
                 otherUserController.transform.SetParent(anchorGameObject.transform);
             }
 
-            TransformExtensions.SetLocalPose(otherUserController.transform, ProtoUtils.FromProto(otherUserState.ControlPose));
+            TransformExtensions.SetLocalPose(otherUserController.transform,
+                ProtoUtils.FromProto(otherUserState.ControlPose));
             if (isServerEcho)
             {
                 otherUserController.transform.localPosition += ServerEchoPositionOffset;
@@ -2256,6 +1820,166 @@ namespace MagicLeap.LeapBrush
             _floorGrid.FoundContentAtPosition(otherUserController.transform.position);
         }
 
+        /// <summary>
+        /// Handle a new or updated brush stroke being received from the server.
+        /// </summary>
+        /// <param name="brushAdd">The brush stroke to add or update.</param>
+        private void HandleBrushStrokeAddReceived(BrushStrokeAddRequest brushAdd)
+        {
+            GameObject anchorGameObject;
+            if (!_anchorsManager.TryGetAnchorGameObject(brushAdd.BrushStroke.AnchorId,
+                    out anchorGameObject))
+            {
+                return;
+            }
+
+            BrushBase brushStroke;
+            _brushStrokeMap.TryGetValue(brushAdd.BrushStroke.Id, out brushStroke);
+
+            bool isServerEcho;
+            if (brushStroke != null)
+            {
+                isServerEcho = _serverConnectionManager.ServerEcho
+                               && brushStroke.UserName == _userName;
+            }
+            else
+            {
+                isServerEcho = _serverConnectionManager.ServerEcho
+                               && brushAdd.BrushStroke.UserName == _userName;
+            }
+
+            if (brushStroke == null)
+            {
+                GameObject brushStrokePrefab =
+                    brushAdd.BrushStroke.Type == BrushStrokeProto.Types.BrushType.Poly ?
+                        _polyBrushTool.Prefab : _scribbleBrushTool.Prefab;
+                brushStroke = Instantiate(brushStrokePrefab, anchorGameObject.transform)
+                    .GetComponent<BrushBase>();
+                brushStroke.AnchorId = brushAdd.BrushStroke.AnchorId;
+                brushStroke.Id = brushAdd.BrushStroke.Id;
+                brushStroke.UserName = brushAdd.BrushStroke.UserName;
+                brushStroke.IsServerEcho = isServerEcho;
+
+                Color32 strokeColor = brushAdd.BrushStroke.StrokeColorRgb != 0 ?
+                    ColorUtils.FromRgbaUint(brushAdd.BrushStroke.StrokeColorRgb) :
+                    _brushColorManager.FallbackBrushColor;
+                Color32 fillColor = brushAdd.BrushStroke.FillColorRgba != 0 ?
+                    ColorUtils.FromRgbaUint(brushAdd.BrushStroke.FillColorRgba) :
+                    Color.clear;
+                float fillDimmerAlpha = brushAdd.BrushStroke.FillDimmerA != 0 ?
+                    (float) brushAdd.BrushStroke.FillDimmerA / 255 : 0;
+                brushStroke.SetColors(strokeColor, fillColor, fillDimmerAlpha);
+
+                if (brushAdd.BrushStroke.StrokeColorRgb != 0 && !isServerEcho)
+                {
+                    _brushColorManager.OtherUserBrushColorObserved(strokeColor);
+                }
+
+                _brushStrokeMap[brushAdd.BrushStroke.Id] = brushStroke;
+                brushStroke.OnDestroyed += OnBrushStrokeDestroyed;
+            }
+
+            if (isServerEcho == brushStroke.IsServerEcho)
+            {
+                Pose[] poses = ProtoUtils.FromProto(brushAdd.BrushStroke.BrushPose);
+                if (isServerEcho)
+                {
+                    for (int i = 0; i < poses.Length; ++i)
+                    {
+                        poses[i].position += ServerEchoPositionOffset;
+                    }
+                }
+
+                brushStroke.SetPosesAndTruncate(brushAdd.BrushStroke.StartIndex, poses, true);
+
+                foreach (Pose pose in poses)
+                {
+                    _floorGrid.FoundContentAtPosition(
+                        pose.GetTransformedBy(anchorGameObject.transform).position);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handle a brush stroke being removed from the server
+        /// </summary>
+        /// <param name="brushRemove">The brush stroke to remove.</param>
+        private void HandleBrushStrokeRemoveReceived(BrushStrokeRemoveRequest brushRemove)
+        {
+            BrushBase brushStroke;
+            if (_brushStrokeMap.TryGetValue(brushRemove.Id, out brushStroke))
+            {
+                Debug.Log("Deleting brush stroke " + brushRemove.Id + " from anchor "
+                          + brushRemove.AnchorId);
+                PlayOneoffSpatialSound(_eraseSound, brushStroke.gameObject.transform.position);
+                Destroy(brushStroke.gameObject);
+            }
+        }
+
+        /// <summary>
+        /// Handle a new or updated 3D model being received from the server.
+        /// </summary>
+        /// <param name="externalModelAdd">The 3D model to add or update.</param>
+        private void HandleExteralModelAddReceived(ExternalModelAddRequest externalModelAdd)
+        {
+            GameObject anchorGameObject;
+            if (!_anchorsManager.TryGetAnchorGameObject(externalModelAdd.Model.AnchorId,
+                    out anchorGameObject))
+            {
+                return;
+            }
+
+            External3DModel externalModel;
+            if (!_externalModelMap.TryGetValue(externalModelAdd.Model.Id, out externalModel))
+            {
+                externalModel = _external3dModelManager.LoadModelAsync(
+                    externalModelAdd.Model.FileName, anchorGameObject.transform);
+                externalModel.Id = externalModelAdd.Model.Id;
+                externalModel.AnchorId = externalModelAdd.Model.AnchorId;
+                externalModel.OnTransformChanged += OnExternalModelTransformChanged;
+
+                _externalModelMap[externalModel.Id] = externalModel;
+                externalModel.OnDestroyed += () => _externalModelMap.Remove(externalModel.Id);
+            }
+
+            bool isServerEcho = _serverConnectionManager.ServerEcho
+                                && externalModelAdd.Model.ModifiedByUserName == _userName;
+
+            ProtoUtils.PoseAndScale poseAndScale = ProtoUtils.FromProto(
+                externalModelAdd.Model.Transform);
+
+            if (isServerEcho)
+            {
+                poseAndScale.Pose.position += ServerEchoPositionOffset;
+            }
+
+            TransformExtensions.SetLocalPose(externalModel.gameObject.transform, poseAndScale.Pose);
+            if (!isServerEcho)
+            {
+                externalModel.gameObject.transform.localScale = poseAndScale.Scale;
+            }
+        }
+
+        /// <summary>
+        /// Handle a 3D model being removed from the server
+        /// </summary>
+        /// <param name="externalModelRemove">The 3D model to remove.</param>
+        private void HandlExternalModelRemoveReceived(
+            ExternalModelRemoveRequest externalModelRemove)
+        {
+            External3DModel externalModel;
+            if (_externalModelMap.TryGetValue(externalModelRemove.Id, out externalModel))
+            {
+                Debug.Log("Deleting external model " + externalModelRemove.Id
+                          + " from anchor " + externalModelRemove.AnchorId);
+                PlayOneoffSpatialSound(_eraseSound, externalModel.gameObject.transform.position);
+                Destroy(externalModel.gameObject);
+            }
+        }
+
+        /// <summary>
+        /// Convert a current tool enum value to the protocol buffer equivalent.
+        /// </summary>
         private static UserStateProto.Types.ToolState ToProto(Tool currentTool)
         {
             switch (currentTool)
@@ -2273,78 +1997,9 @@ namespace MagicLeap.LeapBrush
             }
         }
 
-        private string GetOrLoadServerUrl()
-        {
-            lock (_serverUrlLock)
-            {
-                if (!string.IsNullOrEmpty(_serverUrl))
-                {
-                    return _serverUrl;
-                }
-
-#if !UNITY_EDITOR
-                string serverHostPortPrefPath;
-                lock (_lock)
-                {
-                    serverHostPortPrefPath = Path.Join(_persistentDataPath, "serverHostPort.txt");
-                }
-
-                try
-                {
-                    using (StreamReader reader = new StreamReader(serverHostPortPrefPath))
-                    {
-                        _serverUrl = reader.ReadToEnd().Trim();
-                    }
-                }
-                catch (FileNotFoundException)
-                {
-                    Debug.Log(string.Format(
-                        "LeapBrush server host:port not configured! Set a url by placing it in the file {0}",
-                        serverHostPortPrefPath));
-                }
-#endif
-
-                if (string.IsNullOrEmpty(_serverUrl))
-                {
-                    if (!string.IsNullOrEmpty(_defaultServerUrl))
-                    {
-                        _serverUrl = _defaultServerUrl;
-                    }
-                    else
-                    {
-                        _serverUrl = "localhost:8402";
-                    }
-                }
-
-                ThreadDispatcher.ScheduleMain(UpdateNotConnectedDescriptionText);
-                return _serverUrl;
-            }
-        }
-
-
-        private static void SaveServerUrl(string serverUrl)
-        {
-#if !UNITY_EDITOR
-            string persistentDataPath = Application.persistentDataPath;
-
-            ThreadDispatcher.ScheduleWork(() =>
-            {
-                string userNamePath = Path.Join(persistentDataPath, "serverHostPort.txt");
-
-                try
-                {
-                    using (StreamWriter writer = new StreamWriter(userNamePath))
-                    {
-                        writer.Write(serverUrl);
-                    }
-                }
-                catch (IOException e)
-                {
-                }
-            });
-#endif
-        }
-
+        /// <summary>
+        /// Handle a Unity log messing being posted. Keep track of errors an exceptions.
+        /// </summary>
         private void OnLogMessageReceived(string condition, string stacktrace, LogType type)
         {
             switch (type)

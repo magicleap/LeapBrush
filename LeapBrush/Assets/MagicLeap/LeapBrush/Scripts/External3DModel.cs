@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace MagicLeap
 {
+    /// <summary>
+    /// A 3D model imported into the scene.
+    /// </summary>
     [RequireComponent(typeof(Interactable))]
     public class External3DModel : MonoBehaviour
     {

@@ -291,6 +291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b5212c5018944d18424609252ece4b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _openSpacesAppButton: {fileID: 1630292814985441261}
 --- !u!1001 &3142834669568780731
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -954,6 +955,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 7672190879026508030}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1630292814985441261 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9000142975330279187, guid: cc522a8ab0eb87a41bdbacbf5d4799b2,
+    type: 3}
+  m_PrefabInstance: {fileID: 7672190879026508030}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -935739111, guid: b5e08719cdaec43e482cc299e379a5ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8891374398208093335
 PrefabInstance:
   m_ObjectHideFlags: 0

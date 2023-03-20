@@ -4,8 +4,14 @@ using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// Api for starting the Spaces application on the device in various modes.
+    /// </summary>
     public class SpacesAppApi
     {
+        /// <summary>
+        /// Start the spaces app.
+        /// </summary>
         public static void StartApp()
         {
             try
@@ -26,6 +32,11 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Start the spaces app for the purpose of localizing into a particular space.
+        /// </summary>
+        /// <param name="spaceId">The id of the space to be localized to.</param>
+        /// <param name="mappingMode">The mapping mode of the space to be localized to.</param>
         public static void StartAppToSelectSpace(string spaceId, MLAnchors.MappingMode mappingMode)
         {
             try

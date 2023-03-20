@@ -9,6 +9,9 @@ using UnityGLTF.Loader;
 
 namespace MagicLeap
 {
+    /// <summary>
+    /// Manager for fetching the list of available 3D models to load, gltf model loader, etc.
+    /// </summary>
     public class External3DModelManager : MonoBehaviour
     {
         public bool Multithreaded = false;

@@ -89,6 +89,8 @@ A Magic Leap 2 user watching another user draw in realtime.
     * `$HOME/Library/Application Support/Magic Leap/Leap Brush/`
   * Linux
     * `$HOME/.config/unity3d/Magic Leap/Leap Brush/`
+  * Windows
+    * `%HOMEPATH%\"AppData\LocalLow\Magic Leap\Leap Brush\"`
 
 ### Usage
 
@@ -116,6 +118,8 @@ Leap Brush includes a handful of sample 3D Models (available from the Import but
       * `ls *.glb *.gltf|while read F; do echo "$F"; cp "$F" "$HOME/Library/Application Support/Magic Leap/Leap Brush/"; done`
     * Push to Linux spectator app:
       * `ls *.glb *.gltf|while read F; do echo "$F"; cp "$F" "$HOME/.config/unity3d/Magic Leap/Leap Brush/"; done`
+    * Push to Windows spectator app:
+      * `FOR %i IN (*.glb *.gltf) DO copy %i %HOMEPATH%\"AppData\LocalLow\Magic Leap\Leap Brush\"`
 
 ## Development Setup
 
@@ -149,14 +153,8 @@ Leap Brush includes a handful of sample 3D Models (available from the Import but
 
 ### Regenerate protocol buffer apis as needed.
 
-- Note: also run the associated api update script for the server project, and regenerate leapbrush-grpc-lib.
 - `./scripts/generate_protos.py`
-
-
-### Regenerate leapbrush-grpc-lib as needed.
-
-- Needed if protocol buffers or the leapbrush-grpc-lib source is modified.
-- `./leapbrush-grpc-lib/build_and_publish_to_unity.py`
+- Note: Run the associated api update script for the server project as well.
 
 
 ### Run the server

@@ -13,25 +13,40 @@ import (
 )
 
 const (
-	periodicChecksInterval             = time.Second
-	userTimeout                        = 10 * time.Second
+	// Interval between running periodic cleanup checks
+	periodicChecksInterval = time.Second
+
+	// Timeout for removing a user who has not sent updates in this period.
+	userTimeout = 10 * time.Second
+
+	// Interval for periodic connection health pings from server to client
 	periodicServerToClientPingInterval = 1 * time.Second
 )
 
+// UserState represents th ttate for each user currently connected and uploading data
 type UserState struct {
-	userName       string
-	lastPingTime   time.Time
-	stateProto     *pb.UserStateProto
+	// User identifier string
+	userName string
+	// Time when the user last sent an update
+	lastPingTime time.Time
+	// Latest state of the user
+	stateProto *pb.UserStateProto
+	// Latest Space information for ths user
 	spaceInfoProto *pb.SpaceInfoProto
 }
 
 func (u *UserState) Init() {
 }
 
+// AnchorState represents the state for a Spatial Anchor
 type AnchorState struct {
-	id             string
-	userSet        map[string]bool
-	brushStrokes   map[string]*pb.BrushStrokeProto
+	// The spatial anchor identifier
+	id string
+	// Set of users that have currently found this spatial anchor. Key is userName, Value is ignored.
+	userSet map[string]bool
+	// Map of Brush strokes attached to this spatial anchor. Key is brush stroke id.
+	brushStrokes map[string]*pb.BrushStrokeProto
+	// Map of External 3D Models attached to this spatial anchor. Key is model id.
 	externalModels map[string]*pb.ExternalModelProto
 }
 
@@ -41,23 +56,43 @@ func (a *AnchorState) Init() {
 	a.externalModels = make(map[string]*pb.ExternalModelProto)
 }
 
+// UserBrushStrokeState represents the state of a particular connected user who has received a
+// partial set of poses from a brush stroke.
 type UserBrushStrokeState struct {
-	anchorId     string
+	// The spatial anchor identifier where this brush stroke is attached.
+	anchorId string
+	// The number of poses already sent to this user for this brush stroke.
 	numPosesSent int
 }
 
+// UserConnectionState represents the current state of a connected user's Download thread
 type UserConnectionState struct {
-	userName                         string
-	appVersion                       string
-	shutDownStart                    chan bool
-	shutDownDone                     chan bool
-	brushStrokeState                 map[string]*UserBrushStrokeState
-	notifyAboutUsers                 map[string]bool
-	notifyAboutBrushStrokeAdds       map[string]string
-	notifyAboutBrushStrokeRemovals   map[string]string
-	notifyAboutExternalModelAdds     map[string]string
+	// The user identifier for the connected user.
+	userName string
+	// The client application version string.
+	appVersion string
+	// A channel to trigger shutdown of this connection.
+	shutDownStart chan bool
+	// A channel to receive when shutdown of this channel has completed before a new one starts.
+	shutDownDone chan bool
+	// Map from brush stroke ids to current UserBrushStrokeState.
+	brushStrokeState map[string]*UserBrushStrokeState
+	// Set of other users that have had state update changes this user needs to be notified about.
+	notifyAboutUsers map[string]bool
+	// Set of brush strokes that have been modified that this user needs to be notified about.
+	// Key is brush stroke id, value is attached anchor id.
+	notifyAboutBrushStrokeAdds map[string]string
+	// Set of brush strokes that have been removed that this user needs to be notified about.
+	// Key is brush stroke id, value is attached anchor id.
+	notifyAboutBrushStrokeRemovals map[string]string
+	// Set of 3D models that have been added or modified that this user needs to be notified about.
+	// Key is external model id, value is attached anchor id.
+	notifyAboutExternalModelAdds map[string]string
+	// Set of 3D models that have been removed that this user needs to be notified about.
+	// Key is external model id, value is attached anchor id.
 	notifyAboutExternalModelRemovals map[string]string
-	wakeUp                           chan bool
+	// A channel to trigger the wake-up of this connection if it was sleeping for work to do.
+	wakeUp chan bool
 }
 
 func (u *UserConnectionState) Init() {
@@ -72,21 +107,31 @@ func (u *UserConnectionState) Init() {
 	u.wakeUp = make(chan bool, 1)
 }
 
+// Server implements the leap brush api and stores brush strokes, 3d models, and user state, with dispatch
 type Server struct {
 	pb.UnimplementedLeapBrushApiServer
 
+	// Whether this server should log verbosely.
 	verbose bool
 
+	// A channel to notify that periodic checks should stop.
 	periodicChecksShutDownStart chan bool
-	periodicChecksShutDownDone  chan bool
+	// A channel to notify that ths periodic checks have stopped.
+	periodicChecksShutDownDone chan bool
 
-	lock               sync.Mutex
-	shutDown           bool
-	userStateMap       map[string]*UserState
-	anchorStateMap     map[string]*AnchorState
+	// Lock to protect cross-thread accessed data
+	lock sync.Mutex
+	// Whether this server is shutting down.
+	shutDown bool
+	// Map from user identifier to current user state.
+	userStateMap map[string]*UserState
+	// Map from anchor id to anchor state.
+	anchorStateMap map[string]*AnchorState
+	// Map from user identifier to connection state.
 	userConnectionsMap map[string]*UserConnectionState
 }
 
+// InitAndStart initializes and starts the server
 func (s *Server) InitAndStart() {
 	s.userStateMap = make(map[string]*UserState)
 	s.anchorStateMap = make(map[string]*AnchorState)
@@ -97,6 +142,7 @@ func (s *Server) InitAndStart() {
 	go s.PeriodicChecks()
 }
 
+// ShutDown initiates and waits for server shutdown
 func (s *Server) ShutDown() {
 	func() {
 		s.lock.Lock()
@@ -116,6 +162,7 @@ func (s *Server) ShutDown() {
 	<-s.periodicChecksShutDownDone
 }
 
+// PeriodicChecks runs periodic server cleanup checks until shutdown is initiated.
 func (s *Server) PeriodicChecks() {
 	for {
 		select {
@@ -134,6 +181,7 @@ func (s *Server) PeriodicChecks() {
 			now := time.Now()
 			var timedOutUsers []string = nil
 
+			// Look for and clean up users that have not sent updates in a while.
 			for userName, userState := range s.userStateMap {
 				if now.After(userState.lastPingTime.Add(userTimeout)) {
 					if timedOutUsers == nil {
@@ -153,6 +201,8 @@ func (s *Server) PeriodicChecks() {
 	}
 }
 
+// RegisterAndListen handles the download connection from a client and sends a stream of server updates when
+// information changes that that client should be notified about.
 func (s *Server) RegisterAndListen(req *pb.RegisterDeviceRequest, listenServer pb.LeapBrushApi_RegisterAndListenServer) error {
 	func() {
 		var userConnectionEntry *UserConnectionState
@@ -168,6 +218,8 @@ func (s *Server) RegisterAndListen(req *pb.RegisterDeviceRequest, listenServer p
 			userConnectionEntry, existingEntryFound = s.userConnectionsMap[userName]
 		}()
 
+		// If an existing connection state is present for this user, shut it down and wait for it to exit
+		// before continuing with the new connection.
 		if existingEntryFound {
 			log.Printf("User %v: Shutting down existing listening channel...", userName)
 			userConnectionEntry.shutDownStart <- true
@@ -186,9 +238,12 @@ func (s *Server) RegisterAndListen(req *pb.RegisterDeviceRequest, listenServer p
 			log.Printf("User %v (version %v): Starting listening channel... (%d users now connected)",
 				userName, req.AppVersion, len(s.userConnectionsMap))
 
+			// Send the user all brush strokes and 3D models that currently apply.
 			s.DistributeMissingBrushStrokesToUserLocked(nil, userConnectionEntry)
+			s.DistributeMissingExternalModelsToUserLocked(nil, userConnectionEntry)
 		}()
 
+		// Deferred function to perform cleanup and shutdown
 		defer func() {
 			s.lock.Lock()
 			defer s.lock.Unlock()
@@ -201,18 +256,24 @@ func (s *Server) RegisterAndListen(req *pb.RegisterDeviceRequest, listenServer p
 				userName, len(s.userConnectionsMap))
 		}()
 
+		// Loop until the connection (download) thread should shut down.
 		for {
+			// Wait until the next trigger for processing
 			select {
 			case <-userConnectionEntry.shutDownStart:
+				// Shutdown has been requested for this connection, exit now
 				return
 			case <-userConnectionEntry.wakeUp:
+				// This connection should wake up to process a pending state event
 				break
 			case <-time.After(periodicServerToClientPingInterval):
+				// This connection should wake up to send a periodic ping to the client.
 				break
 			}
 
 			serverStateResponse := &pb.ServerStateResponse{}
 
+			// Send server info to the client one time
 			if !sentServerInfo {
 				serverStateResponse.ServerInfo = &pb.ServerInfoProto{ServerVersion: serverVersion, MinAppVersion: minAppVersion}
 				sentServerInfo = true
@@ -222,13 +283,18 @@ func (s *Server) RegisterAndListen(req *pb.RegisterDeviceRequest, listenServer p
 				s.lock.Lock()
 				defer s.lock.Unlock()
 
+				// Notify the client of each other user that has had state changes since last server update.
 				for userOfInterest, _ := range userConnectionEntry.notifyAboutUsers {
 					if userStateOfInterest, ok := s.userStateMap[userOfInterest]; ok {
 						serverStateResponse.UserState = append(serverStateResponse.UserState, userStateOfInterest.stateProto)
 					}
 				}
+				// Clear the notifyAboutUsers map now that all pending notifications for user state have been added.
 				userConnectionEntry.notifyAboutUsers = make(map[string]bool)
 
+				// Go through each entry in notifyAboutBrushStrokeAdds and send any new brush strokes. At most one
+				// brush stroke (and also missing poses) is sent per server update to avoid very large proto sizes --
+				// prefer a streamed approach.
 				for brushId, anchorId := range userConnectionEntry.notifyAboutBrushStrokeAdds {
 					delete(userConnectionEntry.notifyAboutBrushStrokeAdds, brushId)
 					if anchorState, ok := s.anchorStateMap[anchorId]; ok {
@@ -278,6 +344,8 @@ func (s *Server) RegisterAndListen(req *pb.RegisterDeviceRequest, listenServer p
 					}
 				}
 
+				// Include in the response every brush stroke remove event that this user hasn't
+				// been notified about yet.
 				for brushId, anchorId := range userConnectionEntry.notifyAboutBrushStrokeRemovals {
 					serverStateResponse.BrushStrokeRemove = append(
 						serverStateResponse.BrushStrokeRemove, &pb.BrushStrokeRemoveRequest{Id: brushId, AnchorId: anchorId})
@@ -287,6 +355,8 @@ func (s *Server) RegisterAndListen(req *pb.RegisterDeviceRequest, listenServer p
 				}
 				userConnectionEntry.notifyAboutBrushStrokeRemovals = make(map[string]string)
 
+				// Include in the response all added or modified external 3d model states that the user hasn't been
+				// notified about yet.
 				for modelId, anchorId := range userConnectionEntry.notifyAboutExternalModelAdds {
 					if anchorState, ok := s.anchorStateMap[anchorId]; ok {
 						if modelState, ok := anchorState.externalModels[modelId]; ok {
@@ -302,6 +372,8 @@ func (s *Server) RegisterAndListen(req *pb.RegisterDeviceRequest, listenServer p
 				}
 				userConnectionEntry.notifyAboutExternalModelAdds = make(map[string]string)
 
+				// Include in the response every 3d model remove event that this user hasn't
+				// been notified about yet.
 				for modelId, anchorId := range userConnectionEntry.notifyAboutExternalModelRemovals {
 					serverStateResponse.ExternalModelRemove = append(
 						serverStateResponse.ExternalModelRemove, &pb.ExternalModelRemoveRequest{
@@ -313,6 +385,8 @@ func (s *Server) RegisterAndListen(req *pb.RegisterDeviceRequest, listenServer p
 				userConnectionEntry.notifyAboutExternalModelRemovals = make(map[string]string)
 			}()
 
+			// Send the new server response to the connection stream. It may be empty in the case of a periodic
+			// health check ping.
 			if err := listenServer.Send(serverStateResponse); err != nil {
 				log.Printf("User %v: *** Failed to send server state: %v", userName, err)
 				break
@@ -323,17 +397,10 @@ func (s *Server) RegisterAndListen(req *pb.RegisterDeviceRequest, listenServer p
 	return nil
 }
 
-func (s *Server) UpdateDevice(ctx context.Context, req *pb.UpdateDeviceRequest) (*pb.UpdateDeviceResponse, error) {
-	resp := s.HandleUpdateDevice(req)
-	if resp == nil {
-		resp = &pb.UpdateDeviceResponse{}
-	}
-
-	return resp, nil
-}
-
+// UpdateDeviceStream handles a stream of updates from clients.
 func (s *Server) UpdateDeviceStream(updateServer pb.LeapBrushApi_UpdateDeviceStreamServer) error {
 	for {
+		// Receive the next update message
 		req, err := updateServer.Recv()
 		if err != nil {
 			return err
@@ -346,6 +413,7 @@ func (s *Server) UpdateDeviceStream(updateServer pb.LeapBrushApi_UpdateDeviceStr
 	}
 }
 
+// Rpc handles an out-of-band remote procedure call from a client
 func (s *Server) Rpc(ctx context.Context, req *pb.RpcRequest) (*pb.RpcResponse, error) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
@@ -359,6 +427,7 @@ func (s *Server) Rpc(ctx context.Context, req *pb.RpcRequest) (*pb.RpcResponse, 
 	return resp, nil
 }
 
+// HandleUpdateDevice handles a single update device request from a client stream.
 func (s *Server) HandleUpdateDevice(req *pb.UpdateDeviceRequest) *pb.UpdateDeviceResponse {
 	s.lock.Lock()
 	defer s.lock.Unlock()
@@ -367,6 +436,7 @@ func (s *Server) HandleUpdateDevice(req *pb.UpdateDeviceRequest) *pb.UpdateDevic
 
 	userName := req.UserState.UserName
 
+	// Create a new entry in userStateMap if this user doesn't have a record yet.
 	userStateEntry, ok := s.userStateMap[userName]
 	if !ok {
 		log.Printf("User %s (%s): First state update received", userName, req.UserState.UserDisplayName)
@@ -375,6 +445,7 @@ func (s *Server) HandleUpdateDevice(req *pb.UpdateDeviceRequest) *pb.UpdateDevic
 		s.userStateMap[userName] = userStateEntry
 	}
 
+	// Note the time the user state was last received in order to time out disconnected clients.
 	userStateEntry.lastPingTime = time.Now()
 
 	if userStateEntry.stateProto != nil && req.UserState.UserDisplayName != userStateEntry.stateProto.UserDisplayName {
@@ -386,6 +457,7 @@ func (s *Server) HandleUpdateDevice(req *pb.UpdateDeviceRequest) *pb.UpdateDevic
 
 	if req.SpaceInfo != nil {
 		if !AnchorIdsEqual(req.SpaceInfo, userStateEntry.spaceInfoProto) {
+			// The user's found anchor ids have changed: remove and re-add the user to the anchor state maps.
 			s.RemoveUserAnchorsLocked(userStateEntry)
 			userStateEntry.spaceInfoProto = req.SpaceInfo
 			for _, anchor := range userStateEntry.spaceInfoProto.Anchor {
@@ -402,6 +474,8 @@ func (s *Server) HandleUpdateDevice(req *pb.UpdateDeviceRequest) *pb.UpdateDevic
 				userName, req.UserState.UserDisplayName, req.SpaceInfo.Anchor, req.SpaceInfo.SpaceName,
 				req.SpaceInfo.SpaceId)
 
+			// Now that the user has found a different set of anchors, send any brush strokes and 3d model information
+			// that they haven't recieved yet.
 			s.DistributeMissingBrushStrokesToUserLocked(userStateEntry, nil)
 			s.DistributeMissingExternalModelsToUserLocked(userStateEntry, nil)
 		} else {
@@ -414,8 +488,11 @@ func (s *Server) HandleUpdateDevice(req *pb.UpdateDeviceRequest) *pb.UpdateDevic
 		}
 	}
 
+	// Distribute the change for the current user to any other users that should be notified (by having the same
+	// anchors).
 	s.DistributeUserChangesLocked(userStateEntry, req.Echo)
 
+	// Process an added or modified brush stroke by the user
 	if req.BrushStrokeAdd != nil {
 		if anchorState, ok := s.anchorStateMap[req.BrushStrokeAdd.BrushStroke.AnchorId]; ok {
 			if existingBrushStroke, ok := anchorState.brushStrokes[req.BrushStrokeAdd.BrushStroke.Id]; ok {
@@ -450,6 +527,7 @@ func (s *Server) HandleUpdateDevice(req *pb.UpdateDeviceRequest) *pb.UpdateDevic
 		}
 	}
 
+	// Process a removed brush stroke from the user.
 	if req.BrushStrokeRemove != nil {
 		if anchorState, ok := s.anchorStateMap[req.BrushStrokeRemove.AnchorId]; ok {
 			delete(anchorState.brushStrokes, req.BrushStrokeRemove.Id)
@@ -461,6 +539,7 @@ func (s *Server) HandleUpdateDevice(req *pb.UpdateDeviceRequest) *pb.UpdateDevic
 		}
 	}
 
+	// Process an added or modified external 3d model from the user.
 	if req.ExternalModelAdd != nil {
 		if anchorState, ok := s.anchorStateMap[req.ExternalModelAdd.Model.AnchorId]; ok {
 			anchorState.externalModels[req.ExternalModelAdd.Model.Id] = req.ExternalModelAdd.Model
@@ -472,6 +551,7 @@ func (s *Server) HandleUpdateDevice(req *pb.UpdateDeviceRequest) *pb.UpdateDevic
 		}
 	}
 
+	// Process a removed 3d model from the user.
 	if req.ExternalModelRemove != nil {
 		if anchorState, ok := s.anchorStateMap[req.ExternalModelRemove.AnchorId]; ok {
 			delete(anchorState.externalModels, req.ExternalModelRemove.Id)
@@ -483,16 +563,11 @@ func (s *Server) HandleUpdateDevice(req *pb.UpdateDeviceRequest) *pb.UpdateDevic
 		}
 	}
 
-	if req.QueryUsersRequest != nil {
-		if resp == nil {
-			resp = &pb.UpdateDeviceResponse{}
-		}
-		resp.QueryUsersResponse = s.HandleQueryUsersLocked(userName, req.QueryUsersRequest)
-	}
-
 	return resp
 }
 
+// HandleQueryUsersLocked handles an rpc from a user to fetch the list of other connected users.
+// s.lock must be held while calling this function.
 func (s *Server) HandleQueryUsersLocked(userName string, _ *pb.QueryUsersRequest) *pb.QueryUsersResponse {
 	resp := &pb.QueryUsersResponse{}
 
@@ -510,6 +585,7 @@ func (s *Server) HandleQueryUsersLocked(userName string, _ *pb.QueryUsersRequest
 	return resp
 }
 
+// AnchorIdsEqual checks if the anchor ids are equal between two space info protos.
 func AnchorIdsEqual(spaceInfo1 *pb.SpaceInfoProto, spaceInfo2 *pb.SpaceInfoProto) bool {
 	if (spaceInfo1 == nil) != (spaceInfo2 == nil) {
 		return false
@@ -530,6 +606,8 @@ func AnchorIdsEqual(spaceInfo1 *pb.SpaceInfoProto, spaceInfo2 *pb.SpaceInfoProto
 	return true
 }
 
+// DistributeUserChangesLocked sets notification bits for user connections so that they are sent updates in the next
+// server state message. s.lock must be held while calling this function.
 func (s *Server) DistributeUserChangesLocked(userStateEntry *UserState, echo bool) {
 	if userStateEntry.spaceInfoProto == nil {
 		return
@@ -537,12 +615,15 @@ func (s *Server) DistributeUserChangesLocked(userStateEntry *UserState, echo boo
 
 	usersToNotify := make(map[string]bool)
 
+	// Build up a set of users to notify by looking at all the current user's anchors (users may share multiple
+	// anchors).
 	for _, anchor := range userStateEntry.spaceInfoProto.Anchor {
 		for userToNotify := range s.anchorStateMap[anchor.Id].userSet {
 			usersToNotify[userToNotify] = true
 		}
 	}
 
+	// Set notify bits for each of the users to notify, and try to wake up their connection threads if sleeping.
 	for userToNotify, _ := range usersToNotify {
 		if userToNotify == userStateEntry.userName && !echo {
 			continue
@@ -558,6 +639,8 @@ func (s *Server) DistributeUserChangesLocked(userStateEntry *UserState, echo boo
 	}
 }
 
+// DistributeBrushStrokeAddLocked sets notification bits for user connections, for a brush stroke that was added
+// or modified. s.lock must be held while calling this function.
 func (s *Server) DistributeBrushStrokeAddLocked(anchorState *AnchorState, brushStrokeId string, brushStartIndex int, senderUserName string, echo bool) {
 	for userToNotify, _ := range anchorState.userSet {
 		if userToNotify == senderUserName && !echo {
@@ -580,6 +663,8 @@ func (s *Server) DistributeBrushStrokeAddLocked(anchorState *AnchorState, brushS
 	}
 }
 
+// DistributeBrushStrokeRemoveLocked sets notification bits for user connections, for a brush stroke that was removed.
+// s.lock must be held while calling this function.
 func (s *Server) DistributeBrushStrokeRemoveLocked(anchorState *AnchorState, brushStrokeId string, senderUserName string, echo bool) {
 	for userToNotify, _ := range anchorState.userSet {
 		if userToNotify == senderUserName && !echo {
@@ -596,6 +681,8 @@ func (s *Server) DistributeBrushStrokeRemoveLocked(anchorState *AnchorState, bru
 	}
 }
 
+// DistributeMissingBrushStrokesToUserLocked sets notify bits for all brush strokes that a user hasn't been notified
+// about yet, and also cleans up obsolete brush stroke states. s.lock must be held while calling this function.
 func (s *Server) DistributeMissingBrushStrokesToUserLocked(userStateEntry *UserState, userConnectionState *UserConnectionState) {
 	if userStateEntry == nil {
 		userStateEntry = s.userStateMap[userConnectionState.userName]
@@ -635,6 +722,8 @@ func (s *Server) DistributeMissingBrushStrokesToUserLocked(userStateEntry *UserS
 	}
 }
 
+// DistributeExternalModelAddLocked sets notification bits for user connections, for a 3d model that was added
+// or modified. s.lock must be held while calling this function.
 func (s *Server) DistributeExternalModelAddLocked(anchorState *AnchorState, modelId string, senderUserName string, echo bool) {
 	for userToNotify, _ := range anchorState.userSet {
 		if userToNotify == senderUserName && !echo {
@@ -651,6 +740,8 @@ func (s *Server) DistributeExternalModelAddLocked(anchorState *AnchorState, mode
 	}
 }
 
+// DistributeExternalModelRemoveLocked sets notification bits for user connections, for a 3d model that was removed.
+// s.lock must be held while calling this function.
 func (s *Server) DistributeExternalModelRemoveLocked(anchorState *AnchorState, modelId string, senderUserName string, echo bool) {
 	for userToNotify, _ := range anchorState.userSet {
 		if userToNotify == senderUserName && !echo {
@@ -667,6 +758,8 @@ func (s *Server) DistributeExternalModelRemoveLocked(anchorState *AnchorState, m
 	}
 }
 
+// DistributeMissingExternalModelsToUserLocked sets notify bits for all 3d models that a user hasn't been notified
+// about yet. s.lock must be held while calling this function.
 func (s *Server) DistributeMissingExternalModelsToUserLocked(userStateEntry *UserState, userConnectionState *UserConnectionState) {
 	if userStateEntry == nil {
 		userStateEntry = s.userStateMap[userConnectionState.userName]
@@ -687,6 +780,8 @@ func (s *Server) DistributeMissingExternalModelsToUserLocked(userStateEntry *Use
 	}
 }
 
+// RemoveUserAnchorsLocked removes the user from all anchor user sets.
+// s.lock must be held while calling this function.
 func (s *Server) RemoveUserAnchorsLocked(userStateEntry *UserState) {
 	if userStateEntry.spaceInfoProto == nil {
 		return

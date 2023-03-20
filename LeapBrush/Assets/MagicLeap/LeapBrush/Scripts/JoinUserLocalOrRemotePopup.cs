@@ -7,6 +7,9 @@ using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// Popup asking the user if they would like to join another user eithe remotely or in person.
+    /// </summary>
     public class JoinUserLocalOrRemotePopup : MonoBehaviour
     {
         [SerializeField]

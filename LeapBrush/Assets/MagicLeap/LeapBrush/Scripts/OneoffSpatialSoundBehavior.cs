@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// A oneoff spatial sound that plays at a particular location and automatically
+    /// destroys itself once the sound ends.
+    /// </summary>
     public class OneoffSpatialSoundBehavior : AudioHandler
     {
         private SoundDefinition _sound;

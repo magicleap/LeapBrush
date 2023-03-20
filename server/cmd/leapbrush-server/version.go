@@ -1,6 +1,6 @@
 package main
 
 const (
-	serverVersion = "0.4.1"
+	serverVersion = "0.4.5"
 	minAppVersion = "0"
 )

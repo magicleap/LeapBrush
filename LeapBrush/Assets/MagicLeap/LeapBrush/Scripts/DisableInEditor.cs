@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// Helper to disable a particular component when the app is run from the Unity Editor.
+    /// </summary>
     public class DisableInEditor : MonoBehaviour
     {
         [SerializeField]

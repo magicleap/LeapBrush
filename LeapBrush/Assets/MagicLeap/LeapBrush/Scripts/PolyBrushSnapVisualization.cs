@@ -2,6 +2,10 @@ using UnityEngine;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// Visualization of a snap point where the user could join or stop a polygon drawing by
+    /// clicking.
+    /// </summary>
     public class PolyBrushSnapVisualization : MonoBehaviour
     {
         public float TargetRadius

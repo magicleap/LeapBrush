@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace MagicLeap
 {
+    /// <summary>
+    /// Utilities for working with Colors.
+    /// </summary>
     public class ColorUtils
     {
         public static Color32 FromRgbaUint(uint rgbaUint)

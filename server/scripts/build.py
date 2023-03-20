@@ -1,11 +1,11 @@
 #!/usr/bin/env -S python3 -u
 
 import argparse
+import glob
 import os
 import sys
 import subprocess
 import tempfile
-import pipes
 import re
 
 
@@ -13,8 +13,9 @@ def Build(root_dir, go_os, arch, output_path):
   env = os.environ.copy()
   env['GOOS'] = go_os
   env['GOARCH'] = arch
-  subprocess.check_call('go build -o %s cmd/leapbrush-server/*' % pipes.quote(output_path),
-                        shell=True, env=env, cwd=root_dir)
+  cmd = ['go', 'build', '-o', output_path]
+  cmd.extend(glob.glob('cmd/leapbrush-server/*', root_dir=root_dir))
+  subprocess.check_call(cmd, env=env, cwd=root_dir)
 
 
 def BuildMac(root_dir, output_parent_dir, version_string):
@@ -35,6 +36,12 @@ def BuildLinux(root_dir, output_parent_dir, version_string):
   output_path = os.path.join(
     output_parent_dir, 'leapbrush-server-linux-%s.x86_64' % version_string)
   Build(root_dir, 'linux', 'amd64', output_path)
+
+
+def BuildWindows(root_dir, output_parent_dir, version_string):
+  output_path = os.path.join(
+    output_parent_dir, 'leapbrush-server-windows-%s.exe' % version_string)
+  Build(root_dir, 'windows', 'amd64', output_path)
 
 
 if __name__ == '__main__':
@@ -64,4 +71,5 @@ if __name__ == '__main__':
     os.mkdir(output_parent_dir)
 
   BuildMac(root_dir, output_parent_dir, version_string)
+  BuildWindows(root_dir, output_parent_dir, version_string)
   BuildLinux(root_dir, output_parent_dir, version_string)

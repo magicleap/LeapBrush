@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace MagicLeap
 {
+    /// <summary>
+    /// Entry in the join users popup representing a single user that can be joined.
+    /// </summary>
     public class JoinUserEntry : MonoBehaviour
     {
         [SerializeField]

@@ -5,6 +5,14 @@ using Random = System.Random;
 
 namespace MagicLeap
 {
+    /// <summary>
+    /// Manage the current color selection for brushes.
+    /// </summary>
+    /// <remarks>
+    /// This class attempts to allocate a unique brush color to each user who joins a scene,
+    /// provided they haven't yet made any drawings. Once a user picks an explicit color or
+    /// begins drawing, their color selection locks in.
+    /// </remarks>
     public class BrushColorManager : MonoBehaviour
     {
         [SerializeField]

@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// UI for the Color Picker (Palette) popup.
+    /// </summary>
     public class ColorPickerPopup : MonoBehaviour
     {
         [Header("External Dependencies")]

@@ -5,12 +5,32 @@ using UnityEngine;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// The polygon brush tool and brush stroke.
+    /// </summary>
+    /// <remarks>
+    /// The polygon brush allows the user to precisely place a series of control points which are
+    /// connected by brush strokes. The user can click on the previous or first control point
+    /// to stop the drawing or create a loop. The drawing can optionally have a fill and/or
+    /// segmented dimming fill value.
+    ///
+    /// <para>Similar to the ScribbleBrush, this algorithm creates a ribbon between the control
+    /// points, however if a fill is selected, it also uses a simple triangle fan to attempt
+    /// to draw a reasonable fill. This algorithm could be improved.
+    /// </para>
+    /// </remarks>
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshCollider))]
     [RequireComponent(typeof(GenericAudioHandler))]
     public class PolyBrush : BrushBase
     {
-        [SerializeField]
+        /// <summary>
+        /// Event fired when poses have been updated in this brush. The first argument is the
+        /// start index in the list of poses where poses have been modified.
+        /// </summary>
+        public event Action<int> OnPosesUpdated;
+
+        [SerializeField, Tooltip("Visualization for a snap point when the tool is close to one")]
         private PolyBrushSnapVisualization _snapVisualization;
 
         [SerializeField]
@@ -46,8 +66,6 @@ namespace MagicLeap.LeapBrush
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
-
-        public event Action<int> OnPosesUpdated;
 
         private void Awake()
         {
@@ -105,12 +123,15 @@ namespace MagicLeap.LeapBrush
                 if ((nextPose.position - lastPose.position).sqrMagnitude <
                     MinDistanceUpdatePose * MinDistanceUpdatePose)
                 {
+                    // The tool is too close to the last pose added still.
                     return;
                 }
 
+                // Replace the last pose with the current tool location.
                 _poses[^1] = nextPose;
                 RebuildMesh(_poses);
 
+                // Calculate a snap radius that increases based on the distance from the camera.
                 _snapRadius = Vector3.Distance(Camera.main.transform.position, nextPose.position)
                               * SnapRadiusCameraDistanceMultiplier;
                 _snapVisualization.TargetRadius = _snapRadius;
@@ -125,6 +146,9 @@ namespace MagicLeap.LeapBrush
                     {
                         if (_movedAwayFromPreviousSnap)
                         {
+                            // The new pose is close to the most recently added pose -- show the
+                            // snap visualization since the user could click here to finish
+                            // the current drawing.
                             _snapVisualization.transform.position = mostRecentPosition;
                             _snapVisualization.gameObject.SetActive(true);
                         }
@@ -134,12 +158,16 @@ namespace MagicLeap.LeapBrush
                     {
                         if (_movedAwayFromPreviousSnap)
                         {
+                            // The new pose is close to the first pose in the drawing -- show
+                            // the snap visualization since the user could click here to finish
+                            // the current drawing as a loop.
                             _snapVisualization.transform.position = firstPosition;
                             _snapVisualization.gameObject.SetActive(true);
                         }
                     }
                     else
                     {
+                        // Hide the snap visualization since the user is not close to a snap point.
                         _snapVisualization.gameObject.SetActive(false);
                         _movedAwayFromPreviousSnap = true;
                     }
@@ -149,6 +177,9 @@ namespace MagicLeap.LeapBrush
             }
             else if (_brushControllerTransform != null)
             {
+                // The user is not drawing currently but this is the polygon brush tool visual
+                // -- move the brush to the expected transform.
+
                 transform.SetPositionAndRotation(_brushControllerTransform.position,
                     _brushControllerTransform.rotation);
             }
@@ -250,6 +281,10 @@ namespace MagicLeap.LeapBrush
         {
         }
 
+        /// <summary>
+        /// Handle the trigger button being released, and create a new control point or start
+        /// drawing depending on the current state.
+        /// </summary>
         public override void OnTriggerButtonUp()
         {
             if (!_drawing)
@@ -293,6 +328,10 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Replace the current poses with a simple list which visualizes a drawing tip. This
+        /// is displayed so the user knows where the drawing will start if they initiate a drawing.
+        /// </summary>
         private void ApplyDrawingTipPoses()
         {
             _poses.Clear();
@@ -300,6 +339,10 @@ namespace MagicLeap.LeapBrush
             _poses.Add(Pose.identity);
         }
 
+        /// <summary>
+        /// Rebuild the current mesh of this brush stroke with an updated set of poses.
+        /// </summary>
+        /// <param name="poses">The new poses to use for the mesh.</param>
         private void RebuildMesh(IList<Pose> poses)
         {
             var mesh = GetComponent<MeshFilter>().mesh;
@@ -311,6 +354,8 @@ namespace MagicLeap.LeapBrush
                 _fillDimmerGameObject.SetActive(false);
                 return;
             }
+
+            // Create a ribbon strip for the lines (strokes) between control points.
 
             var vertices = new Vector3[poses.Count * 2];
             var triangles = new int[poses.Count * 6 - 6];
@@ -338,6 +383,8 @@ namespace MagicLeap.LeapBrush
 
             mesh.RecalculateNormals();
 
+            // Update the fill mesh if there are enough poses and colors were selected.
+
             _fillGameObject.SetActive(poses.Count > 2 && _fillColor != Color.clear);
             _fillDimmerGameObject.SetActive(poses.Count > 2 && _fillDimmerAlpha > 0);
             if (poses.Count > 2)
@@ -346,6 +393,10 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        /// <summary>
+        /// Rebuild the fill and dimmer meshes with new poses.
+        /// </summary>
+        /// <param name="poses">The new poses that should make up the fill mesh</param>
         private void RebuildFillMesh(IList<Pose> poses)
         {
             var mesh = _fillGameObject.GetComponent<MeshFilter>().mesh;

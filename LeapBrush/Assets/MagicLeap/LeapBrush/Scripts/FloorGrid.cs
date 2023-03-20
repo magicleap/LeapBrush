@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace MagicLeap
 {
+    /// <summary>
+    /// Manager for a visualization of a floor grid that can be displayed in a spectator app.
+    /// </summary>
+    /// <remarks>
+    /// The floor grid relocates based on loaded content to always remain below things.
+    /// </remarks>
     public class FloorGrid : MonoBehaviour
     {
         [SerializeField]

@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace MagicLeap
 {
+    /// <summary>
+    /// Helper to delay a UI button click event handler for a brief period to allow animations
+    /// and sounds to play first.
+    /// </summary>
     public class DelayedButtonHandler : MonoBehaviour
     {
         public const float DefaultButtonDelaySeconds = 0.25f;

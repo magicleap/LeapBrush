@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace MagicLeap
 {
+    /// <summary>
+    /// An entry in the list of 3D models UI that the user can pick from.
+    /// </summary>
     public class External3DModelEntry : MonoBehaviour
     {
         [SerializeField]

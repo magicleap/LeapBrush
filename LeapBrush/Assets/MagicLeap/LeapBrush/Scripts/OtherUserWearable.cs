@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 namespace MagicLeap.LeapBrush
 {
+    /// <summary>
+    /// Component managing the display of other user's Headsets present in the area.
+    /// </summary>
     public class OtherUserWearable : MonoBehaviour
     {
         [SerializeField]
