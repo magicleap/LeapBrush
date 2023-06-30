@@ -22,6 +22,7 @@ namespace MagicLeap.LeapBrush
 
         private AnchorsApi.Anchor[] _anchors = new AnchorsApi.Anchor[0];
         private bool _isUsingImportedAnchors;
+        private bool _lastQuerySuccessful;
         private Dictionary<string, GameObject> _anchorGameObjectsMap = new();
 
         private IEnumerator _updateAnchorsCoroutine;
@@ -68,6 +69,8 @@ namespace MagicLeap.LeapBrush
 
         public bool IsUsingImportedAnchors => _isUsingImportedAnchors;
 
+        public bool LastQuerySuccessful => _lastQuerySuccessful;
+
         public bool TryGetAnchorGameObject(string anchorId, out GameObject gameObject)
         {
             if (anchorId == null)
@@ -106,18 +109,29 @@ namespace MagicLeap.LeapBrush
                     }
                 }
 
-                if (!hasValidPoses)
+                if (hasValidPoses)
                 {
-                    // TODO(ghazen): Find and report the root cause for invalid anchor poses.
+                    Array.Sort(anchors, (AnchorsApi.Anchor a, AnchorsApi.Anchor b) =>
+                        string.CompareOrdinal(a.Id, b.Id));
+
+                    ThreadDispatcher.ScheduleMain(() => UpdateAnchorsOnMainThread(
+                        anchors, isUsingImportedAnchors));
                     return;
                 }
 
-                Array.Sort(anchors, (AnchorsApi.Anchor a, AnchorsApi.Anchor b) =>
-                    string.CompareOrdinal(a.Id, b.Id));
-
-                ThreadDispatcher.ScheduleMain(() => UpdateAnchorsOnMainThread(
-                    anchors, isUsingImportedAnchors));
+                // TODO(ghazen): Find and report the root cause for invalid anchor poses.
+                Debug.LogError("UpdateAnchorsOnWorkerThread: some anchors have invalid poses");
             }
+            else
+            {
+                Debug.LogError("UpdateAnchorsOnWorkerThread: failed to query anchors "
+                               + result);
+            }
+
+            ThreadDispatcher.ScheduleMain(() =>
+            {
+                 _lastQuerySuccessful = false;
+            });
         }
 
         private void UpdateAnchorsOnMainThread(
@@ -125,6 +139,7 @@ namespace MagicLeap.LeapBrush
         {
             _anchors = anchors;
             _isUsingImportedAnchors = isUsingImportedAnchors;
+            _lastQuerySuccessful = true;
 
             HashSet<string> removedAnchorIds = new HashSet<string>();
             foreach (KeyValuePair<string, GameObject> anchorEntry in _anchorGameObjectsMap)

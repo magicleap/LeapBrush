@@ -52,6 +52,11 @@ namespace MagicLeap.LeapBrush
                 externalModels = new();
 
                 string anchorDir = GetAnchorDir(anchorId, false);
+                if (!Directory.Exists(anchorDir))
+                {
+                    return;
+                }
+
                 foreach (string path in Directory.GetFiles(anchorDir))
                 {
                     string filename = Path.GetFileName(path);

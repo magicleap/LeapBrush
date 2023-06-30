@@ -221,143 +221,11 @@ namespace MagicLeap.LeapBrush
         {
             try
             {
-                LeapBrushApiBase.UpdateDeviceStream updateDeviceStream =
-                    _leapBrushClient.UpdateDeviceStream(_shutDownTokenSource.Token);
-
-                UserStateProto userState = new UserStateProto();
-                userState.UserName = _userName;
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-                userState.DeviceType = UserStateProto.Types.DeviceType.MagicLeap;
-#else
-                userState.DeviceType = UserStateProto.Types.DeviceType.DesktopSpectator;
-#endif
-
-                SpaceInfoProto spaceInfo = new SpaceInfoProto();
-
-                UpdateDeviceRequest updateRequest = new UpdateDeviceRequest();
-                updateRequest.UserState = userState;
-
-                DateTimeOffset lastUpdateTime = DateTimeOffset.MinValue;
                 while (!_shutDownTokenSource.IsCancellationRequested)
                 {
-                    TimeSpan sleepTime = (lastUpdateTime + TimeSpan.FromSeconds(MinServerUpdateIntervalSeconds)
-                                          - DateTimeOffset.Now);
-                    if (sleepTime.Milliseconds > 0)
-                    {
-                        Thread.Sleep(sleepTime);
-                    }
-
-                    bool sendUpdate;
-
-                    updateRequest.SpaceInfo = null;
-                    updateRequest.BrushStrokeAdd = null;
-                    updateRequest.BrushStrokeRemove = null;
-                    updateRequest.ExternalModelAdd = null;
-                    updateRequest.ExternalModelRemove = null;
-
-                    lock (_lock)
-                    {
-                        sendUpdate = !_lastUploadOk || lastUpdateTime
-                            + TimeSpan.FromSeconds(ServerPingIntervalSeconds) < DateTimeOffset.Now;
-
-                        if (UpdateUserStateGetWasChanged(userState, _userDisplayName, _headClosestAnchorId,
-                                _headPoseRelativeToAnchor, _controlPoseRelativeToAnchor,
-                                _currentToolState, _currentToolColor, _batteryStatus))
-                        {
-                            sendUpdate = true;
-                        }
-
-                        if (!_lastUploadOk || UpdateSpaceInfoGetWasChanged(spaceInfo, _spaceInfo))
-                        {
-                            sendUpdate = true;
-                            updateRequest.SpaceInfo = spaceInfo;
-                        }
-
-                        if (updateRequest.Echo != _serverEchoEnabled)
-                        {
-                            sendUpdate = true;
-                            updateRequest.Echo = _serverEchoEnabled;
-                        }
-
-                        if (_currentBrushStroke != null && _currentBrushStroke.BrushPose.Count > 0)
-                        {
-                            sendUpdate = true;
-                            BrushStrokeProto brushStrokeProto = new();
-                            if (_currentBrushStroke.StartIndex == 0)
-                            {
-                                brushStrokeProto.MergeFrom(_currentBrushStroke);
-                            }
-                            else
-                            {
-                                brushStrokeProto.Id = _currentBrushStroke.Id;
-                                brushStrokeProto.AnchorId = _currentBrushStroke.AnchorId;
-                                brushStrokeProto.StartIndex = _currentBrushStroke.StartIndex;
-                                brushStrokeProto.BrushPose.AddRange(_currentBrushStroke.BrushPose);
-                            }
-
-                            updateRequest.BrushStrokeAdd = new BrushStrokeAddRequest {BrushStroke = brushStrokeProto};
-                            _currentBrushStroke.StartIndex += _currentBrushStroke.BrushPose.Count;
-                            _currentBrushStroke.BrushPose.Clear();
-                        }
-                        else if (_brushStrokesToUpload.Count > 0)
-                        {
-                            sendUpdate = true;
-                            updateRequest.BrushStrokeAdd = new BrushStrokeAddRequest {BrushStroke = _brushStrokesToUpload.First.Value};
-                            _brushStrokesToUpload.RemoveFirst();
-                        }
-
-                        if (_brushStrokesToRemove.Count > 0)
-                        {
-                            sendUpdate = true;
-                            updateRequest.BrushStrokeRemove = _brushStrokesToRemove.First.Value;
-                            _brushStrokesToRemove.RemoveFirst();
-                        }
-
-                        if (_externalModelsToUpdate.Count > 0)
-                        {
-                            sendUpdate = true;
-                            string firstModelId = null;
-                            foreach (string modelId in _externalModelsToUpdate.Keys)
-                            {
-                                firstModelId = modelId;
-                                break;
-                            }
-                            updateRequest.ExternalModelAdd = new ExternalModelAddRequest()
-                            {
-                                Model = _externalModelsToUpdate[firstModelId]
-                            };
-                            _externalModelsToUpdate.Remove(firstModelId);
-                        }
-
-                        if (_externalModelsToRemove.Count > 0)
-                        {
-                            sendUpdate = true;
-                            updateRequest.ExternalModelRemove = _externalModelsToRemove.First.Value;
-                            _externalModelsToRemove.RemoveFirst();
-                        }
-                    }
-
-                    if (!sendUpdate)
-                    {
-                        continue;
-                    }
-
-                    lastUpdateTime = DateTimeOffset.Now;
-
                     try
                     {
-                        updateDeviceStream.Write(updateRequest, _shutDownTokenSource.Token);
-
-                        lock (_lock)
-                        {
-                            if (!_lastUploadOk)
-                            {
-                                Debug.Log("UpdateDevice started succeeding");
-                            }
-
-                            _lastUploadOk = true;
-                        }
+                        RunUpdateDeviceLoop();
                     }
                     catch (RpcException e)
                     {
@@ -371,6 +239,8 @@ namespace MagicLeap.LeapBrush
                             _lastUploadOk = false;
                         }
                     }
+
+                    Thread.Sleep(TimeSpan.FromMilliseconds(100));
                 }
 
                 Debug.Log("Upload thread: Shutting down");
@@ -378,6 +248,147 @@ namespace MagicLeap.LeapBrush
             catch (Exception e)
             {
                 Debug.LogException(e);
+            }
+        }
+
+        private void RunUpdateDeviceLoop()
+        {
+            LeapBrushApiBase.UpdateDeviceStream updateDeviceStream =
+                _leapBrushClient.UpdateDeviceStream(_shutDownTokenSource.Token);
+
+            UserStateProto userState = new UserStateProto();
+            userState.UserName = _userName;
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            userState.DeviceType = UserStateProto.Types.DeviceType.MagicLeap;
+#else
+            userState.DeviceType = UserStateProto.Types.DeviceType.DesktopSpectator;
+#endif
+
+            SpaceInfoProto spaceInfo = new SpaceInfoProto();
+
+            UpdateDeviceRequest updateRequest = new UpdateDeviceRequest();
+            updateRequest.UserState = userState;
+
+            DateTimeOffset lastUpdateTime = DateTimeOffset.MinValue;
+            while (!_shutDownTokenSource.IsCancellationRequested)
+            {
+                TimeSpan sleepTime = (lastUpdateTime + TimeSpan.FromSeconds(MinServerUpdateIntervalSeconds)
+                                      - DateTimeOffset.Now);
+                if (sleepTime.Milliseconds > 0)
+                {
+                    Thread.Sleep(sleepTime);
+                }
+
+                bool sendUpdate;
+
+                updateRequest.SpaceInfo = null;
+                updateRequest.BrushStrokeAdd = null;
+                updateRequest.BrushStrokeRemove = null;
+                updateRequest.ExternalModelAdd = null;
+                updateRequest.ExternalModelRemove = null;
+
+                lock (_lock)
+                {
+                    sendUpdate = !_lastUploadOk || lastUpdateTime
+                        + TimeSpan.FromSeconds(ServerPingIntervalSeconds) < DateTimeOffset.Now;
+
+                    if (UpdateUserStateGetWasChanged(userState, _userDisplayName, _headClosestAnchorId,
+                            _headPoseRelativeToAnchor, _controlPoseRelativeToAnchor,
+                            _currentToolState, _currentToolColor, _batteryStatus))
+                    {
+                        sendUpdate = true;
+                    }
+
+                    if (!_lastUploadOk || UpdateSpaceInfoGetWasChanged(spaceInfo, _spaceInfo))
+                    {
+                        sendUpdate = true;
+                        updateRequest.SpaceInfo = spaceInfo;
+                    }
+
+                    if (updateRequest.Echo != _serverEchoEnabled)
+                    {
+                        sendUpdate = true;
+                        updateRequest.Echo = _serverEchoEnabled;
+                    }
+
+                    if (_currentBrushStroke != null && _currentBrushStroke.BrushPose.Count > 0)
+                    {
+                        sendUpdate = true;
+                        BrushStrokeProto brushStrokeProto = new();
+                        if (_currentBrushStroke.StartIndex == 0)
+                        {
+                            brushStrokeProto.MergeFrom(_currentBrushStroke);
+                        }
+                        else
+                        {
+                            brushStrokeProto.Id = _currentBrushStroke.Id;
+                            brushStrokeProto.AnchorId = _currentBrushStroke.AnchorId;
+                            brushStrokeProto.StartIndex = _currentBrushStroke.StartIndex;
+                            brushStrokeProto.BrushPose.AddRange(_currentBrushStroke.BrushPose);
+                        }
+
+                        updateRequest.BrushStrokeAdd = new BrushStrokeAddRequest {BrushStroke = brushStrokeProto};
+                        _currentBrushStroke.StartIndex += _currentBrushStroke.BrushPose.Count;
+                        _currentBrushStroke.BrushPose.Clear();
+                    }
+                    else if (_brushStrokesToUpload.Count > 0)
+                    {
+                        sendUpdate = true;
+                        updateRequest.BrushStrokeAdd = new BrushStrokeAddRequest {BrushStroke = _brushStrokesToUpload.First.Value};
+                        _brushStrokesToUpload.RemoveFirst();
+                    }
+
+                    if (_brushStrokesToRemove.Count > 0)
+                    {
+                        sendUpdate = true;
+                        updateRequest.BrushStrokeRemove = _brushStrokesToRemove.First.Value;
+                        _brushStrokesToRemove.RemoveFirst();
+                    }
+
+                    if (_externalModelsToUpdate.Count > 0)
+                    {
+                        sendUpdate = true;
+                        string firstModelId = null;
+                        foreach (string modelId in _externalModelsToUpdate.Keys)
+                        {
+                            firstModelId = modelId;
+                            break;
+                        }
+
+                        updateRequest.ExternalModelAdd = new ExternalModelAddRequest()
+                        {
+                            Model = _externalModelsToUpdate[firstModelId]
+                        };
+                        _externalModelsToUpdate.Remove(firstModelId);
+                    }
+
+                    if (_externalModelsToRemove.Count > 0)
+                    {
+                        sendUpdate = true;
+                        updateRequest.ExternalModelRemove = _externalModelsToRemove.First.Value;
+                        _externalModelsToRemove.RemoveFirst();
+                    }
+                }
+
+                if (!sendUpdate)
+                {
+                    continue;
+                }
+
+                lastUpdateTime = DateTimeOffset.Now;
+
+                updateDeviceStream.Write(updateRequest, _shutDownTokenSource.Token);
+
+                lock (_lock)
+                {
+                    if (!_lastUploadOk)
+                    {
+                        Debug.Log("UpdateDevice started succeeding");
+                    }
+
+                    _lastUploadOk = true;
+                }
             }
         }
 

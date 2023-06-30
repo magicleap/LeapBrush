@@ -1404,7 +1404,7 @@ namespace MagicLeap.LeapBrush
         {
             yield return new WaitForSeconds(1.0f);
 
-            if (_anchorsManager.Anchors.Length == 0)
+            if (_anchorsManager.Anchors.Length == 0 && _anchorsManager.LastQuerySuccessful)
             {
                 AnchorsApi.Anchor anchor;
                 MLResult result = AnchorsApi.CreateAnchor(
@@ -1422,6 +1422,8 @@ namespace MagicLeap.LeapBrush
                     Debug.LogError("Failed to create new anchor: " + result);
                 }
             }
+
+            _maybeCreateAnchorAfterLocalizationWithDelayCoroutine = null;
         }
 
         /// <summary>
