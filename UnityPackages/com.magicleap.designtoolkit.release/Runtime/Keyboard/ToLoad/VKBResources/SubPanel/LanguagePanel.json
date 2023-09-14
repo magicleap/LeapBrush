@@ -1,0 +1,22 @@
+{
+  "IsVertical":"true",
+  "LanguageID":"kAll_Unity",
+  "SubPanelID":"LanguagePanel",
+  "Keys":[
+    {"KeyTypeID":"kChangeLocaleEn", "DefaultChar":"EN"},
+    {"KeyTypeID":"kChangeLocaleJP", "DefaultChar":"JP"},
+    {"KeyTypeID":"kChangeLocaleAR", "DefaultChar":"AR"},
+    {"KeyTypeID":"kChangeLocaleDE", "DefaultChar":"DE"},
+    {"KeyTypeID":"kChangeLocaleFR", "DefaultChar":"FR"},
+    {"KeyTypeID":"kChangeLocaleES", "DefaultChar":"ES"},
+    {"KeyTypeID":"kChangeLocalePT", "DefaultChar":"PT"},
+    {"KeyTypeID":"kChangeLocaleIT", "DefaultChar":"IT"}
+  ],
+  "DefaultKeySizeX":25,
+  "DefaultKeySizeY":25,
+  "DefaultKeySizeZ":25,
+  "MotionRangeZStart":0,
+  "MotionRangeZEnd":2.33,
+  "FrontSideDetectThreshold":5.83,
+  "KeyGap":5
+}

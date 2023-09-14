@@ -25,8 +25,6 @@ namespace MagicLeap.LeapBrush
         [SerializeField]
         private GameObject _batteryChargingGameObject;
 
-        public DateTimeOffset LastUpdateTime = DateTimeOffset.Now;
-
         public event Action OnDestroyed;
 
         private float _nameTagVerticalOffset;
@@ -60,13 +58,12 @@ namespace MagicLeap.LeapBrush
         private void Update()
         {
             Transform nameTagTransform = _nameTag.transform;
-            Vector3 lookDir = (
-                nameTagTransform.position - Camera.main.transform.position).normalized;
+            Vector3 lookDir = (nameTagTransform.position - Camera.main.transform.position).normalized;
             lookDir.y = 0;
             if (lookDir != Vector3.zero)
             {
                 nameTagTransform.SetPositionAndRotation(
-                    transform.position + new Vector3(0, _nameTagVerticalOffset, 0),
+                    transform.position + Vector3.up * _nameTagVerticalOffset,
                     Quaternion.LookRotation(lookDir, Vector3.up));
             }
         }

@@ -1,0 +1,58 @@
+variables:
+  GIT_REPO_SSH_URL: git@gitlab.magicleap.io:mrtk/com.magicleap.mrtk3.git
+  RELEASE_TYPE: patch
+  DESCRIPTION: ""
+
+  BLUE: "\e[34m"
+  CLEAR: "\e[0m"
+
+include:
+  - project: solutions-engineering/unity_packages/gitlab_common
+    file:
+      - /Nexus/nexus-publish.gitlab-ci.yml
+      - /GitLab/gitlab-tag.gitlab-ci.yml
+
+stages:
+  - prepare
+  - publish
+  - tag
+
+# PREPARE
+mr:prepare:version:
+  extends: .gitlab_mr_prep_tag
+  only:
+    refs: 
+      - merge_requests
+
+prepare:version:
+  extends: .gitlab_prep_tag
+  only:
+    refs: 
+      - branches
+    variables:
+      - $CI_COMMIT_REF_PROTECTED == "true"
+
+# PUBLISH
+mr-publish:
+  extends: .publish_to_nexus
+  only:
+    refs: 
+      - merge_requests
+  when: manual
+
+push-publish:
+  extends: .publish_to_nexus
+  only:
+    refs: 
+      - branches
+    variables:
+      - $CI_COMMIT_REF_PROTECTED == "true"
+
+# TAG
+release:tag:
+  extends: .gitlab_tag
+  only:
+    refs: 
+      - branches
+    variables:
+      - $CI_COMMIT_REF_PROTECTED == "true"

@@ -8,8 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MagicLeap/LeapBrush/Scenes/LeapBrush.unity
     guid: 40c828f7847b64649af00dbb35a52748
+  - enabled: 1
+    path: Assets/MagicLeap/LeapBrush/Scenes/LeapBrushKeyboard.unity
+    guid: edd0d7d846491489c8e40f51a909404f
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 9b8a5242bae004163860bea4831dc8ad,
+      type: 2}
+    com.unity.input.settings: {fileID: 11400000, guid: 65ddc61455877414894a4a64d3e06b11,
       type: 2}
     com.unity.localization.settings: {fileID: 11400000, guid: 0c6a0402d50a8419fb9ae678180a3e1f,
       type: 2}
@@ -18,4 +23,6 @@ EditorBuildSettings:
     com.unity.xr.magicleap.magic_leap_settings: {fileID: 11400000, guid: e74d74253eeaaee41a6792c8d86712a8,
       type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 59ceb475d0dbca0478340e450c5339b6,
+      type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 250ffd012c69d4c7c8d017d51a8828cb,
       type: 2}

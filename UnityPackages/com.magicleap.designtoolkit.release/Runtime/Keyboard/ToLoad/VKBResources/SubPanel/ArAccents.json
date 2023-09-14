@@ -1,0 +1,24 @@
+{
+  "LanguageID":"kAr_AR_Unity",
+  "SubPanelID":"ArAccents",
+  "Keys":[
+    {"KeyTypeID":"kTashkeel", "DefaultChar":" ٓ", "LabelMargins":{"Top":-5.0,"Right":3.5}, "ShowAccentEllipse":"true"},
+    {"KeyTypeID":"kTashkeel", "DefaultChar":" ٰ", "LabelMargins":{"Top":-5.0, "Right":1.15}, "ShowAccentEllipse":"true"},
+    {"KeyTypeID":"kCharacter", "DefaultChar":"ـ"},
+    {"KeyTypeID":"kTashkeel", "DefaultChar":"َ", "LabelMargins":{"Top":-5.0,"Right":3.5}, "ShowAccentEllipse":"true"},
+    {"KeyTypeID":"kTashkeel", "DefaultChar":"ً", "LabelMargins":{"Top":-5.0,"Right":3.5}, "ShowAccentEllipse":"true"},
+    {"KeyTypeID":"kTashkeel", "DefaultChar":"ِ", "LabelMargins":{"Bottom":-5.0, "Right":2.5}, "ShowAccentEllipse":"true"},
+    {"KeyTypeID":"kTashkeel", "DefaultChar":"ٍ", "LabelMargins":{"Bottom":-5.0, "Right":2.5}, "ShowAccentEllipse":"true"},
+    {"KeyTypeID":"kTashkeel", "DefaultChar":"ُ", "LabelMargins":{"Top":-5.0, "Right":3.5}, "ShowAccentEllipse":"true"},
+    {"KeyTypeID":"kTashkeel", "DefaultChar":"ٌ", "LabelMargins":{"Top":-5.0, "Right":1.15}, "ShowAccentEllipse":"true"},
+    {"KeyTypeID":"kTashkeel", "DefaultChar":"ْ", "LabelMargins":{"Top":-5.0, "Right":1.15}, "ShowAccentEllipse":"true"},
+    {"KeyTypeID":"kTashkeel", "DefaultChar":"ّ", "LabelMargins":{"Top":-5.0, "Right":1.15}, "ShowAccentEllipse":"true"}
+  ],
+  "DefaultKeySizeX":25,
+  "DefaultKeySizeY":25,
+  "DefaultKeySizeZ":25,
+  "MotionRangeZStart":0,
+  "MotionRangeZEnd":2.33,
+  "FrontSideDetectThreshold":5.83,
+  "KeyGap":5
+}

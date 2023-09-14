@@ -1,36 +1,55 @@
 {
   "dependencies": {
+    "com.atteneder.gltfast": {
+      "version": "https://github.com/atteneder/glTFast.git#v4.8.3",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.unitywebrequesttexture": "1.0.0",
+        "com.unity.mathematics": "1.2.6",
+        "com.unity.burst": "1.6.6"
+      },
+      "hash": "04962b47618cdab46943217d30c6c6de33d3c3f7"
+    },
     "com.magicleap.designtoolkit": {
       "version": "file:../../UnityPackages/com.magicleap.designtoolkit.release",
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.textmeshpro": "3.0.6",
-        "com.magicleap.unityaudiotools": "0.1.7-050-5c2c49a1",
-        "com.unity.xr.magicleap": "4.1.3",
+        "com.unity.textmeshpro": "3.2.0-pre.4",
+        "com.unity.xr.magicleap": "7.0.0-pre.2",
         "com.unity.xr.management": "3.2.10",
         "com.unity.render-pipelines.universal": "10.3.2",
+        "org.mixedrealitytoolkit.core": "file:../../UnityPackages/ThirdParty/MixedRealityToolkit-Unity/org.mixedrealitytoolkit.core",
         "com.nosuchstudio.rtltmpro": "3.4.5"
       }
     },
+    "com.magicleap.mrtk3": {
+      "version": "file:../../UnityPackages/com.magicleap.mrtk3",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.magicleap.unitysdk": "1.8.0",
+        "org.mixedrealitytoolkit.core": "3.0.0",
+        "org.mixedrealitytoolkit.input": "3.0.0",
+        "org.mixedrealitytoolkit.uxcomponents": "3.0.0",
+        "com.unity.inputsystem": "1.3.0",
+        "com.unity.textmeshpro": "3.0.6",
+        "com.unity.xr.core-utils": "2.1.0",
+        "com.unity.xr.interaction.toolkit": "2.2.0"
+      }
+    },
     "com.magicleap.soundfield": {
-      "version": "3.4.0-230405.66.cf20c31",
+      "version": "3.4.2-230816.64.b8aa6f8",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://registry.npmjs.org"
     },
-    "com.magicleap.unityaudiotools": {
-      "version": "file:../../UnityPackages/com.magicleap.unityaudiotools",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {
-        "com.unity.textmeshpro": "3.0.1",
-        "com.magicleap.soundfield": "3.1.4-220718.117777.1ce4139"
-      }
-    },
     "com.magicleap.unitysdk": {
-      "version": "1.8.0",
+      "version": "1.11.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -38,13 +57,27 @@
         "com.unity.xr.arfoundation": "5.0.0-pre.12",
         "com.unity.xr.interaction.toolkit": "2.1.0-pre.1",
         "com.unity.inputsystem": "1.3.0",
-        "com.unity.modules.androidjni": "1.0.0"
+        "com.unity.modules.androidjni": "1.0.0",
+        "com.unity.xr.interactionsubsystems": "2.0.0"
       },
       "url": "https://registry.npmjs.org"
     },
+    "com.microsoft.mixedreality.visualprofiler": {
+      "version": "https://github.com/microsoft/VisualProfiler-Unity.git#v2.2.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "22d727d4d1641c27fa85a7519cf76b81890c8f3d"
+    },
+    "com.microsoft.mrtk.graphicstools.unity": {
+      "version": "file:../../UnityPackages/ThirdParty/com.microsoft.mrtk.graphicstools.unity",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.nosuchstudio.rtltmpro": {
       "version": "3.4.5",
-      "depth": 1,
+      "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://package.openupm.com"
@@ -86,7 +119,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.formats.usd": {
-      "version": "3.0.0-exp.2",
+      "version": "3.0.0-exp.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -106,7 +139,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.18",
+      "version": "2.0.20",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -200,18 +233,18 @@
       }
     },
     "com.unity.sysroot": {
-      "version": "2.0.6",
+      "version": "2.0.7",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.sysroot.linux-x86_64": {
-      "version": "2.0.5",
+      "version": "2.0.6",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.sysroot": "2.0.6"
+        "com.unity.sysroot": "2.0.7"
       },
       "url": "https://packages.unity.com"
     },
@@ -227,7 +260,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.6",
+      "version": "3.2.0-pre.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -236,7 +269,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.7.4",
+      "version": "1.7.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -248,12 +281,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.toolchain.macos-x86_64-linux-x86_64": {
-      "version": "2.0.5",
+      "version": "2.0.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.sysroot": "2.0.6",
-        "com.unity.sysroot.linux-x86_64": "2.0.5"
+        "com.unity.sysroot": "2.0.7",
+        "com.unity.sysroot.linux-x86_64": "2.0.6"
       },
       "url": "https://packages.unity.com"
     },
@@ -277,8 +310,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.arfoundation": {
-      "version": "5.0.6",
-      "depth": 1,
+      "version": "5.0.7",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.inputsystem": "1.3.0",
@@ -295,10 +328,22 @@
     },
     "com.unity.xr.core-utils": {
       "version": "2.2.1",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.modules.xr": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.xr.hands": {
+      "version": "1.3.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.inputsystem": "1.3.0",
+        "com.unity.modules.xr": "1.0.0",
+        "com.unity.xr.core-utils": "2.2.0",
+        "com.unity.xr.management": "4.0.1"
       },
       "url": "https://packages.unity.com"
     },
@@ -329,7 +374,7 @@
     },
     "com.unity.xr.legacyinputhelpers": {
       "version": "2.1.10",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.modules.vr": "1.0.0",
@@ -365,6 +410,17 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.xr.openxr": {
+      "version": "1.7.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.xr.management": "4.0.1",
+        "com.unity.xr.legacyinputhelpers": "2.1.2",
+        "com.unity.inputsystem": "1.4.4"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.whinarn.unitymeshsimplifier": {
       "version": "3.1.0",
       "depth": 0,
@@ -372,11 +428,106 @@
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
-    "org.khronos.unitygltf": {
-      "version": "file:../../UnityPackages/ThirdParty/org.khronos.unitygltf",
+    "org.mixedrealitytoolkit.audio": {
+      "version": "file:../../UnityPackages/ThirdParty/MixedRealityToolkit-Unity/org.mixedrealitytoolkit.audio",
       "depth": 0,
       "source": "local",
-      "dependencies": {}
+      "dependencies": {
+        "org.mixedrealitytoolkit.core": "3.0.0"
+      }
+    },
+    "org.mixedrealitytoolkit.core": {
+      "version": "file:../../UnityPackages/ThirdParty/MixedRealityToolkit-Unity/org.mixedrealitytoolkit.core",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.xr.interaction.toolkit": "2.3.0",
+        "com.unity.xr.management": "4.2.1",
+        "com.unity.xr.core-utils": "2.1.0"
+      }
+    },
+    "org.mixedrealitytoolkit.diagnostics": {
+      "version": "file:../../UnityPackages/ThirdParty/MixedRealityToolkit-Unity/org.mixedrealitytoolkit.diagnostics",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "org.mixedrealitytoolkit.core": "3.0.0",
+        "com.unity.xr.management": "4.2.1"
+      }
+    },
+    "org.mixedrealitytoolkit.input": {
+      "version": "file:../../UnityPackages/ThirdParty/MixedRealityToolkit-Unity/org.mixedrealitytoolkit.input",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.microsoft.mrtk.graphicstools.unity": "0.5.12",
+        "org.mixedrealitytoolkit.core": "3.0.0",
+        "com.unity.inputsystem": "1.6.1",
+        "com.unity.xr.arfoundation": "5.0.5",
+        "com.unity.xr.interaction.toolkit": "2.3.0",
+        "com.unity.xr.core-utils": "2.1.0"
+      }
+    },
+    "org.mixedrealitytoolkit.spatialmanipulation": {
+      "version": "file:../../UnityPackages/ThirdParty/MixedRealityToolkit-Unity/org.mixedrealitytoolkit.spatialmanipulation",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "org.mixedrealitytoolkit.core": "3.0.0",
+        "org.mixedrealitytoolkit.uxcore": "3.0.0",
+        "com.unity.inputsystem": "1.6.1",
+        "com.unity.xr.interaction.toolkit": "2.3.0"
+      }
+    },
+    "org.mixedrealitytoolkit.standardassets": {
+      "version": "file:../../UnityPackages/ThirdParty/MixedRealityToolkit-Unity/org.mixedrealitytoolkit.standardassets",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.microsoft.mrtk.graphicstools.unity": "0.5.12"
+      }
+    },
+    "org.mixedrealitytoolkit.tools": {
+      "version": "file:../../UnityPackages/ThirdParty/MixedRealityToolkit-Unity/org.mixedrealitytoolkit.tools",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "org.mixedrealitytoolkit.core": "3.0.0"
+      }
+    },
+    "org.mixedrealitytoolkit.uxcomponents": {
+      "version": "file:../../UnityPackages/ThirdParty/MixedRealityToolkit-Unity/org.mixedrealitytoolkit.uxcomponents",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.microsoft.mrtk.graphicstools.unity": "0.5.12",
+        "org.mixedrealitytoolkit.uxcore": "3.0.0",
+        "org.mixedrealitytoolkit.spatialmanipulation": "3.0.0",
+        "org.mixedrealitytoolkit.standardassets": "3.0.0",
+        "com.unity.xr.interaction.toolkit": "2.3.0"
+      }
+    },
+    "org.mixedrealitytoolkit.uxcomponents.noncanvas": {
+      "version": "file:../../UnityPackages/ThirdParty/MixedRealityToolkit-Unity/org.mixedrealitytoolkit.uxcomponents.noncanvas",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "org.mixedrealitytoolkit.uxcore": "3.0.0",
+        "org.mixedrealitytoolkit.spatialmanipulation": "3.0.0",
+        "org.mixedrealitytoolkit.standardassets": "3.0.0"
+      }
+    },
+    "org.mixedrealitytoolkit.uxcore": {
+      "version": "file:../../UnityPackages/ThirdParty/MixedRealityToolkit-Unity/org.mixedrealitytoolkit.uxcore",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.microsoft.mrtk.graphicstools.unity": "0.5.12",
+        "org.mixedrealitytoolkit.core": "3.0.0",
+        "com.unity.inputsystem": "1.6.1",
+        "com.unity.textmeshpro": "3.0.6",
+        "com.unity.xr.interaction.toolkit": "2.3.0"
+      }
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
@@ -463,7 +614,7 @@
     },
     "com.unity.modules.subsystems": {
       "version": "1.0.0",
-      "depth": 2,
+      "depth": 1,
       "source": "builtin",
       "dependencies": {
         "com.unity.modules.jsonserialize": "1.0.0"
@@ -572,7 +723,7 @@
     },
     "com.unity.modules.vr": {
       "version": "1.0.0",
-      "depth": 1,
+      "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.modules.jsonserialize": "1.0.0",
@@ -582,7 +733,7 @@
     },
     "com.unity.modules.xr": {
       "version": "1.0.0",
-      "depth": 1,
+      "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.modules.physics": "1.0.0",

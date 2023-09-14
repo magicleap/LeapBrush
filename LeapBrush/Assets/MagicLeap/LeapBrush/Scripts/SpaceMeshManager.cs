@@ -5,34 +5,34 @@
 using System;
 using System.Collections;
 using System.IO;
-using pxr;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Serialization;
 
 #if ENABLE_USD
 using Unity.Formats.USD;
 using USD.NET;
+using pxr;
 #endif
 
-namespace MagicLeap
+namespace MagicLeap.LeapBrush
 {
     /// <summary>
     /// Manager for displaying a visualization of the Space RGG mesh if present.
     /// </summary>
     public class SpaceMeshManager : MonoBehaviour
     {
-        [FormerlySerializedAs("_material")]
         [SerializeField]
         public Material Material;
 
-        [FormerlySerializedAs("_spaceMeshContainer")]
         [SerializeField]
         public GameObject SpaceMeshContainer;
 
         [SerializeField]
         private GameObject _loadingSpinner;
+
+        [SerializeField]
+        private LeapBrushPreferences _preferences;
 
         private IEnumerator _loaderCoroutine;
         private string _spaceId;
@@ -60,23 +60,34 @@ namespace MagicLeap
             }
         }
 
-        private void Start()
+        private void Awake()
         {
 #if ENABLE_USD
             InitUsd.Initialize();
 #endif
         }
 
-        public void SetShown(bool isShown)
+        private void OnEnable()
         {
-            if (_isShown == isShown)
+            _preferences.ShowSpaceMesh.OnChanged += OnShowSpaceMeshPreferenceChanged;
+            OnShowSpaceMeshPreferenceChanged();
+        }
+
+        private void OnDisable()
+        {
+            _preferences.ShowSpaceMesh.OnChanged -= OnShowSpaceMeshPreferenceChanged;
+        }
+
+        private void OnShowSpaceMeshPreferenceChanged()
+        {
+            if (_isShown == _preferences.ShowSpaceMesh.Value)
             {
                 return;
             }
 
-            _isShown = isShown;
+            _isShown = _preferences.ShowSpaceMesh.Value;
 
-            if (!isShown)
+            if (!_isShown)
             {
                 SpaceMeshContainer.SetActive(false);
             }
@@ -124,6 +135,11 @@ namespace MagicLeap
             }
 
             SpaceMeshContainer.SetActive(false);
+
+            if (string.IsNullOrEmpty(_spaceId))
+            {
+                return;
+            }
 
             string usdDir = Path.Join(
                 Application.persistentDataPath,

@@ -90,3 +90,7 @@ Runtime/Audio/SoundAssets/Sounds/.DS_Store
 
 # Ignore link.xml which is used during build time. See https://forum.unity.com/threads/link-xml-part-of-version-control.1227360/
 /Assets/AddressableAssetsData/link.xml*
+
+# NOTICE_binaries.txt.gz resource is automatically generated
+/Assets/Resources/NOTICE_binaries.txt.gz.bytes
+/Assets/Resources/NOTICE_binaries.txt.gz.bytes.meta

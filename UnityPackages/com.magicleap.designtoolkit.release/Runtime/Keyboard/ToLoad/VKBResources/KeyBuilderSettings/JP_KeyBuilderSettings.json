@@ -12,9 +12,14 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
-      }
+      },
+      "LabelMargins":{
+        "Top":-5.0,
+        "Bottom":-5.0
+      },
+      "FontSizeMax":10
     },
     {
       "KeyTypeID":"kKatakana",
@@ -27,9 +32,14 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
-      }
+      },
+      "LabelMargins":{
+        "Top":-5.0,
+        "Bottom":-5.0
+      },
+      "FontSizeMax":10
     },
     {
       "KeyTypeID":"kCharacter",
@@ -42,9 +52,14 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
-      }
+      },
+      "LabelMargins":{
+        "Top":-5.0,
+        "Bottom":-5.0
+      },
+      "FontSizeMax":10
     },
     {
       "KeyTypeID":"kSubPanel",
@@ -57,8 +72,8 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
-        "AnchorPosY":0.5
+        "AnchorPosX":0.0,
+        "AnchorPosY":0.0
       },
       "KeyButtonStyle":"kMedium",
       "TextColorOn":{
@@ -78,7 +93,8 @@
     {
       "KeyTypeID":"kCharacter2Labels",
       "LabelAndTypedTextIsSame":"true",
-      "UseDefaultCharAsLabel":"true"
+      "UseDefaultCharAsLabel":"true",
+      "FontSizeMax":10
     },
     {
       "KeyTypeID":"kJPSpacebar",
@@ -145,8 +161,8 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
-        "AnchorPosY":0.5
+        "AnchorPosX":0.0,
+        "AnchorPosY":0.0
       }
     },
     {
@@ -159,8 +175,8 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
-        "AnchorPosY":0.5
+        "AnchorPosX":0.0,
+        "AnchorPosY":0.0
       },
       "KeyButtonStyle":"kDark",
       "TextColorOn":{
@@ -187,8 +203,8 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
-        "AnchorPosY":0.5
+        "AnchorPosX":0.0,
+        "AnchorPosY":0.0
       },
       "KeyButtonStyle":"kMedium",
       "TextColorOn":{
@@ -216,7 +232,7 @@
         "PivotX":0.5,
         "PivotY":0.5,
         "AnchorPosX":0.5,
-        "AnchorPosY":0.5
+        "AnchorPosY":0.0
       },
       "KeyButtonStyle":"kLight"
     },
@@ -230,9 +246,14 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
       },
+      "LabelMargins":{
+        "Top":-5.0,
+        "Bottom":-5.0
+      },
+      "FontSizeMax":10,
       "KeyButtonStyle":"kDark",
       "TextColorOn":{
         "Red":0,
@@ -258,9 +279,14 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
       },
+      "LabelMargins":{
+        "Top":-5.0,
+        "Bottom":-5.0
+      },
+      "FontSizeMax":10,
       "KeyButtonStyle":"kDark",
       "TextColorOn":{
         "Red":0,
@@ -443,8 +469,8 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
-        "AnchorPosY":0.5
+        "AnchorPosX":0.0,
+        "AnchorPosY":0.0
       },
       "KeyButtonStyle":"kDark"
     },
@@ -458,7 +484,7 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
       }
     },
@@ -472,7 +498,7 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
       }
     },
@@ -486,7 +512,7 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
       }
     },
@@ -500,7 +526,63 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
+        "AnchorPosY":0.5
+      }
+    },
+    {
+      "KeyTypeID":"kChangeLocaleFR",
+      "UseDefaultCharAsLabel":"true",
+      "LabelTransform":{
+        "AnchorMinX":0.5,
+        "AnchorMinY":0.5,
+        "AnchorMaxX":0.5,
+        "AnchorMaxY":0.5,
+        "PivotX":0.5,
+        "PivotY":0.5,
+        "AnchorPosX":0.0,
+        "AnchorPosY":0.5
+      }
+    },
+    {
+      "KeyTypeID":"kChangeLocaleES",
+      "UseDefaultCharAsLabel":"true",
+      "LabelTransform":{
+        "AnchorMinX":0.5,
+        "AnchorMinY":0.5,
+        "AnchorMaxX":0.5,
+        "AnchorMaxY":0.5,
+        "PivotX":0.5,
+        "PivotY":0.5,
+        "AnchorPosX":0.0,
+        "AnchorPosY":0.5
+      }
+    },
+    {
+      "KeyTypeID":"kChangeLocalePT",
+      "UseDefaultCharAsLabel":"true",
+      "LabelTransform":{
+        "AnchorMinX":0.5,
+        "AnchorMinY":0.5,
+        "AnchorMaxX":0.5,
+        "AnchorMaxY":0.5,
+        "PivotX":0.5,
+        "PivotY":0.5,
+        "AnchorPosX":0.0,
+        "AnchorPosY":0.5
+      }
+    },
+    {
+      "KeyTypeID":"kChangeLocaleIT",
+      "UseDefaultCharAsLabel":"true",
+      "LabelTransform":{
+        "AnchorMinX":0.5,
+        "AnchorMinY":0.5,
+        "AnchorMaxX":0.5,
+        "AnchorMaxY":0.5,
+        "PivotX":0.5,
+        "PivotY":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
       }
     }

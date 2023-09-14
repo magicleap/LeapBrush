@@ -1,16 +1,18 @@
 using System;
 using System.Collections;
-using MagicLeap.DesignToolkit.Actions;
 using MagicLeap.LeapBrush;
+using MixedReality.Toolkit.SpatialManipulation;
 using TMPro;
+using Unity.VisualScripting;
+using Unity.XR.CoreUtils;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace MagicLeap
 {
     /// <summary>
     /// A 3D model imported into the scene.
     /// </summary>
-    [RequireComponent(typeof(Interactable))]
     public class External3DModel : MonoBehaviour
     {
         [HideInInspector]
@@ -18,6 +20,9 @@ namespace MagicLeap
 
         [HideInInspector]
         public string AnchorId;
+
+        [SerializeField]
+        private GameObject _statusCanvas;
 
         [SerializeField]
         private TMP_Text _statusText;
@@ -28,6 +33,18 @@ namespace MagicLeap
         [SerializeField]
         private float _rotationSpeed = 75;
 
+        [SerializeField]
+        private ObjectManipulator _objectManipulator;
+
+        [SerializeField]
+        private GameObject _boundsVisualsPrefab;
+
+        [SerializeField]
+        SelectEnterEvent _boundsControlManipulationStarted = new();
+
+        [SerializeField]
+        SelectExitEvent _boundsControlManipulationEnded = new();
+
         public event Action<External3DModel> OnTransformChanged;
 
         public string FileName => _fileName;
@@ -36,31 +53,39 @@ namespace MagicLeap
 
         public event Action OnDestroyed;
 
+        /// <summary>
+        /// Whether to restrict the initial dimensions of this model once loaded.
+        /// </summary>
+        [HideInInspector]
+        public bool RestrictInitialModelDimensions;
+
         private string _fileName;
         private Quaternion _loadingCubeInitialRotation;
-        private Interactable _interactable;
         private TransformProto _transformProto;
-        private bool _loaded;
+        private GameObject _model;
         private bool _failed;
         private IEnumerator _delayLoadingCubeCoroutine;
         private bool _started;
+        private float _statusCanvasCenterOffset;
+        private BoundsControl _boundsControl;
 
+        private IEnumerator _enableManipulationAfterDelayCoroutine;
+
+        private const float MinInitialModelDimension = 0.05f;
         private const float MaxInitialModelDimension = 2.0f;
-        private const float MinScaleFactor = 0.1f;
-        private const float MaxScaleFactor = 5.0f;
 
         public void Start()
         {
-            _interactable = GetComponent<Interactable>();
-            _interactable.Settings.Grabbable = false;
             _loadingCubeInitialRotation = _loadingCube.transform.rotation;
 
             _loadingCube.SetActive(false);
             _delayLoadingCubeCoroutine = ShowLoadingCubeWithDelayCoroutine();
             StartCoroutine(_delayLoadingCubeCoroutine);
 
+            _statusCanvasCenterOffset = _statusCanvas.transform.localPosition.magnitude;
+
             _started = true;
-            if (_loaded)
+            if (_model != null)
             {
                 OnLoadedAndStarted();
             }
@@ -75,14 +100,32 @@ namespace MagicLeap
                     * _loadingCubeInitialRotation;
             }
 
-            if (_loaded && _interactable.IsGrabbed)
+            if (_model != null && (_objectManipulator.isSelected ||
+                                   (_boundsControl != null && _boundsControl.HandlesActive)))
             {
-                if (!ProtoUtils.EpsilonEquals(transform, _transformProto))
-                {
-                    _transformProto = ProtoUtils.ToProto(transform);
-                    OnTransformChanged?.Invoke(this);
-                }
+                UpdateTransformProtoDispatchIfChanged();
             }
+
+            if (_statusCanvas.activeSelf)
+            {
+                Vector3 toCamera =
+                    Camera.main.transform.position - transform.position;
+                _statusCanvas.transform.position =
+                    transform.position + toCamera.normalized * _statusCanvasCenterOffset;
+                _statusCanvas.transform.LookAt(
+                    _statusCanvas.transform.position - toCamera, Vector3.up);
+            }
+        }
+
+        private void UpdateTransformProtoDispatchIfChanged()
+        {
+            if (ProtoUtils.EpsilonEquals(transform, _transformProto))
+            {
+                return;
+            }
+
+            _transformProto = ProtoUtils.ToProto(transform);
+            OnTransformChanged?.Invoke(this);
         }
 
         public void Initialize(string fileName)
@@ -90,6 +133,38 @@ namespace MagicLeap
             _fileName = fileName;
             _statusText.text = string.Format("Loading {0}...", fileName);
             _loadingCube.GetComponent<Renderer>().material.color = new Color(0, 0.7f, 0);
+        }
+
+        public void SetPoseAndScale(ProtoUtils.PoseAndScale poseAndScale)
+        {
+            if (ProtoUtils.EpsilonEquals(transform, poseAndScale))
+            {
+                return;
+            }
+
+            transform.SetLocalPose(poseAndScale.Pose);
+            transform.localScale = poseAndScale.Scale;
+
+            if (!isActiveAndEnabled)
+            {
+                return;
+            }
+
+            if (_boundsControl != null)
+            {
+                _boundsControl.HandlesActive = false;
+            }
+
+            // Disable object manipulation until other users have stopped moving the object.
+            _objectManipulator.enabled = false;
+
+            if (_enableManipulationAfterDelayCoroutine != null)
+            {
+                StopCoroutine(_enableManipulationAfterDelayCoroutine);
+            }
+
+            _enableManipulationAfterDelayCoroutine = EnableManipulationAfterDelayCoroutine();
+            StartCoroutine(_enableManipulationAfterDelayCoroutine);
         }
 
         public void OnDestroy()
@@ -101,13 +176,13 @@ namespace MagicLeap
         {
             yield return new WaitForSeconds(0.5f);
 
-            if (!_loaded)
+            if (_model == null)
             {
                 _loadingCube.SetActive(true);
             }
         }
 
-        public void OnLoadCompleted()
+        public void OnLoadCompleted(GameObject model)
         {
             if (_delayLoadingCubeCoroutine != null)
             {
@@ -115,7 +190,8 @@ namespace MagicLeap
                 _delayLoadingCubeCoroutine = null;
             }
 
-            _loaded = true;
+            _model = model;
+
             if (_started)
             {
                 OnLoadedAndStarted();
@@ -124,12 +200,41 @@ namespace MagicLeap
 
         private void OnLoadedAndStarted()
         {
-            SetInitialModelScale();
-
-            _interactable.Settings.Grabbable = true;
-            _statusText.gameObject.SetActive(false);
-            _loadingCube.SetActive(false);
             _transformProto = ProtoUtils.ToProto(transform);
+
+            if (RestrictInitialModelDimensions)
+            {
+                SetInitialModelScale();
+            }
+
+            // Reload colliders now that the 3D model has been loaded.
+            _objectManipulator.colliders.Clear();
+            _model.GetComponentsInChildren(_objectManipulator.colliders);
+
+            // Toggle the object manipulator XR Interactable to re-register updated colliders.
+            _objectManipulator.enabled = false;
+            _objectManipulator.enabled = true;
+
+            // Add the bounds control so that it initializes with a valid absolute minimum scale.
+            _boundsControl = transform.AddComponent<BoundsControl>();
+            _boundsControl.EnabledHandles =
+                HandleType.Rotation | HandleType.Scale | HandleType.Translation;
+            _boundsControl.RotateAnchor = RotateAnchorType.ObjectOrigin;
+            _boundsControl.BoundsVisualsPrefab = _boundsVisualsPrefab;
+            _boundsControl.ManipulationStarted.AddListener(_boundsControlManipulationStarted.Invoke);
+            _boundsControl.ManipulationEnded.AddListener(_boundsControlManipulationEnded.Invoke);
+
+            _statusCanvas.gameObject.SetActive(false);
+            _loadingCube.SetActive(false);
+
+            UpdateTransformProtoDispatchIfChanged();
+        }
+
+        private IEnumerator EnableManipulationAfterDelayCoroutine()
+        {
+            yield return new WaitForSeconds(0.5f);
+
+            _objectManipulator.enabled = true;
         }
 
         private void SetInitialModelScale()
@@ -159,13 +264,12 @@ namespace MagicLeap
                 Mathf.Max(modelBounds.size.y * transform.localScale.y,
                     modelBounds.size.z * transform.localScale.z));
 
-            float initialScale = maxDimension > MaxInitialModelDimension ? MaxInitialModelDimension / maxDimension
-                : transform.localScale.x;
+            float initialScale = maxDimension < MinInitialModelDimension
+                ? MinInitialModelDimension / maxDimension
+                : (maxDimension > MaxInitialModelDimension
+                    ? MaxInitialModelDimension / maxDimension
+                    : transform.localScale.x);
             transform.localScale = Vector3.one * initialScale;
-            _interactable.ScaleSettings = Instantiate(_interactable.ScaleSettings);
-            _interactable.ScaleSettings.MinScale = initialScale * MinScaleFactor;
-            _interactable.ScaleSettings.MaxScale = initialScale * MaxScaleFactor;
-            _interactable.ScaleSettings.ConstantLerpSpeed = 1.0f;
         }
 
         public void OnLoadFailed(bool notFound)

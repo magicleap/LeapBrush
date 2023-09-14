@@ -1,0 +1,24 @@
+{
+    "name": "MagicLeap.MRTK3.Samples",
+    "rootNamespace": "",
+    "references": [
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:dc960734dc080426fa6612f1c5fe95f3",
+        "GUID:fe685ec1767f73d42b749ea8045bfe43",
+        "GUID:56255bd5d851a6243b63cb370cfc40b1",
+        "GUID:d59347cf3d47ac148925927618efb1b5",
+        "GUID:28d8685fae23c21419ef42894cb9b075",
+        "GUID:1fc69d160eafe774ab0a8e5191500311",
+        "GUID:e40ba710768534012815d3193fa296cb"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

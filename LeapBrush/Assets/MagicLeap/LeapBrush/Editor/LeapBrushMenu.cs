@@ -4,7 +4,6 @@ namespace MagicLeap.LeapBrush
 {
     public class LeapBrushMenu
     {
-
         [MenuItem("Leap Brush/Build Current Platform")]
         static void Build_Menu()
         {

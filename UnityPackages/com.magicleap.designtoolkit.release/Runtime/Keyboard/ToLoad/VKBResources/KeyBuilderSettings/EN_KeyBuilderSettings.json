@@ -12,14 +12,20 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
-      }
+      },
+      "LabelMargins":{
+        "Top":-5.0,
+        "Bottom":-5.0
+      },
+      "FontSizeMax":8.5
     },
     {
       "KeyTypeID":"kCharacter2Labels",
       "LabelAndTypedTextIsSame":"true",
-      "UseDefaultCharAsLabel":"true"
+      "UseDefaultCharAsLabel":"true",
+      "FontSizeMax":8.0
     },
     {
       "KeyTypeID":"kSpacebar",
@@ -242,7 +248,7 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
       }
     },
@@ -256,7 +262,7 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
       }
     },
@@ -270,7 +276,7 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
       }
     },
@@ -284,7 +290,63 @@
         "AnchorMaxY":0.5,
         "PivotX":0.5,
         "PivotY":0.5,
-        "AnchorPosX":0.5,
+        "AnchorPosX":0.0,
+        "AnchorPosY":0.5
+      }
+    },
+    {
+      "KeyTypeID":"kChangeLocaleFR",
+      "UseDefaultCharAsLabel":"true",
+      "LabelTransform":{
+        "AnchorMinX":0.5,
+        "AnchorMinY":0.5,
+        "AnchorMaxX":0.5,
+        "AnchorMaxY":0.5,
+        "PivotX":0.5,
+        "PivotY":0.5,
+        "AnchorPosX":0.0,
+        "AnchorPosY":0.5
+      }
+    },
+    {
+      "KeyTypeID":"kChangeLocaleES",
+      "UseDefaultCharAsLabel":"true",
+      "LabelTransform":{
+        "AnchorMinX":0.5,
+        "AnchorMinY":0.5,
+        "AnchorMaxX":0.5,
+        "AnchorMaxY":0.5,
+        "PivotX":0.5,
+        "PivotY":0.5,
+        "AnchorPosX":0.0,
+        "AnchorPosY":0.5
+      }
+    },
+    {
+      "KeyTypeID":"kChangeLocalePT",
+      "UseDefaultCharAsLabel":"true",
+      "LabelTransform":{
+        "AnchorMinX":0.5,
+        "AnchorMinY":0.5,
+        "AnchorMaxX":0.5,
+        "AnchorMaxY":0.5,
+        "PivotX":0.5,
+        "PivotY":0.5,
+        "AnchorPosX":0.0,
+        "AnchorPosY":0.5
+      }
+    },
+    {
+      "KeyTypeID":"kChangeLocaleIT",
+      "UseDefaultCharAsLabel":"true",
+      "LabelTransform":{
+        "AnchorMinX":0.5,
+        "AnchorMinY":0.5,
+        "AnchorMaxX":0.5,
+        "AnchorMaxY":0.5,
+        "PivotX":0.5,
+        "PivotY":0.5,
+        "AnchorPosX":0.0,
         "AnchorPosY":0.5
       }
     }

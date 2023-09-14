@@ -1,6 +1,7 @@
 #!/usr/bin/env -S python3 -u
 
 import argparse
+import getpass
 import os
 import sys
 import subprocess
@@ -28,6 +29,7 @@ if __name__ == '__main__':
   parser.add_argument('--unity-editor-binary', required=True)
   parser.add_argument('--output-dir', required=True)
   parser.add_argument('--version-string-suffix')
+  parser.add_argument('--android-release-sign', action='store_true')
   parser.add_argument('--target', dest='targets', default=[], choices=TARGETS, action='append')
   args = parser.parse_args()
 
@@ -39,6 +41,21 @@ if __name__ == '__main__':
 
   root_dir = os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0])))
   unity_project_path = os.path.join(root_dir, 'LeapBrush')
+
+  env = os.environ
+
+  if args.android_release_sign and TARGET_ANDROID in args.targets:
+    print('Provide android signing information:')
+
+    print('Keystore path: ', end='')
+    env['UNITY_KEYSTORE_PATH'] = input()
+
+    env['UNITY_KEYSTORE_PASS'] = getpass.getpass(prompt='Keystore password: ')
+
+    print('Keyalias name: ', end='')
+    env['UNITY_KEYALIAS_NAME'] = input()
+
+    env['UNITY_KEYALIAS_PASS'] = getpass.getpass(prompt='Keyalias password: ')
 
   for target in args.targets:
     if target == TARGET_SERVER:
@@ -59,4 +76,4 @@ if __name__ == '__main__':
       if args.version_string_suffix:
         cmd.extend(['-versionStringSuffix', args.version_string_suffix])
       cmd.extend(['-quit', '-logfile', '/dev/stdout'])
-      subprocess.check_call(cmd)
+      subprocess.check_call(cmd, env=env)

@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     to_path = os.path.join(
       base_dir,
-      '../LeapBrush/Assets/MagicLeap/LeapBrush/Scripts/%s' % filename)
+      '../LeapBrush/Assets/MagicLeap/LeapBrush/Scripts/Api/%s' % filename)
 
     assert os.path.exists(to_path)
 

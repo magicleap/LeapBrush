@@ -7,3 +7,4 @@
 *.ttf filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 /NOTICE filter=lfs diff=lfs merge=lfs -text
+/NOTICE_binaries.txt.gz filter=lfs diff=lfs merge=lfs -text

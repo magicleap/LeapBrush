@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using MagicLeap.DesignToolkit.Audio;
-using MagicLeap.DesignToolkit.Input.Controller;
-using MagicLeap.DesignToolkit.Keyboard;
+using MixedReality.Toolkit.Input;
+using MixedReality.Toolkit.Input.Simulation;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.MagicLeap;
 using TransformExtensions = Unity.XR.CoreUtils.TransformExtensions;
 
@@ -29,6 +30,8 @@ namespace MagicLeap.LeapBrush
     [RequireComponent(typeof(AnchorsManager))]
     [RequireComponent(typeof(SpaceMeshManager))]
     [RequireComponent(typeof(ServerConnectionManager))]
+    [RequireComponent(typeof(LeapBrushPreferences))]
+    [RequireComponent(typeof(ToolManager))]
     public class LeapBrush : MonoBehaviour
     {
         [Header("UI Panels and Popups")]
@@ -58,60 +61,49 @@ namespace MagicLeap.LeapBrush
         private ServerTooOldPanel _serverTooOldPanel;
 
         [SerializeField]
-        private DrawSoloAreYourSurePopup _drawSoloAreYourSurePopup;
-
-        [SerializeField]
-        private ImportModelsPopup _importModelPopup;
+        private ImportModelsPopup _importModelsPopup;
 
         [SerializeField]
         private JoinUserPopup _joinUserPopup;
 
         [SerializeField]
-        private ColorPickerPopup _colorPickerPopup;
+        private LeapBrushKeyboard _keyboard;
 
         [SerializeField]
-        private KeyboardManager _keyboardManager;
+        private HandMenu _handMenu;
 
-        [Header("Tools")]
-
-        [SerializeField]
-        private ScribbleBrush _scribbleBrushTool;
+        [Header("Input")]
 
         [SerializeField]
-        private PolyBrush _polyBrushTool;
+        private InputActionReference _toggleMenuInputAction;
 
         [SerializeField]
-        private EraserTool _eraserTool;
+        private InputActionReference _touchpadPosition;
 
-        [SerializeField, Tooltip(
-             "The base pose for tools that can have a relative offset from the Controller")]
-        private Transform _toolBasePose;
+        [SerializeField]
+        private ActionBasedController _ml2Controller;
 
-        [SerializeField, Tooltip("The laser pointer ray and cursor game object")]
-        private GameObject _rayAndCursor;
+        [SerializeField]
+        private GazeInteractor _gazeInteractor;
+
+        [SerializeField]
+        private InputSimulator _inputSimulator;
 
         [Header("Sounds")]
 
         [SerializeField]
-        private SoundDefinition _eraseSound;
+        private GameObject _eraseAudioPrefab;
 
         [SerializeField]
-        private SoundDefinition _userJoinSound;
-
-        [SerializeField]
-        private GameObject _oneoffSpatialSoundBehaviorPrefab;
+        private GameObject _userJoinAudioPrefab;
 
         [Header("Miscellaneous")]
 
         [SerializeField, Tooltip("The text used to display status information.")]
         private TMP_Text _statusText;
 
-        [SerializeField, Tooltip("Prefab to use for other user Controllers being displayed")]
-        private GameObject _otherUserControllerPrefab;
-
-        [SerializeField, Tooltip(
-             "Prefab to use for other user Headsets (Wearables) being displayed")]
-        private GameObject _otherUserWearablePrefab;
+        [SerializeField, Tooltip("Prefab to use for other users being displayed")]
+        private GameObject _otherUserPrefab;
 
         [SerializeField]
         private GameObject _spaceOriginAxis;
@@ -126,16 +118,17 @@ namespace MagicLeap.LeapBrush
         private UploadThread _uploadThread;
         private DownloadThread _downloadThread;
         private IEnumerator _updateStatusTextCoroutine;
+        private IEnumerator _updateBatteryStatusCoroutine;
         private SpaceLocalizationManager _localizationManager;
         private AnchorsManager _anchorsManager;
         private SpaceMeshManager _spaceMeshManager;
         private External3DModelManager _external3dModelManager;
         private DelayedButtonHandler _delayedButtonHandler;
-        private BrushColorManager _brushColorManager;
+        private LeapBrushPreferences _preferences;
+        private ToolManager _toolManager;
         private ServerConnectionManager _serverConnectionManager;
         private CancellationTokenSource _shutDownTokenSource = new();
-        private Dictionary<string, OtherUserWearable> _otherUserWearables = new();
-        private Dictionary<string, OtherUserController> _otherUserControllers = new();
+        private Dictionary<string, OtherUserVisual> _otherUsersMap = new();
         private Dictionary<string, BrushBase> _brushStrokeMap = new();
         private Dictionary<string, External3DModel> _externalModelMap = new();
         private IEnumerator _maybeCreateAnchorAfterLocalizationWithDelayCoroutine;
@@ -148,31 +141,29 @@ namespace MagicLeap.LeapBrush
         private string _appVersion;
         private LeapBrushApiBase.LeapBrushClient _leapBrushClient;
         private bool _drawSolo;
-
-        /// <summary>
-        /// Enumeration of tools that user can select.
-        /// </summary>
-        private enum Tool
-        {
-            Eraser,
-            Laser,
-            BrushScribble,
-            BrushPoly
-        }
-
-        private Tool _currentTool = Tool.BrushScribble;
         private int _errorsLogged = 0;
         private int _exceptionsOrAssertsLogged = 0;
         private bool _continuedPastStartPanel;
         private Camera _camera;
         private string _cameraFollowUserName;
+        private bool _startupPerformanceDelayCompleted;
+        private Vector2 _lastTouchpadPosition;
+        private StringBuilder _statusTextBuilder = new();
 
-        private const float StatusTextUpdateDelaySeconds = .1f;
+        private const float StatusTextUpdateDelaySeconds = .5f;
+        private const float BatteryStatusUpdateDelaySeconds = 1;
         private static readonly Vector3 ServerEchoPositionOffset = new(0.1f, 0, 0);
-        private static readonly Vector3 ServerEchoWearablePositionOffset = new(.5f, 0, 0);
-        private static readonly TimeSpan OtherUserControllerExpirationAge = TimeSpan.FromSeconds(10);
-        private static readonly TimeSpan OtherUserWearableExpirationAge = TimeSpan.FromSeconds(5);
+        private static readonly TimeSpan OtherUserExpirationAge = TimeSpan.FromSeconds(5);
         private static readonly Vector3 External3DModelRelativeStartPosition = new(0, 0, 1.5f);
+
+        /// <summary>
+        /// Show the main menu.
+        /// </summary>
+        public void ShowMainMenu()
+        {
+            _mainMenu.SetActive(true);
+            HandleActiveToolOrMenuVisibilityChanged();
+        }
 
         /// <summary>
         /// Unity lifecycle for the LeapBrush component first initializing
@@ -185,8 +176,9 @@ namespace MagicLeap.LeapBrush
             _anchorsManager = GetComponent<AnchorsManager>();
             _spaceMeshManager = GetComponent<SpaceMeshManager>();
             _external3dModelManager = GetComponent<External3DModelManager>();
-            _brushColorManager = GetComponent<BrushColorManager>();
+            _toolManager = GetComponent<ToolManager>();
             _serverConnectionManager = GetComponent<ServerConnectionManager>();
+            _preferences = GetComponent<LeapBrushPreferences>();
 
             _delayedButtonHandler = gameObject.AddComponent<DelayedButtonHandler>();
 
@@ -212,53 +204,60 @@ namespace MagicLeap.LeapBrush
             _updateStatusTextCoroutine = UpdateStatusTextPeriodically();
             StartCoroutine(_updateStatusTextCoroutine);
 
+            _updateBatteryStatusCoroutine = UpdateBatteryStatusCoroutine();
+            StartCoroutine(_updateBatteryStatusCoroutine);
+
             _localizationManager.OnLocalizationInfoChanged += OnLocalizationInfoChanged;
 
-            ControllerInput.Instance.Events.OnMenuDown += OnMenuButtonDown;
-            ControllerInput.Instance.Events.OnTriggerDown += OnTriggerButtonDown;
-            ControllerInput.Instance.Events.OnTriggerUp += OnTriggerButtonUp;
-            ControllerInput.Instance.Events.OnTouchDelta += OnTouchDelta;
+            _toggleMenuInputAction.action.performed += OnMenuActionPerformed;
+            _touchpadPosition.action.started += OnTouchpadPositionStart;
+            _touchpadPosition.action.performed += OnTouchpadPositionPerformed;
 
-            _settingsPanel.Init();
-            _settingsPanel.OnShowHeadsetsChanged += OnShowHeadsetsChanged;
-            _settingsPanel.OnShowControllersChanged += OnShowControllersChanged;
+            _preferences.ShowOtherHeadsets.OnChanged += OnShowOtherHeadsetsPreferenceChanged;
+            _preferences.ShowOtherHandsAndControls.OnChanged +=
+                OnShowOtherHandsAndControlsPreferenceChanged;
+            _preferences.ShowFloorGrid.OnChanged += OnShowFloorGridPreferenceChanged;
+            _preferences.GazePinchEnabled.OnChanged += OnGazePinchPreferenceChanged;
+
             _settingsPanel.OnClearAllContentSelected += OnClearAllContentSelected;
             _settingsPanel.OnSettingsPanelHidden += OnSettingsPanelHidden;
 
             _startPanel.OnContinueSelected += OnStartPanelContinueSelected;
             _startPanel.OnSetUserDisplayName += OnSetUserDisplayName;
 
-            _scribbleBrushTool.OnPosesAdded += OnScribbleBrushStrokePosesAdded;
-            _scribbleBrushTool.OnDrawingCompleted += OnScribbleBrushDrawingCompleted;
-            _polyBrushTool.OnPosesUpdated += OnPolyBrushStrokePosesUpdated;
-            _polyBrushTool.OnDrawingCompleted += OnPolyBrushDrawingCompleted;
-            _eraserTool.OnTriggerEnterEvent += OnEraserCollisionTrigger;
+            _toolManager.OnActiveToolChanged += OnActiveToolChanged;
+            foreach (InteractorToolManager toolContainer in _toolManager.InteractorToolManagers)
+            {
+                toolContainer.ScribbleBrush.OnPosesAdded += OnScribbleBrushStrokePosesAdded;
+                toolContainer.ScribbleBrush.OnDrawingCompleted += OnBrushDrawingCompleted;
+                toolContainer.PolyBrush.OnPosesUpdated += OnPolyBrushStrokePosesUpdated;
+                toolContainer.PolyBrush.OnDrawingCompleted += OnBrushDrawingCompleted;
+                toolContainer.Eraser.OnTriggerEnterEvent += OnEraserCollisionTrigger;
+            }
 
-            _mainPanel.OnScribbleBrushToolSelected += OnScribbleBrushToolSelected;
-            _mainPanel.OnColorPaletteSelected += OnColorPaletteSelected;
-            _mainPanel.OnPolyBrushToolSelected += OnPolyBrushToolSelected;
-            _mainPanel.OnEraserToolSelected += OnEraserToolSelected;
-            _mainPanel.OnLaserPointerSelected += OnLaserPointerSelected;
-            _mainPanel.OnImportModelSelected += OnImportModelSelected;
             _mainPanel.OnSettingsSelected += OnSettingsSelected;
+            _mainPanel.OnToolSelected += OnMainPanelOrHandMenuToolSelected;
 
             _external3dModelManager.OnModelsListUpdated += OnExternal3DModelsListUpdated;
-            _importModelPopup.OnPlaceNewExternal3DModel += OnPlaceNewExternal3DModel;
+            _importModelsPopup.OnPlaceNewExternal3DModel += OnPlaceNewExternal3DModel;
 
-            _notConnectedPanel.OnChooseServerSelected += OnChooseServerSelected;
             _notConnectedPanel.OnDrawSoloSelected += OnDrawSoloSelected;
-
-            _drawSoloAreYourSurePopup.OnConfirmSelected += OnDrawSoloConfirmButtonSelected;
-
-#if !UNITY_ANDROID
-            _floorGrid.gameObject.SetActive(true);
-            ControllerInput.Instance.gameObject.SetActive(true);
-#endif
 
             _joinUserPopup.OnJoinUserSessionRemotelySelected += OnJoinUserSessionRemotelySelected;
 
-            UpdateUserBrushColors();
-            _brushColorManager.OnBrushColorsChanged += UpdateUserBrushColors;
+            _handMenu.OnEnabledChanged += OnHandMenuEnabledChanged;
+            _handMenu.OnShowMainMenuClicked += ShowMainMenu;
+            _handMenu.OnToolSelected += OnMainPanelOrHandMenuToolSelected;
+
+#if !UNITY_ANDROID || UNITY_EDITOR
+            _ml2Controller.gameObject.SetActive(false);
+#endif
+
+            OnShowOtherHeadsetsPreferenceChanged();
+            OnShowOtherHandsAndControlsPreferenceChanged();
+            OnShowFloorGridPreferenceChanged();
+            OnGazePinchPreferenceChanged();
+            HandleActiveToolOrMenuVisibilityChanged();
 
             LoadUserDisplayName();
 
@@ -271,23 +270,39 @@ namespace MagicLeap.LeapBrush
         /// </summary>
         private void Update()
         {
-            if (_cameraFollowUserName != null)
-            {
-                if (_otherUserWearables.TryGetValue(_cameraFollowUserName,
-                        out OtherUserWearable otherUserWearable))
-                {
-                    _camera.transform.SetPositionAndRotation(
-                        otherUserWearable.transform.position, otherUserWearable.transform.rotation);
-                }
-            }
+            UpdateCameraFollow();
 
             UpdateUploadThread();
             UpdatePanelVisibility();
 
-            MaybeExpireOtherUserControls();
-            MaybeExpireOtherUserWearables();
+            MaybeExpireOtherUsers();
 
             ThreadDispatcher.DispatchAll();
+        }
+
+        /// <summary>
+        /// Update the camera to follow a particular joined user if set.
+        /// </summary>
+        private void UpdateCameraFollow()
+        {
+            if (_cameraFollowUserName == null)
+            {
+                return;
+            }
+
+            if (_otherUsersMap.TryGetValue(_cameraFollowUserName,
+                out OtherUserVisual otherUserVisual))
+            {
+                var otherUserWearableTransform = otherUserVisual.WearableTransform;
+                _camera.transform.SetPositionAndRotation(
+                    otherUserWearableTransform.position, otherUserWearableTransform.rotation);
+
+                _inputSimulator.gameObject.SetActive(false);
+            }
+            else
+            {
+                _inputSimulator.gameObject.SetActive(true);
+            }
         }
 
         /// <summary>
@@ -301,8 +316,7 @@ namespace MagicLeap.LeapBrush
                 return;
             }
 
-            Transform controlTransform = ControllerInput.Instance.transform;
-            Vector3 controlPosition = controlTransform.position;
+            Transform controlTransform = _ml2Controller.transform;
             Vector3 headPosition = _camera.transform.position;
 
             _uploadThread.SetSpaceInfo(_localizationManager.LocalizationInfo,
@@ -336,37 +350,79 @@ namespace MagicLeap.LeapBrush
                 // was found, update the upload thread with the closest anchor, Headset and
                 // Controller poses. These poses are relative to the anchor pose.
                 _headClosestAnchorId = anchorClosestToHead.Id;
+                _uploadThread.SetHeadClosestAnchorId(_headClosestAnchorId);
                 _uploadThread.SetHeadPoseRelativeToAnchor(
                     anchorClosestToHeadGameObject.transform
                     .InverseTransformPose(new Pose(headPosition, _camera.transform.rotation)));
-                _uploadThread.SetControlPoseRelativeToAnchor(
-                    anchorClosestToHeadGameObject.transform
-                    .InverseTransformPose(
-                        new Pose(controlPosition, controlTransform.rotation)));
+                if (_toolManager.ControllerManager.IsTrackingActive)
+                {
+                    _uploadThread.SetControllerStateRelativeToAnchor(
+                        anchorClosestToHeadGameObject.transform
+                            .InverseTransformPose(
+                                new Pose(controlTransform.position, controlTransform.rotation)),
+                        controlTransform.transform
+                            .InverseTransformPose(TransformExtensions.GetWorldPose(
+                                _toolManager.ControllerManager.ToolOffset)).position.z,
+                        _toolManager.ControllerManager.SelectProgress,
+                        _toolManager.ControllerManager.GetRayLinePointsRelative(
+                            anchorClosestToHeadGameObject.transform));
+                }
+                else
+                {
+                    _uploadThread.ClearControllerState();
+                }
+                if (_toolManager.LeftHandManager.IsTrackingActive &&
+                    _toolManager.LeftHandManager.ToolsVisible)
+                {
+                    _uploadThread.SetHandStateRelativeToAnchor(UploadThread.HandType.Left,
+                        anchorClosestToHeadGameObject.transform
+                            .InverseTransformPose(TransformExtensions.GetWorldPose(
+                                _toolManager.LeftHandManager.ToolOffset)),
+                        _toolManager.LeftHandManager.SelectProgress,
+                        _toolManager.LeftHandManager.GetRayLinePointsRelative(
+                            anchorClosestToHeadGameObject.transform));
+                }
+                else
+                {
+                    _uploadThread.ClearHandState(UploadThread.HandType.Left);
+                }
+                if (_toolManager.RightHandManager.IsTrackingActive &&
+                    _toolManager.RightHandManager.ToolsVisible)
+                {
+                    _uploadThread.SetHandStateRelativeToAnchor(UploadThread.HandType.Right,
+                        anchorClosestToHeadGameObject.transform
+                            .InverseTransformPose(TransformExtensions.GetWorldPose(
+                                _toolManager.RightHandManager.ToolOffset)),
+                        _toolManager.RightHandManager.SelectProgress,
+                        _toolManager.RightHandManager.GetRayLinePointsRelative(
+                            anchorClosestToHeadGameObject.transform));
+                }
+                else
+                {
+                    _uploadThread.ClearHandState(UploadThread.HandType.Right);
+                }
             }
             else
             {
                 _headClosestAnchorId = null;
-                _uploadThread.SetHeadPoseRelativeToAnchor(Pose.identity);
-                _uploadThread.SetControlPoseRelativeToAnchor(Pose.identity);
+                _uploadThread.ClearAnchorAttachedStates();
             }
 
-            _uploadThread.SetHeadClosestAnchorId(_headClosestAnchorId);
-            _uploadThread.SetBatteryStatus(SystemInfo.batteryLevel, SystemInfo.batteryStatus);
             _uploadThread.SetServerEchoEnabled(_serverConnectionManager.ServerEcho);
             _uploadThread.SetUserDisplayName(_userDisplayName);
 
-            if (_mainMenu.activeSelf || _keyboardManager.gameObject.activeSelf)
+            if (_mainMenu.activeSelf || _keyboard.IsShown ||
+                _handMenu.isActiveAndEnabled)
             {
                 // The menu is being shown to the user -- advertise that the user is using
                 // the menu instead of a normal tool.
                 _uploadThread.SetCurrentToolState(UserStateProto.Types.ToolState.Menu,
-                    _brushColorManager.StrokeColor);
+                    _toolManager.StrokeColor);
             }
             else
             {
-                _uploadThread.SetCurrentToolState(ToProto(_currentTool),
-                    _brushColorManager.StrokeColor);
+                _uploadThread.SetCurrentToolState(ProtoUtils.ToProto(_toolManager.ActiveTool),
+                    _toolManager.StrokeColor);
             }
         }
 
@@ -375,6 +431,16 @@ namespace MagicLeap.LeapBrush
         /// </summary>
         private void UpdatePanelVisibility()
         {
+            if (!_startupPerformanceDelayCompleted)
+            {
+                // Keep the main menu hidden until a startup frame delta goal has been achieved,
+                // or a timeout has been hit.
+                _startupPerformanceDelayCompleted =
+                    (Time.frameCount > 10 && Time.deltaTime < 1.5f / 60f) || Time.frameCount > 120;
+                _mainMenu.SetActive(_startupPerformanceDelayCompleted);
+                return;
+            }
+
             if (_appTooOld || _serverTooOld)
             {
                 // The application and server are not incompatible. Show an error panel indicating
@@ -393,8 +459,7 @@ namespace MagicLeap.LeapBrush
                 _startPanel.Hide();
                 _mainPanel.gameObject.SetActive(false);
                 _settingsPanel.Hide();
-                _keyboardManager.gameObject.SetActive(false);
-                _drawSoloAreYourSurePopup.Hide();
+                _keyboard.Hide();
             }
             else if (((!_downloadThread?.LastDownloadOk ?? false)
                       || (!_uploadThread?.LastUploadOk ?? false)) && !_drawSolo)
@@ -402,7 +467,7 @@ namespace MagicLeap.LeapBrush
                 // The server and client appear to have been disconnected, show the not connected
                 // panel.
 
-                if (!_keyboardManager.gameObject.activeSelf)
+                if (!_keyboard.IsShown)
                 {
                     _notConnectedPanel.gameObject.SetActive(true);
                 }
@@ -426,8 +491,7 @@ namespace MagicLeap.LeapBrush
                 _startPanel.Hide();
                 _mainPanel.gameObject.SetActive(false);
                 _settingsPanel.Hide();
-                _keyboardManager.gameObject.SetActive(false);
-                _drawSoloAreYourSurePopup.Hide();
+                _keyboard.Hide();
             }
 #endif
             else
@@ -437,8 +501,7 @@ namespace MagicLeap.LeapBrush
 
                 _notConnectedPanel.gameObject.SetActive(false);
                 _notLocalizedPanel.gameObject.SetActive(false);
-                _drawSoloAreYourSurePopup.Hide();
-                if (!_settingsPanel.isActiveAndEnabled && !_keyboardManager.gameObject.activeSelf)
+                if (!_settingsPanel.gameObject.activeSelf && !_keyboard.IsShown)
                 {
                     if (_continuedPastStartPanel)
                     {
@@ -488,16 +551,16 @@ namespace MagicLeap.LeapBrush
         }
 
         /// <summary>
-        /// Look for other user's Controls that haven't had their poses updated recently, and
-        /// remove them when found.
+        /// Look for other users that haven't had their poses updated recently, and remove
+        /// them when found.
         /// </summary>
-        private void MaybeExpireOtherUserControls()
+        private void MaybeExpireOtherUsers()
         {
             List<string> userNamesToRemove = null;
             List<GameObject> gameObjectsToDestroy = null;
 
             DateTimeOffset now = DateTimeOffset.Now;
-            foreach (var entry in _otherUserControllers)
+            foreach (var entry in _otherUsersMap)
             {
                 if (entry.Value == null)
                 {
@@ -509,56 +572,7 @@ namespace MagicLeap.LeapBrush
                     continue;
                 }
 
-                if (entry.Value.LastUpdateTime < now - OtherUserControllerExpirationAge)
-                {
-                    if (gameObjectsToDestroy == null)
-                    {
-                        gameObjectsToDestroy = new ();
-                    }
-                    gameObjectsToDestroy.Add(entry.Value.gameObject);
-                }
-            }
-
-            if (userNamesToRemove != null)
-            {
-                foreach (string userName in userNamesToRemove)
-                {
-                    _otherUserControllers.Remove(userName);
-                }
-            }
-
-            if (gameObjectsToDestroy != null)
-            {
-                foreach (GameObject gameObject in gameObjectsToDestroy)
-                {
-                    Destroy(gameObject);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Look for other user's Headsets (Wearables) that haven't had their poses updated
-        /// recently, and remove them when found.
-        /// </summary>
-        private void MaybeExpireOtherUserWearables()
-        {
-            List<string> userNamesToRemove = null;
-            List<GameObject> gameObjectsToDestroy = null;
-
-            DateTimeOffset now = DateTimeOffset.Now;
-            foreach (var entry in _otherUserWearables)
-            {
-                if (entry.Value == null)
-                {
-                    if (userNamesToRemove == null)
-                    {
-                        userNamesToRemove = new();
-                    }
-                    userNamesToRemove.Add(entry.Key);
-                    continue;
-                }
-
-                if (entry.Value.LastUpdateTime < now - OtherUserWearableExpirationAge)
+                if (entry.Value.LastUpdateTime < now - OtherUserExpirationAge)
                 {
                     if (gameObjectsToDestroy == null)
                     {
@@ -572,10 +586,10 @@ namespace MagicLeap.LeapBrush
             {
                 foreach (string userName in userNamesToRemove)
                 {
-                    _otherUserWearables.Remove(userName);
+                    _otherUsersMap.Remove(userName);
                 }
 
-                _startPanel.OnOtherUserCountChanged(_otherUserWearables.Count);
+                _startPanel.OnOtherUserCountChanged(_otherUsersMap.Count);
             }
 
             if (gameObjectsToDestroy != null)
@@ -592,14 +606,15 @@ namespace MagicLeap.LeapBrush
         /// </summary>
         private void OnDestroy()
         {
-            ControllerInput.Instance.Events.OnMenuUp -= OnMenuButtonDown;
-            ControllerInput.Instance.Events.OnTriggerDown -= OnTriggerButtonDown;
-            ControllerInput.Instance.Events.OnTriggerUp -= OnTriggerButtonUp;
+            _toggleMenuInputAction.action.performed -= OnMenuActionPerformed;
+            _touchpadPosition.action.started -= OnTouchpadPositionStart;
+            _touchpadPosition.action.performed -= OnTouchpadPositionPerformed;
 
             StopServerConnections();
             ThreadDispatcher.DispatchAllAndShutdown();
 
             StopCoroutine(_updateStatusTextCoroutine);
+            StopCoroutine(_updateBatteryStatusCoroutine);
             if (_maybeCreateAnchorAfterLocalizationWithDelayCoroutine != null)
             {
                 StopCoroutine(_maybeCreateAnchorAfterLocalizationWithDelayCoroutine);
@@ -607,29 +622,23 @@ namespace MagicLeap.LeapBrush
 
             _localizationManager.OnLocalizationInfoChanged -= OnLocalizationInfoChanged;
 
-            _settingsPanel.OnShowHeadsetsChanged -= OnShowHeadsetsChanged;
-            _settingsPanel.OnShowControllersChanged -= OnShowControllersChanged;
+            _preferences.ShowOtherHeadsets.OnChanged -= OnShowOtherHeadsetsPreferenceChanged;
+            _preferences.ShowOtherHandsAndControls.OnChanged -=
+                OnShowOtherHandsAndControlsPreferenceChanged;
+            _preferences.ShowFloorGrid.OnChanged -= OnShowFloorGridPreferenceChanged;
+            _preferences.GazePinchEnabled.OnChanged -= OnGazePinchPreferenceChanged;
 
-            _eraserTool.OnTriggerEnterEvent -= OnEraserCollisionTrigger;
-            _scribbleBrushTool.OnPosesAdded -= OnScribbleBrushStrokePosesAdded;
-            _scribbleBrushTool.OnDrawingCompleted -= OnScribbleBrushDrawingCompleted;
-            _polyBrushTool.OnPosesUpdated -= OnPolyBrushStrokePosesUpdated;
-            _polyBrushTool.OnDrawingCompleted -= OnPolyBrushDrawingCompleted;
+            _toolManager.OnActiveToolChanged -= OnActiveToolChanged;
+            foreach (InteractorToolManager toolContainer in _toolManager.InteractorToolManagers)
+            {
+                toolContainer.ScribbleBrush.OnPosesAdded -= OnScribbleBrushStrokePosesAdded;
+                toolContainer.ScribbleBrush.OnDrawingCompleted -= OnBrushDrawingCompleted;
+                toolContainer.PolyBrush.OnPosesUpdated -= OnPolyBrushStrokePosesUpdated;
+                toolContainer.PolyBrush.OnDrawingCompleted -= OnBrushDrawingCompleted;
+                toolContainer.Eraser.OnTriggerEnterEvent -= OnEraserCollisionTrigger;
+            }
 
             Application.logMessageReceived -= OnLogMessageReceived;
-        }
-
-        /// <summary>
-        /// Update the tool colors to match the user's color selection in the Palette menu.
-        /// </summary>
-        private void UpdateUserBrushColors()
-        {
-            _scribbleBrushTool.SetColors(
-                _brushColorManager.StrokeColor, _brushColorManager.FillColor,
-                _brushColorManager.FillDimmerAlpha);
-            _polyBrushTool.SetColors(
-                _brushColorManager.StrokeColor, _brushColorManager.FillColor,
-                _brushColorManager.FillDimmerAlpha);
         }
 
         /// <summary>
@@ -703,7 +712,8 @@ namespace MagicLeap.LeapBrush
             {
                 Debug.Log("Erasing brush stroke " + collidedBrush.Id + " from anchor "
                           + collidedBrush.AnchorId);
-                PlayOneoffSpatialSound(_eraseSound, collider.gameObject.transform.position);
+                PlayOneoffSpatialSound(_eraseAudioPrefab,
+                    collider.gameObject.transform.position);
                 Destroy(collidedBrush.gameObject);
 
                 _uploadThread.RemoveBrushStroke(collidedBrush.Id, collidedBrush.AnchorId);
@@ -715,7 +725,8 @@ namespace MagicLeap.LeapBrush
             {
                 Debug.Log("Erasing external model " + externalModel.Id + " from anchor "
                           + externalModel.AnchorId);
-                PlayOneoffSpatialSound(_eraseSound, collider.gameObject.transform.position);
+                PlayOneoffSpatialSound(_eraseAudioPrefab,
+                    collider.gameObject.transform.position);
                 Destroy(externalModel.gameObject);
 
                 _uploadThread.RemoveExternalModel(externalModel.Id, externalModel.AnchorId);
@@ -725,15 +736,14 @@ namespace MagicLeap.LeapBrush
         /// <summary>
         /// Play a oneoff spatial sound at a particular location.
         /// </summary>
-        /// <param name="soundDefinition">The sound definition for the sound to play.</param>
+        /// <param name="audioPrefab">The audio source prefab for the sound to play.</param>
         /// <param name="position">The world position where the sound should play.</param>
-        private void PlayOneoffSpatialSound(SoundDefinition soundDefinition, Vector3 position)
+        private void PlayOneoffSpatialSound(GameObject audioPrefab, Vector3 position)
         {
-            OneoffSpatialSoundBehavior oneoffSoundBehavior = Instantiate(
-                _oneoffSpatialSoundBehaviorPrefab, transform)
-                .GetComponent<OneoffSpatialSoundBehavior>();
-            oneoffSoundBehavior.Initialize(soundDefinition);
-            oneoffSoundBehavior.transform.position = position;
+            OneoffAudioSource oneoffAudioSource = Instantiate(
+                audioPrefab, transform)
+                .GetComponent<OneoffAudioSource>();
+            oneoffAudioSource.transform.position = position;
         }
 
         /// <summary>
@@ -764,100 +774,126 @@ namespace MagicLeap.LeapBrush
         }
 
         /// <summary>
-        /// Handler for the user tapping the menu button on their Controller.
+        /// Handler for the user triggering the menu action.
         /// </summary>
-        private void OnMenuButtonDown()
+        private void OnMenuActionPerformed(InputAction.CallbackContext callbackContext)
         {
             if (_continuedPastStartPanel)
             {
-                _mainMenu.SetActive(!_mainMenu.activeSelf);
+                if (!_mainMenu.activeSelf)
+                {
+                    _mainMenu.SetActive(true);
+                }
+                else if (_mainPanel.gameObject.activeInHierarchy
+                         || _settingsPanel.gameObject.activeInHierarchy)
+                {
+                    _mainMenu.SetActive(false);
+                }
+            }
+
+            StopCameraFollow();
+            HandleActiveToolOrMenuVisibilityChanged();
+        }
+
+        private void OnTouchpadPositionStart(InputAction.CallbackContext callbackContext)
+        {
+            _lastTouchpadPosition = callbackContext.action.ReadValue<Vector2>();
+        }
+
+        private void OnTouchpadPositionPerformed(InputAction.CallbackContext callbackContext)
+        {
+            Vector2 touchpadPosition = callbackContext.action.ReadValue<Vector2>();
+            Vector2 touchpadDelta = touchpadPosition - _lastTouchpadPosition;
+            _lastTouchpadPosition = touchpadPosition;
+
+            if (_toolManager.ActiveTool == ToolType.Laser || _toolManager.LaserToolOverride)
+            {
+                return;
+            }
+
+            _toolManager.AdjustToolOffset(touchpadDelta.y * 0.25f);
+        }
+
+        /// <summary>
+        /// Start following a particular user in first person follow mode.
+        /// </summary>
+        /// <param name="cameraFollowUserName"></param>
+        private void StartCameraFollow(string cameraFollowUserName)
+        {
+            _cameraFollowUserName = cameraFollowUserName;
+            _mainMenu.SetActive(false);
+            _toolManager.SetActiveTool(ToolType.Laser);
+
+            if (_otherUsersMap.TryGetValue(_cameraFollowUserName,
+                    out OtherUserVisual otherUserVisual))
+            {
+                otherUserVisual.SetCameraFollowingUser(true);
+            }
+        }
+
+        /// <summary>
+        /// Stop following any user in first person follow mode.
+        /// </summary>
+        private void StopCameraFollow()
+        {
+            if (_cameraFollowUserName == null)
+            {
+                return;
+            }
+
+            if (_otherUsersMap.TryGetValue(_cameraFollowUserName,
+                    out OtherUserVisual otherUserVisual))
+            {
+                otherUserVisual.SetCameraFollowingUser(false);
             }
 
             _cameraFollowUserName = null;
-
-            UpdateActiveTool();
-        }
-
-        /// <summary>
-        /// Handler for the user pushing the trigger button down on their Controller.
-        /// </summary>
-        private void OnTriggerButtonDown()
-        {
-            BrushBase brushTool = GetActiveBrushTool();
-            if (brushTool != null)
-            {
-                brushTool.OnTriggerButtonDown();
-            }
-        }
-
-        /// <summary>
-        /// Handler for the user releasing the trigger button on their Controller.
-        /// </summary>
-        private void OnTriggerButtonUp()
-        {
-            BrushBase brushTool = GetActiveBrushTool();
-            if (brushTool != null)
-            {
-                brushTool.OnTriggerButtonUp();
-            }
-        }
-
-        /// <summary>
-        /// Handler for the user swiping on the Controller's touchpad
-        /// </summary>
-        /// <param name="touchDelta">The 2D delta of the swipe</param>
-        private void OnTouchDelta(Vector2 touchDelta)
-        {
-            BrushBase brushTool = GetActiveBrushTool();
-            if (brushTool != null || _eraserTool.isActiveAndEnabled)
-            {
-                Vector3 newPosition = _toolBasePose.localPosition;
-                newPosition.z = Mathf.Clamp(newPosition.z + touchDelta.y * 0.25f, 0.00f, 1.5f);
-                _toolBasePose.localPosition = newPosition;
-            }
+            _inputSimulator.gameObject.SetActive(true);
         }
 
         /// <summary>
         /// Handler for new poses being added to the scribble brush tool while drawing.
         /// </summary>
-        private void OnScribbleBrushStrokePosesAdded()
+        private void OnScribbleBrushStrokePosesAdded(ScribbleBrushTool scribbleBrush)
         {
             // Hold the upload thread lock while manipulating _uploadThread.CurrentBrushStroke
             lock (_uploadThread.Lock)
             {
-                if (_uploadThread.CurrentBrushStroke == null)
+                BrushStrokeProto currentBrushStroke = _uploadThread.GetCurrentBrushStroke(
+                    scribbleBrush.Brush);
+                if (currentBrushStroke == null)
                 {
                     if (!_anchorsManager.TryGetAnchorGameObject(_headClosestAnchorId, out _))
                     {
                         return;
                     }
 
-                    BrushStrokeProto brushStrokeProto = new BrushStrokeProto
+                    currentBrushStroke = new BrushStrokeProto
                     {
                         Id = "B" + _random.Next(0, Int32.MaxValue),
                         AnchorId = _headClosestAnchorId,
-                        StrokeColorRgb = ColorUtils.ToRgbaUint(_brushColorManager.StrokeColor),
+                        StrokeColorRgb = ColorUtils.ToRgbaUint(_toolManager.StrokeColor),
                     };
 
-                    brushStrokeProto.Type = BrushStrokeProto.Types.BrushType.Scribble;
-                    brushStrokeProto.UserName = _userName;
-                    _uploadThread.CurrentBrushStroke = brushStrokeProto;
+                    currentBrushStroke.Type = BrushStrokeProto.Types.BrushType.Scribble;
+                    currentBrushStroke.UserName = _userName;
+                    _uploadThread.SetCurrentBrushStroke(scribbleBrush.Brush, currentBrushStroke);
 
-                    _brushColorManager.SetManuallySelected();
+                    _toolManager.SetBrushColorManuallySelected();
                 }
 
                 if (_anchorsManager.TryGetAnchorGameObject(
-                        _uploadThread.CurrentBrushStroke.AnchorId, out GameObject anchorGameObject))
+                        currentBrushStroke.AnchorId, out GameObject anchorGameObject))
                 {
                     Transform anchorTransform = anchorGameObject.transform;
 
                     int brushStrokeStartIndex =
-                        _uploadThread.CurrentBrushStroke.StartIndex
-                        + _uploadThread.CurrentBrushStroke.BrushPose.Count;
-                    for (int i = brushStrokeStartIndex; i < _scribbleBrushTool.Poses.Count; ++i)
+                        currentBrushStroke.StartIndex
+                        + currentBrushStroke.BrushPose.Count;
+                    for (int i = brushStrokeStartIndex; i < scribbleBrush.Brush.Poses.Count; ++i)
                     {
-                        _uploadThread.CurrentBrushStroke.BrushPose.Add(ProtoUtils.ToProto(
-                            anchorTransform.InverseTransformPose(_scribbleBrushTool.Poses[i])));
+                        currentBrushStroke.BrushPose.Add(ProtoUtils.ToProto(
+                            anchorTransform.InverseTransformPose(scribbleBrush.Brush.Poses[i])));
                     }
                 }
             }
@@ -867,88 +903,79 @@ namespace MagicLeap.LeapBrush
         /// Handler for new poses being added to the polygon brush while drawing.
         /// </summary>
         /// <param name="startIndex">The start index from where poses were modified.</param>
-        private void OnPolyBrushStrokePosesUpdated(int startIndex)
+        private void OnPolyBrushStrokePosesUpdated(PolyBrushTool polyBrush, int startIndex)
         {
             // Hold the upload thread lock while manipulating _uploadThread.CurrentBrushStroke
             lock (_uploadThread.Lock)
             {
-                if (_uploadThread.CurrentBrushStroke == null)
+                BrushStrokeProto currentBrushStroke = _uploadThread.GetCurrentBrushStroke(
+                    polyBrush.Brush);
+                if (currentBrushStroke == null)
                 {
                     if (!_anchorsManager.TryGetAnchorGameObject(_headClosestAnchorId, out _))
                     {
                         return;
                     }
 
-                    BrushStrokeProto brushStrokeProto = new BrushStrokeProto
+                    currentBrushStroke = new BrushStrokeProto
                     {
                         Id = "B" + _random.Next(0, Int32.MaxValue),
                         AnchorId = _headClosestAnchorId,
-                        StrokeColorRgb = ColorUtils.ToRgbaUint(_brushColorManager.StrokeColor),
-                        FillColorRgba = ColorUtils.ToRgbaUint(_brushColorManager.FillColor),
-                        FillDimmerA = (uint) Math.Round(_brushColorManager.FillDimmerAlpha * 255)
+                        StrokeColorRgb = ColorUtils.ToRgbaUint(_toolManager.StrokeColor),
+                        FillColorRgba = ColorUtils.ToRgbaUint(_toolManager.FillColor),
+                        FillDimmerA = (uint) Math.Round(_toolManager.FillDimmerAlpha * 255)
                     };
 
-                    brushStrokeProto.Type = BrushStrokeProto.Types.BrushType.Poly;
-                    brushStrokeProto.UserName = _userName;
-                    _uploadThread.CurrentBrushStroke = brushStrokeProto;
+                    currentBrushStroke.Type = BrushStrokeProto.Types.BrushType.Poly;
+                    currentBrushStroke.UserName = _userName;
+                    _uploadThread.SetCurrentBrushStroke(polyBrush.Brush, currentBrushStroke);
 
-                    _brushColorManager.SetManuallySelected();
+                    _toolManager.SetBrushColorManuallySelected();
                 }
 
                 GameObject anchorGameObject;
                 if (_anchorsManager.TryGetAnchorGameObject(
-                        _uploadThread.CurrentBrushStroke.AnchorId, out anchorGameObject))
+                        currentBrushStroke.AnchorId, out anchorGameObject))
                 {
                     Transform anchorTransform = anchorGameObject.transform;
 
-                    if (_uploadThread.CurrentBrushStroke.StartIndex >= startIndex)
+                    if (currentBrushStroke.StartIndex >= startIndex)
                     {
-                        _uploadThread.CurrentBrushStroke.StartIndex = startIndex;
-                        _uploadThread.CurrentBrushStroke.BrushPose.Clear();
+                        currentBrushStroke.StartIndex = startIndex;
+                        currentBrushStroke.BrushPose.Clear();
                     }
 
-                    while (startIndex - _uploadThread.CurrentBrushStroke.StartIndex
-                           < _uploadThread.CurrentBrushStroke.BrushPose.Count)
+                    while (startIndex - currentBrushStroke.StartIndex
+                           < currentBrushStroke.BrushPose.Count)
                     {
-                        _uploadThread.CurrentBrushStroke.BrushPose.RemoveAt(
-                            _uploadThread.CurrentBrushStroke.BrushPose.Count - 1);
+                        currentBrushStroke.BrushPose.RemoveAt(
+                            currentBrushStroke.BrushPose.Count - 1);
                     }
 
-                    int brushStrokeStartIndex =
-                        _uploadThread.CurrentBrushStroke.StartIndex
-                        + _uploadThread.CurrentBrushStroke.BrushPose.Count;
-                    for (int i = brushStrokeStartIndex; i < _polyBrushTool.Poses.Count; ++i)
+                    int brushStrokeStartIndex = currentBrushStroke.StartIndex
+                        + currentBrushStroke.BrushPose.Count;
+                    for (int i = brushStrokeStartIndex; i < polyBrush.Brush.Poses.Count; ++i)
                     {
-                        _uploadThread.CurrentBrushStroke.BrushPose.Add(ProtoUtils.ToProto(
-                            anchorTransform.InverseTransformPose(_polyBrushTool.Poses[i])));
+                        currentBrushStroke.BrushPose.Add(ProtoUtils.ToProto(
+                            anchorTransform.InverseTransformPose(polyBrush.Brush.Poses[i])));
                     }
                 }
             }
-        }
-
-        private void OnScribbleBrushDrawingCompleted()
-        {
-            OnBrushDrawingCompleted(_scribbleBrushTool);
-        }
-
-        private void OnPolyBrushDrawingCompleted()
-        {
-            OnBrushDrawingCompleted(_polyBrushTool);
         }
 
         /// <summary>
         /// Handler for a brush drawing being completed.
         /// </summary>
         /// <param name="brushTool">The brush tool that completed the drawing.</param>
-        private void OnBrushDrawingCompleted(BrushBase brushTool)
+        private void OnBrushDrawingCompleted(BrushToolBase brushTool)
         {
             BrushStrokeProto brushStrokeProto;
             // Hold the upload thread lock while manipulating _uploadThread.CurrentBrushStroke
             lock (_uploadThread.Lock)
             {
                 // Pull the current brush stroke from the upload thread and clear it.
-                brushStrokeProto = _uploadThread.CurrentBrushStroke;
-                _uploadThread.CurrentBrushStroke = null;
+                brushStrokeProto = _uploadThread.GetCurrentBrushStroke(brushTool.Brush);
+                _uploadThread.SetCurrentBrushStroke(brushTool.Brush, null);
             }
 
             if (brushStrokeProto == null)
@@ -963,10 +990,10 @@ namespace MagicLeap.LeapBrush
             }
 
             Transform anchorTransform = anchorGameObject.transform;
-            Pose[] poses = new Pose[brushTool.Poses.Count];
+            Pose[] poses = new Pose[brushTool.Brush.Poses.Count];
             for (int i = 0; i < poses.Length; i++)
             {
-                poses[i] = anchorTransform.InverseTransformPose(brushTool.Poses[i]);
+                poses[i] = anchorTransform.InverseTransformPose(brushTool.Brush.Poses[i]);
             }
 
             if (_brushStrokeMap.TryGetValue(brushStrokeProto.Id, out BrushBase oldBrush))
@@ -985,8 +1012,8 @@ namespace MagicLeap.LeapBrush
             BrushBase brushStroke = Instantiate(
                 brushTool.Prefab, anchorGameObject.transform).GetComponent<BrushBase>();
             brushStroke.SetPosesAndTruncate(0, poses, false);
-            brushStroke.SetColors(_brushColorManager.StrokeColor, _brushColorManager.FillColor,
-                _brushColorManager.FillDimmerAlpha);
+            brushStroke.SetColors(_toolManager.StrokeColor, _toolManager.FillColor,
+                _toolManager.FillDimmerAlpha);
 
             brushStroke.AnchorId = brushStrokeProto.AnchorId;
             brushStroke.Id = brushStrokeProto.Id;
@@ -1032,82 +1059,55 @@ namespace MagicLeap.LeapBrush
         /// <summary>
         /// Handler for the user toggling whether other user's Headsets should be displayed.
         /// </summary>
-        private void OnShowHeadsetsChanged()
+        private void OnShowOtherHeadsetsPreferenceChanged()
         {
-            foreach (var entry in _otherUserWearables)
+            foreach (var entry in _otherUsersMap)
             {
-                entry.Value.gameObject.SetActive(_settingsPanel.IsShowHeadsets);
+                entry.Value.SetShowHeadset(_preferences.ShowOtherHeadsets.Value);
             }
         }
 
         /// <summary>
-        /// Handler for the user toggling whether other user's Controllers should be displayed.
+        /// Handler for the user toggling whether other user's hands and Controllers should be
+        /// displayed.
         /// </summary>
-        private void OnShowControllersChanged()
+        private void OnShowOtherHandsAndControlsPreferenceChanged()
         {
-            foreach (var entry in _otherUserControllers)
+            foreach (var entry in _otherUsersMap)
             {
-                entry.Value.gameObject.SetActive(_settingsPanel.IsShowControllers);
+                entry.Value.ShowHandsAndControls(_preferences.ShowOtherHandsAndControls.Value);
             }
         }
 
         /// <summary>
-        /// Handler for the scribble brush being selected as the current tool.
+        /// Handler for the user toggling whether the floor grid should be displayed.
         /// </summary>
-        private void OnScribbleBrushToolSelected()
+        private void OnShowFloorGridPreferenceChanged()
         {
-            _mainMenu.SetActive(false);
-
-            _currentTool = Tool.BrushScribble;
-            UpdateActiveTool();
+            _floorGrid.gameObject.SetActive(_preferences.ShowFloorGrid.Value);
         }
 
         /// <summary>
-        /// Handler for the Color Palette menu being selected to open.
+        /// Handler for the user toggling the gaze pinch preference.
         /// </summary>
-        private void OnColorPaletteSelected()
+        private void OnGazePinchPreferenceChanged()
         {
-            _colorPickerPopup.Show();
+            _gazeInteractor.gameObject.SetActive(_preferences.GazePinchEnabled.Value);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (_preferences.GazePinchEnabled.Value)
+            {
+                InputSubsystem.Extensions.MLEyes.StartTracking();
+            }
+#endif
         }
 
         /// <summary>
-        /// Handler for the poly brush being selected as the current tool.
+        /// Handler for the hand menu toggling.
         /// </summary>
-        private void OnPolyBrushToolSelected()
+        private void OnHandMenuEnabledChanged()
         {
-            _mainMenu.SetActive(false);
-
-            _currentTool = Tool.BrushPoly;
-            UpdateActiveTool();
-        }
-
-        /// <summary>
-        /// Handler for the eraser being selected as the current tool.
-        /// </summary>
-        private void OnEraserToolSelected()
-        {
-            _mainMenu.SetActive(false);
-            _currentTool = Tool.Eraser;
-            UpdateActiveTool();
-        }
-
-        /// <summary>
-        /// Handler for the laser pointer being selected as the current tool.
-        /// </summary>
-        private void OnLaserPointerSelected()
-        {
-            _mainMenu.SetActive(false);
-            _currentTool = Tool.Laser;
-            UpdateActiveTool();
-        }
-
-        /// <summary>
-        /// Handler for the import model popup to be displayed.
-        /// </summary>
-        private void OnImportModelSelected()
-        {
-            _external3dModelManager.RefreshModelList();
-            _importModelPopup.Show();
+            HandleActiveToolOrMenuVisibilityChanged();
         }
 
         /// <summary>
@@ -1119,12 +1119,22 @@ namespace MagicLeap.LeapBrush
             _mainPanel.gameObject.SetActive(false);
         }
 
+        private void OnMainPanelOrHandMenuToolSelected()
+        {
+            if (_mainPanel.gameObject.activeInHierarchy
+                || _settingsPanel.gameObject.activeInHierarchy)
+            {
+                _mainMenu.SetActive(false);
+                HandleActiveToolOrMenuVisibilityChanged();
+            }
+        }
+
         /// <summary>
         /// Handler for the list of external 3D models being refreshed.
         /// </summary>
         private void OnExternal3DModelsListUpdated()
         {
-            _importModelPopup.OnExternal3DModelsListUpdated(_external3dModelManager.Models);
+            _importModelsPopup.OnExternal3DModelsListUpdated(_external3dModelManager.Models);
         }
 
         /// <summary>
@@ -1133,11 +1143,10 @@ namespace MagicLeap.LeapBrush
         /// <param name="modelInfo">The information about the 3D model to place.</param>
         private void OnPlaceNewExternal3DModel(External3DModelManager.ModelInfo modelInfo)
         {
-            _importModelPopup.Hide();
+            _importModelsPopup.Hide();
             _mainMenu.SetActive(false);
-
-            _currentTool = Tool.Laser;
-            UpdateActiveTool();
+            _toolManager.SetActiveTool(ToolType.Laser);
+            HandleActiveToolOrMenuVisibilityChanged();
 
             Vector3 modelPosition = _camera.transform.TransformPoint(
                 External3DModelRelativeStartPosition);
@@ -1149,6 +1158,7 @@ namespace MagicLeap.LeapBrush
                 externalModel.Id = "M" + _random.Next(0, Int32.MaxValue);
                 externalModel.AnchorId = _headClosestAnchorId;
                 externalModel.OnTransformChanged += OnExternalModelTransformChanged;
+                externalModel.RestrictInitialModelDimensions = true;
 
                 _externalModelMap[externalModel.Id] = externalModel;
                 externalModel.OnDestroyed += () => _externalModelMap.Remove(externalModel.Id);
@@ -1195,13 +1205,10 @@ namespace MagicLeap.LeapBrush
             _delayedButtonHandler.InvokeAfterDelayExclusive(() =>
             {
 #if !UNITY_ANDROID || UNITY_EDITOR
-                _cameraFollowUserName = userResult.UserName;
+                StartCameraFollow(userResult.UserName);
 #endif
 
                 _joinUserPopup.Hide();
-                _mainMenu.SetActive(false);
-                _currentTool = Tool.Laser;
-                UpdateActiveTool();
             });
         }
 
@@ -1268,43 +1275,6 @@ namespace MagicLeap.LeapBrush
             _startPanel.OnUserDisplayNameChanged(userDisplayName);
         }
 
-        /// <summary>
-        /// Handler for the user deciding to select a new server. Opens the keyboard for entry.
-        /// </summary>
-        private void OnChooseServerSelected()
-        {
-            _keyboardManager.gameObject.SetActive(true);
-            _keyboardManager.OnKeyboardClose.AddListener(OnChooseServerKeyboardClosed);
-            _keyboardManager.PublishKeyEvent.AddListener(OnChooseServerKeyboardKeyPressed);
-
-            string serverUrl = _serverConnectionManager.ServerUrl;
-            _keyboardManager.TypedContent = serverUrl;
-            _keyboardManager.InputField.text = serverUrl;
-
-            _mainMenu.SetActive(false);
-        }
-
-        private void OnChooseServerKeyboardKeyPressed(
-            string textToType, KeyType keyType, bool doubleClicked, string typedContent)
-        {
-            if (keyType == KeyType.kEnter || keyType == KeyType.kJPEnter)
-            {
-                // The enter key was pressed, accept the new server url.
-                _serverConnectionManager.SetServerUrl(typedContent.Trim());
-            }
-        }
-
-        private void OnChooseServerKeyboardClosed()
-        {
-            _keyboardManager.PublishKeyEvent.RemoveListener(OnChooseServerKeyboardKeyPressed);
-            _keyboardManager.OnKeyboardClose.RemoveListener(OnChooseServerKeyboardClosed);
-
-            _serverConnectionManager.SetServerUrl(_keyboardManager.TypedContent.Trim());
-
-            _keyboardManager.gameObject.SetActive(false);
-            _mainMenu.SetActive(true);
-        }
-
         private void OnServerUrlChanged(string newServerUrl)
         {
             Debug.LogFormat("Selected the new server {0}", newServerUrl);
@@ -1314,38 +1284,47 @@ namespace MagicLeap.LeapBrush
             RestartServerConnections();
         }
 
+        private void OnActiveToolChanged()
+        {
+            HandleActiveToolOrMenuVisibilityChanged();
+        }
+
         /// <summary>
         /// Update the visibility of various tools based on UI state.
         /// </summary>
-        private void UpdateActiveTool()
+        private void HandleActiveToolOrMenuVisibilityChanged()
         {
-            _scribbleBrushTool.gameObject.SetActive(!_mainMenu.activeSelf && _currentTool == Tool.BrushScribble);
-            _polyBrushTool.gameObject.SetActive(!_mainMenu.activeSelf && _currentTool == Tool.BrushPoly);
-            _eraserTool.gameObject.SetActive(!_mainMenu.activeSelf && _currentTool == Tool.Eraser);
-            _rayAndCursor.gameObject.SetActive(_mainMenu.activeSelf || _currentTool == Tool.Laser);
+            bool menusActive = _mainMenu.activeSelf || _handMenu.isActiveAndEnabled
+                                                    || _keyboard.IsShown;
+            _toolManager.SetLaserToolOverride(menusActive);
 
-            if (_mainMenu.activeSelf)
+            if (_controlInstructions == null)
+            {
+                return;
+            }
+
+            if (menusActive)
             {
                 _controlInstructions.SetInstructionSet(
                     ControlInstructions.InstructionType.MainMenu);
             }
             else
             {
-                switch (_currentTool)
+                switch (_toolManager.ActiveTool)
                 {
-                    case Tool.Eraser:
+                    case ToolType.Eraser:
                         _controlInstructions.SetInstructionSet(
                             ControlInstructions.InstructionType.Eraser);
                         break;
-                    case Tool.Laser:
+                    case ToolType.Laser:
                         _controlInstructions.SetInstructionSet(
                             ControlInstructions.InstructionType.LaserPointer);
                         break;
-                    case Tool.BrushScribble:
+                    case ToolType.BrushScribble:
                         _controlInstructions.SetInstructionSet(
                             ControlInstructions.InstructionType.Brush);
                         break;
-                    case Tool.BrushPoly:
+                    case ToolType.BrushPoly:
                         _controlInstructions.SetInstructionSet(
                             ControlInstructions.InstructionType.PolyTool);
                         break;
@@ -1356,36 +1335,10 @@ namespace MagicLeap.LeapBrush
         }
 
         /// <summary>
-        /// Get the currently active brush tool.
-        /// </summary>
-        /// <returns>The currently active brush tool or null if a brush is not active</returns>
-        private BrushBase GetActiveBrushTool()
-        {
-            if (_scribbleBrushTool.isActiveAndEnabled)
-            {
-                return _scribbleBrushTool;
-            }
-            if (_polyBrushTool.isActiveAndEnabled)
-            {
-                return _polyBrushTool;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Handler for the user picking the draw solo option -- a confirmation dialog is displayed.
-        /// </summary>
-        public void OnDrawSoloSelected()
-        {
-            _drawSoloAreYourSurePopup.Show();
-        }
-
-        /// <summary>
         /// Handler for the user confirming they want to use the draw solo option. Server
         /// connections are severed and the user is now drawing offline.
         /// </summary>
-        private void OnDrawSoloConfirmButtonSelected()
+        private void OnDrawSoloSelected()
         {
             _drawSolo = true;
 
@@ -1407,8 +1360,7 @@ namespace MagicLeap.LeapBrush
             if (_anchorsManager.Anchors.Length == 0 && _anchorsManager.LastQuerySuccessful)
             {
                 AnchorsApi.Anchor anchor;
-                MLResult result = AnchorsApi.CreateAnchor(
-                    Pose.identity, (ulong) TimeSpan.FromDays(365).TotalSeconds, out anchor);
+                MLResult result = AnchorsApi.CreateAnchor(Pose.identity, 0, out anchor);
                 if (result.IsOk)
                 {
                     result = anchor.Publish();
@@ -1431,11 +1383,13 @@ namespace MagicLeap.LeapBrush
         /// </summary>
         private IEnumerator UpdateStatusTextPeriodically()
         {
+            YieldInstruction updateDelay = new WaitForSeconds(StatusTextUpdateDelaySeconds);
+
             while (true)
             {
                 UpdateStatusText();
 
-                yield return new WaitForSeconds(StatusTextUpdateDelaySeconds);
+                yield return updateDelay;
             }
         }
 
@@ -1449,75 +1403,98 @@ namespace MagicLeap.LeapBrush
                 return;
             }
 
-            string serverUrlAndVersionString;
-            if (_drawSolo)
+            _statusTextBuilder.Length = 0;
+
+            _statusTextBuilder.AppendFormat(
+                "<color=#dbfb76><b>Leap Brush v{0}</b></color>\n", Application.version);
+            _statusTextBuilder.AppendFormat("UserName: {0}\n", _userDisplayName);
+
             {
-                serverUrlAndVersionString = "<color=#ffa500>Drawing Solo</color>";
-            }
-            else if (_serverInfo != null)
-            {
-                serverUrlAndVersionString = string.Format(
-                    "{0} (v{1})", _serverConnectionManager.ServerUrl, _serverInfo.ServerVersion);
-            }
-            else
-            {
-                serverUrlAndVersionString = _serverConnectionManager.ServerUrl;
+                _statusTextBuilder.Append("Server Connection: ");
+
+                if (_drawSolo)
+                {
+                    _statusTextBuilder.Append("<color=#ffa500>Drawing Solo</color>");
+                }
+                else
+                {
+                    _statusTextBuilder.Append(_serverConnectionManager.ServerUrl);
+                    if (_serverInfo != null)
+                    {
+                        _statusTextBuilder.AppendFormat(" (v{0})", _serverInfo.ServerVersion);
+                    }
+
+                    _statusTextBuilder.Append(": ");
+                    if ((_downloadThread?.LastDownloadOk ?? false)
+                        && (_uploadThread?.LastUploadOk ?? false))
+                    {
+                        _statusTextBuilder.Append("<color=#00ff00>Connected</color>");
+                    }
+                    else
+                    {
+                        _statusTextBuilder.Append("<color=#ff0000>Disconnected</color>");
+                    }
+                }
+
+                _statusTextBuilder.Append("\n");
             }
 
-            string serverDetailsString;
-            if (_drawSolo)
             {
-                serverDetailsString = "<color=#ffa500>Drawing Solo</color>";
-            }
-            else if ((_downloadThread?.LastDownloadOk ?? false)
-                     && (_uploadThread?.LastUploadOk ?? false))
-            {
-                serverDetailsString = string.Format(
-                    "{0}: {1}", serverUrlAndVersionString, "<color=#00ff00>Connected</color>");
-            }
-            else
-            {
-                serverDetailsString = string.Format(
-                    "{0}: {1}", serverUrlAndVersionString, "<color=#ff0000>Disconnected</color>");
-            }
+                _statusTextBuilder.Append("Map Localization: <i>");
 
-            string localizationString = _localizationManager.LocalizationInfo.ToString();
-            if (_localizationManager.LocalizationInfo.LocalizationStatus == MLAnchors.LocalizationStatus.Localized &&
-                _localizationManager.LocalizationInfo.MappingMode == MLAnchors.MappingMode.ARCloud)
-            {
-                localizationString = "<color=#00ff00>" + localizationString + "</color>";
-            }
-            else
-            {
-                localizationString = "<color=#ffa500>" + localizationString + "</color>";
-            }
+                if (_localizationManager.LocalizationInfo.LocalizationStatus
+                    == MLAnchors.LocalizationStatus.Localized &&
+                    _localizationManager.LocalizationInfo.MappingMode
+                    == MLAnchors.MappingMode.ARCloud)
+                {
+                    _statusTextBuilder.AppendFormat(
+                        "<color=#00ff00>{0}</color>",
+                        _localizationManager.LocalizationInfo.ToString());
+                }
+                else
+                {
+                    _statusTextBuilder.AppendFormat(
+                        "<color=#ffa500>{0}</color>",
+                        _localizationManager.LocalizationInfo.ToString());
+                }
 
-            StringBuilder statusTextBuilder = new StringBuilder();
-            statusTextBuilder.AppendFormat(
-                "<color=#dbfb76><b>Leap Brush v{0}</b></color>\n" +
-                "UserName: {1}\n" +
-                "Server Connection: {2}\n" +
-                "Map Localization: <i>{3}</i>\n",
-                Application.version,
-                _userDisplayName,
-                serverDetailsString,
-                localizationString);
+                _statusTextBuilder.Append("</i>\n");
+            }
 
             if (_exceptionsOrAssertsLogged > 0)
             {
-                statusTextBuilder.AppendFormat(
+                _statusTextBuilder.AppendFormat(
                     "<color=#ee0000><b>{0} errors and {1} exceptions logged</b></color>\n",
                     _errorsLogged,
                     _exceptionsOrAssertsLogged);
             }
             else if (_errorsLogged > 0)
             {
-                statusTextBuilder.AppendFormat(
+                _statusTextBuilder.AppendFormat(
                     "<color=#dbfb76><b>{0} errors logged</b></color>\n",
                     _errorsLogged);
             }
 
-            _statusText.text = statusTextBuilder.ToString();
+            _statusText.text = _statusTextBuilder.ToString();
+        }
+
+        private IEnumerator UpdateBatteryStatusCoroutine()
+        {
+            YieldInstruction updateDelay = new WaitForSeconds(BatteryStatusUpdateDelaySeconds);
+
+            while (true)
+            {
+                yield return updateDelay;
+
+                if (_uploadThread == null)
+                {
+                    continue;
+                }
+
+                // Unity creates a bunch of log spam when querying battery status. Do this
+                // only periodically.
+                _uploadThread.SetBatteryStatus(SystemInfo.batteryLevel, SystemInfo.batteryStatus);
+            }
         }
 
         /// <summary>
@@ -1539,7 +1516,7 @@ namespace MagicLeap.LeapBrush
                     _leapBrushClient = leapBrushClient;
 
                     _uploadThread = new UploadThread(
-                        _leapBrushClient, _shutDownTokenSource, _userName);
+                        _leapBrushClient, _shutDownTokenSource, _userName, _userDisplayName);
                     _uploadThread.Start();
 
                     _downloadThread = new DownloadThread(
@@ -1605,29 +1582,29 @@ namespace MagicLeap.LeapBrush
                 return;
             }
 
-            foreach (UserStateProto otherUserState in resp.UserState)
+            for (var i = 0; i < resp.UserState.Count; i++)
             {
-                HandleOtherUserStateReceived(otherUserState);
+                HandleOtherUserStateReceived(resp.UserState[i]);
             }
 
-            foreach (BrushStrokeAddRequest brushAdd in resp.BrushStrokeAdd)
+            for (var i = 0; i < resp.BrushStrokeAdd.Count; i++)
             {
-                HandleBrushStrokeAddReceived(brushAdd);
+                HandleBrushStrokeAddReceived(resp.BrushStrokeAdd[i]);
             }
 
-            foreach (BrushStrokeRemoveRequest brushRemove in resp.BrushStrokeRemove)
+            for (var i = 0; i < resp.BrushStrokeRemove.Count; i++)
             {
-                HandleBrushStrokeRemoveReceived(brushRemove);
+                HandleBrushStrokeRemoveReceived(resp.BrushStrokeRemove[i]);
             }
 
-            foreach (ExternalModelAddRequest externalModelAdd in resp.ExternalModelAdd)
+            for (var i = 0; i < resp.ExternalModelAdd.Count; i++)
             {
-                HandleExteralModelAddReceived(externalModelAdd);
+                HandleExternalModelAddReceived(resp.ExternalModelAdd[i]);
             }
 
-            foreach (ExternalModelRemoveRequest externalModelRemove in resp.ExternalModelRemove)
+            for (var i = 0; i < resp.ExternalModelRemove.Count; i++)
             {
-                HandlExternalModelRemoveReceived(externalModelRemove);
+                HandlExternalModelRemoveReceived(resp.ExternalModelRemove[i]);
             }
         }
 
@@ -1702,124 +1679,66 @@ namespace MagicLeap.LeapBrush
 
             if (otherUserState.HeadPose != null)
             {
-                HandleOtherUserWearableReceived(otherUserState, anchorGameObject, isServerEcho);
-            }
-            if (otherUserState.ControlPose != null)
-            {
-                HandleOtherUserControllerReceived(otherUserState, anchorGameObject, isServerEcho);
+                HandleValidOtherUserReceived(otherUserState, anchorGameObject, isServerEcho);
             }
         }
 
         /// <summary>
-        /// Handler another user's Wearable pose being received.
+        /// Handler another user's pose and state being received.
         /// </summary>
         /// <param name="otherUserState">The other user's updated state</param>
         /// <param name="anchorGameObject">
-        /// The anchor game object that the other user's wearable pose is attached to.
+        /// The anchor game object that the other user's poses are attached to.
         /// </param>
         /// <param name="isServerEcho">
         /// Whether this event was a server echo from the current user. (Useful for testing
         /// networking).
         /// </param>
-        private void HandleOtherUserWearableReceived(UserStateProto otherUserState,
+        private void HandleValidOtherUserReceived(UserStateProto otherUserState,
             GameObject anchorGameObject, bool isServerEcho)
         {
-            OtherUserWearable otherUserWearable;
+            OtherUserVisual otherUserVisual;
             bool newlyJoinedUser = false;
-            if (!_otherUserWearables.TryGetValue(otherUserState.UserName, out otherUserWearable))
+            if (!_otherUsersMap.TryGetValue(otherUserState.UserName, out otherUserVisual))
             {
                 newlyJoinedUser = true;
                 Debug.Log("Found other user " + otherUserState.UserName);
-                otherUserWearable = Instantiate(_otherUserWearablePrefab,
-                        anchorGameObject.transform)
-                    .GetComponent<OtherUserWearable>();
-                otherUserWearable.gameObject.SetActive(_settingsPanel.IsShowHeadsets);
+                otherUserVisual = Instantiate(_otherUserPrefab, anchorGameObject.transform)
+                    .GetComponent<OtherUserVisual>();
+                otherUserVisual.SetShowHeadset(_preferences.ShowOtherHeadsets.Value);
+                otherUserVisual.ShowHandsAndControls(_preferences.ShowOtherHandsAndControls.Value);
 
-                _otherUserWearables[otherUserState.UserName] = otherUserWearable;
-                otherUserWearable.OnDestroyed += () =>
+                _otherUsersMap[otherUserState.UserName] = otherUserVisual;
+                otherUserVisual.OnDestroyed += () =>
                 {
-                    _otherUserWearables.Remove(otherUserState.UserName);
-                    _startPanel.OnOtherUserCountChanged(_otherUserWearables.Count);
+                    _otherUsersMap.Remove(otherUserState.UserName);
+                    if (_startPanel != null)
+                    {
+                        _startPanel.OnOtherUserCountChanged(_otherUsersMap.Count);
+                    }
                 };
 
-                _startPanel.OnOtherUserCountChanged(_otherUserWearables.Count);
+                _startPanel.OnOtherUserCountChanged(_otherUsersMap.Count);
             }
 
-            if (otherUserWearable.transform.parent != anchorGameObject.transform)
+            if (otherUserVisual.transform.parent != anchorGameObject.transform)
             {
-                otherUserWearable.transform.SetParent(anchorGameObject.transform);
+                otherUserVisual.transform.SetParent(anchorGameObject.transform);
             }
 
-            TransformExtensions.SetLocalPose(otherUserWearable.transform,
-                ProtoUtils.FromProto(otherUserState.HeadPose));
-            if (isServerEcho)
-            {
-                otherUserWearable.transform.localPosition += ServerEchoWearablePositionOffset;
-            }
-
-            if (otherUserState.UserDisplayName != null)
-            {
-                otherUserWearable.SetUserDisplayName(otherUserState.UserDisplayName);
-            }
-
-            if (otherUserState.HeadsetBattery != null)
-            {
-                otherUserWearable.SetHeadsetBattery(otherUserState.HeadsetBattery);
-            }
-
-            otherUserWearable.LastUpdateTime = DateTimeOffset.Now;
+            otherUserVisual.HandleStateUpdate(otherUserState, isServerEcho);
 
             if (newlyJoinedUser && !isServerEcho)
             {
-                PlayOneoffSpatialSound(_userJoinSound, otherUserWearable.transform.position);
+                PlayOneoffSpatialSound(_userJoinAudioPrefab, otherUserVisual.transform.position);
             }
 
-            _floorGrid.FoundContentAtPosition(otherUserWearable.transform.position);
-        }
+            _floorGrid.FoundContentAtPosition(otherUserVisual.WearableTransform.position);
 
-        /// <summary>
-        /// Handler another user's Controller pose being received.
-        /// </summary>
-        /// <param name="otherUserState">The other user's updated state</param>
-        /// <param name="anchorGameObject">
-        /// The anchor game object that the other user's Controller pose is attached to.
-        /// </param>
-        /// <param name="isServerEcho">
-        /// Whether this event was a server echo from the current user. (Useful for testing
-        /// networking).
-        /// </param>
-        private void HandleOtherUserControllerReceived(UserStateProto otherUserState,
-            GameObject anchorGameObject, bool isServerEcho)
-        {
-            OtherUserController otherUserController;
-            if (!_otherUserControllers.TryGetValue(otherUserState.UserName,
-                    out otherUserController))
+            if (otherUserState.ControllerState != null)
             {
-                otherUserController = Instantiate(_otherUserControllerPrefab,
-                        anchorGameObject.transform)
-                    .GetComponent<OtherUserController>();
-                otherUserController.gameObject.SetActive(_settingsPanel.IsShowControllers);
-
-                _otherUserControllers[otherUserState.UserName] = otherUserController;
-                otherUserController.OnDestroyed += () =>
-                    _otherUserControllers.Remove(otherUserState.UserName);
+                _floorGrid.FoundContentAtPosition(otherUserVisual.ControllerTransform.position);
             }
-
-            if (otherUserController.transform.parent != anchorGameObject.transform)
-            {
-                otherUserController.transform.SetParent(anchorGameObject.transform);
-            }
-
-            TransformExtensions.SetLocalPose(otherUserController.transform,
-                ProtoUtils.FromProto(otherUserState.ControlPose));
-            if (isServerEcho)
-            {
-                otherUserController.transform.localPosition += ServerEchoPositionOffset;
-            }
-
-            otherUserController.LastUpdateTime = DateTimeOffset.Now;
-
-            _floorGrid.FoundContentAtPosition(otherUserController.transform.position);
         }
 
         /// <summary>
@@ -1854,7 +1773,7 @@ namespace MagicLeap.LeapBrush
             {
                 GameObject brushStrokePrefab =
                     brushAdd.BrushStroke.Type == BrushStrokeProto.Types.BrushType.Poly ?
-                        _polyBrushTool.Prefab : _scribbleBrushTool.Prefab;
+                        _toolManager.PolyBrushPrefab : _toolManager.ScribbleBrushPrefab;
                 brushStroke = Instantiate(brushStrokePrefab, anchorGameObject.transform)
                     .GetComponent<BrushBase>();
                 brushStroke.AnchorId = brushAdd.BrushStroke.AnchorId;
@@ -1864,7 +1783,7 @@ namespace MagicLeap.LeapBrush
 
                 Color32 strokeColor = brushAdd.BrushStroke.StrokeColorRgb != 0 ?
                     ColorUtils.FromRgbaUint(brushAdd.BrushStroke.StrokeColorRgb) :
-                    _brushColorManager.FallbackBrushColor;
+                    _toolManager.FallbackBrushColor;
                 Color32 fillColor = brushAdd.BrushStroke.FillColorRgba != 0 ?
                     ColorUtils.FromRgbaUint(brushAdd.BrushStroke.FillColorRgba) :
                     Color.clear;
@@ -1874,7 +1793,7 @@ namespace MagicLeap.LeapBrush
 
                 if (brushAdd.BrushStroke.StrokeColorRgb != 0 && !isServerEcho)
                 {
-                    _brushColorManager.OtherUserBrushColorObserved(strokeColor);
+                    _toolManager.OtherUserBrushColorObserved(strokeColor);
                 }
 
                 _brushStrokeMap[brushAdd.BrushStroke.Id] = brushStroke;
@@ -1894,10 +1813,10 @@ namespace MagicLeap.LeapBrush
 
                 brushStroke.SetPosesAndTruncate(brushAdd.BrushStroke.StartIndex, poses, true);
 
-                foreach (Pose pose in poses)
+                for (var i = 0; i < poses.Length; i++)
                 {
                     _floorGrid.FoundContentAtPosition(
-                        pose.GetTransformedBy(anchorGameObject.transform).position);
+                        poses[i].GetTransformedBy(anchorGameObject.transform).position);
                 }
             }
         }
@@ -1913,7 +1832,8 @@ namespace MagicLeap.LeapBrush
             {
                 Debug.Log("Deleting brush stroke " + brushRemove.Id + " from anchor "
                           + brushRemove.AnchorId);
-                PlayOneoffSpatialSound(_eraseSound, brushStroke.gameObject.transform.position);
+                PlayOneoffSpatialSound(_eraseAudioPrefab,
+                    brushStroke.gameObject.transform.position);
                 Destroy(brushStroke.gameObject);
             }
         }
@@ -1922,7 +1842,7 @@ namespace MagicLeap.LeapBrush
         /// Handle a new or updated 3D model being received from the server.
         /// </summary>
         /// <param name="externalModelAdd">The 3D model to add or update.</param>
-        private void HandleExteralModelAddReceived(ExternalModelAddRequest externalModelAdd)
+        private void HandleExternalModelAddReceived(ExternalModelAddRequest externalModelAdd)
         {
             GameObject anchorGameObject;
             if (!_anchorsManager.TryGetAnchorGameObject(externalModelAdd.Model.AnchorId,
@@ -1955,11 +1875,7 @@ namespace MagicLeap.LeapBrush
                 poseAndScale.Pose.position += ServerEchoPositionOffset;
             }
 
-            TransformExtensions.SetLocalPose(externalModel.gameObject.transform, poseAndScale.Pose);
-            if (!isServerEcho)
-            {
-                externalModel.gameObject.transform.localScale = poseAndScale.Scale;
-            }
+            externalModel.SetPoseAndScale(poseAndScale);
         }
 
         /// <summary>
@@ -1974,28 +1890,9 @@ namespace MagicLeap.LeapBrush
             {
                 Debug.Log("Deleting external model " + externalModelRemove.Id
                           + " from anchor " + externalModelRemove.AnchorId);
-                PlayOneoffSpatialSound(_eraseSound, externalModel.gameObject.transform.position);
+                PlayOneoffSpatialSound(_eraseAudioPrefab,
+                    externalModel.gameObject.transform.position);
                 Destroy(externalModel.gameObject);
-            }
-        }
-
-        /// <summary>
-        /// Convert a current tool enum value to the protocol buffer equivalent.
-        /// </summary>
-        private static UserStateProto.Types.ToolState ToProto(Tool currentTool)
-        {
-            switch (currentTool)
-            {
-                case Tool.Eraser:
-                    return UserStateProto.Types.ToolState.Eraser;
-                case Tool.Laser:
-                    return UserStateProto.Types.ToolState.Laser;
-                case Tool.BrushScribble:
-                    return UserStateProto.Types.ToolState.BrushScribble;
-                case Tool.BrushPoly:
-                    return UserStateProto.Types.ToolState.BrushPoly;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(currentTool), currentTool, null);
             }
         }
 
@@ -2011,6 +1908,14 @@ namespace MagicLeap.LeapBrush
                     break;
                 case LogType.Assert:
                 case LogType.Exception:
+#if UNITY_STANDALONE && !UNITY_EDITOR
+                    if (condition.StartsWith("DllNotFoundException: MagicLeapXrProvider")
+                        // TODO: Support compilation of the japaneseime_unity for standalone apps
+                        || condition.StartsWith("DllNotFoundException: japaneseime_unity"))
+                    {
+                        break;
+                    }
+#endif
                     _exceptionsOrAssertsLogged += 1;
                     break;
             }

@@ -3,30 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using GLTFast;
 using UnityEngine;
-using UnityGLTF;
-using UnityGLTF.Loader;
+using UnityEngine.Rendering;
 
-namespace MagicLeap
+namespace MagicLeap.LeapBrush
 {
     /// <summary>
     /// Manager for fetching the list of available 3D models to load, gltf model loader, etc.
     /// </summary>
     public class External3DModelManager : MonoBehaviour
     {
-        public bool Multithreaded = false;
-        public int MaximumLod = 300;
-        public int Timeout = 8;
-        public GLTFSceneImporter.ColliderType Collider = GLTFSceneImporter.ColliderType.Mesh;
-        public GameObject _external3DModelPrefab_;
+        [SerializeField]
+        private GameObject _external3DModelPrefab;
 
-        public ImporterFactory Factory = null;
+        [Serializable]
+        public class BuiltIn3DModel
+        {
+            public GameObject Prefab;
+            public float Scale = 1.0f;
+        }
 
         [SerializeField]
-        private Shader _shaderOverride = null;
-
-        [SerializeField]
-        private GameObject[] _builtIn3DModels = Array.Empty<GameObject>();
+        private BuiltIn3DModel[] _builtIn3DModels = Array.Empty<BuiltIn3DModel>();
 
         private class ModelCacheEntry
         {
@@ -45,6 +44,7 @@ namespace MagicLeap
             public string FileName;
             public string Path;
             public GameObject Prefab;
+            public float Scale = 1.0f;
         }
 
         public ModelInfo[] Models => _models;
@@ -100,7 +100,7 @@ namespace MagicLeap
 
         public External3DModel LoadModelAsync(string fileName, Transform parentTransform)
         {
-            External3DModel externalModel = Instantiate(_external3DModelPrefab_, parentTransform)
+            External3DModel externalModel = Instantiate(_external3DModelPrefab, parentTransform)
                 .GetComponent<External3DModel>();
             externalModel.Initialize(fileName);
 
@@ -111,8 +111,8 @@ namespace MagicLeap
 
         private IEnumerator LoadGltfCoroutine(string fileName, External3DModel externalModel)
         {
-            // TODO(ghazen): This is a hack: Instead, alter External3DModel to support immediate
-            // load completion callbacks
+            // Load the model on a secondary frame to allow External3DModel to initialize
+            // correctly.
             yield return new WaitForEndOfFrame();
 
             LoadGltfSafe(fileName, externalModel);
@@ -132,17 +132,9 @@ namespace MagicLeap
 
         private async Task LoadGltf(string fileName, External3DModel external3DModel)
         {
-            Factory = Factory ?? ScriptableObject.CreateInstance<DefaultImporterFactory>();
-
             Debug.LogFormat("Trying to load file {0}", fileName);
 
-            var importOptions = new ImportOptions
-            {
-                AsyncCoroutineHelper = gameObject.GetComponent<AsyncCoroutineHelper>() ??
-                                       gameObject.AddComponent<AsyncCoroutineHelper>()
-            };
-
-            GLTFSceneImporter sceneImporter = null;
+            GltfImport gltfImporter = new GltfImport(logger: new ConsoleLogger());
             ModelCacheEntry cacheEntry = null;
             try
             {
@@ -151,8 +143,7 @@ namespace MagicLeap
                     if (cacheEntry.Model != null)
                     {
                         Debug.LogFormat("Loaded model {0} from cache", fileName);
-                        Instantiate(cacheEntry.Model, external3DModel.transform).SetActive(true);
-                        external3DModel.OnLoadCompleted();
+                        InstantiateModelInstanceAndAttach(external3DModel, cacheEntry.Model);
                         return;
                     }
 
@@ -167,36 +158,47 @@ namespace MagicLeap
                 if (GetBuiltIn3DModelInfos().TryGetValue(fileName, out ModelInfo modelInfo))
                 {
                     cacheEntry.Model = Instantiate(modelInfo.Prefab, transform);
+                    cacheEntry.Model.transform.localScale = Vector3.one * modelInfo.Scale;
                 }
 
                 if (cacheEntry.Model == null)
                 {
                     string gltfPath = Path.Join(Application.persistentDataPath, fileName);
 
-                    importOptions.DataLoader = new FileLoader(Path.GetDirectoryName(gltfPath));
-
-                    sceneImporter = Factory.CreateSceneImporter(fileName, importOptions);
-
-                    sceneImporter.SceneParent = transform;
-                    sceneImporter.Collider = Collider;
-                    sceneImporter.MaximumLod = MaximumLod;
-                    sceneImporter.Timeout = Timeout;
-                    sceneImporter.IsMultithreaded = Multithreaded;
-                    sceneImporter.CustomShaderName = _shaderOverride ? _shaderOverride.name : null;
-
-                    await sceneImporter.LoadSceneAsync();
-
-                    cacheEntry.Model = sceneImporter.LastLoadedScene;
-                }
-
-                // Override the shaders on all materials if a shader is provided
-                if (_shaderOverride != null)
-                {
-                    Renderer[] renderers = cacheEntry.Model.GetComponentsInChildren<Renderer>();
-                    foreach (Renderer renderer in renderers)
+                    if (!File.Exists(gltfPath))
                     {
-                        renderer.sharedMaterial.shader = _shaderOverride;
+                        throw new FileNotFoundException();
                     }
+
+                    bool result = await gltfImporter.Load(new Uri(new Uri("file://"), gltfPath));
+                    if (!result)
+                    {
+                        throw new Exception("Gltf Load Failed");
+                    }
+
+                    GameObject instantiateParent = new GameObject("InstantiateTemp");
+                    instantiateParent.transform.SetParent(transform);
+
+                    bool instantiateResult = gltfImporter.InstantiateMainScene(
+                        instantiateParent.transform);
+                    if (!instantiateResult)
+                    {
+                        throw new Exception("Gltf InstantiateMainScene failed");
+                    }
+
+                    if (instantiateParent.transform.childCount == 0)
+                    {
+                        throw new Exception("Gltf InstantiateMainScene created no content");
+                    }
+
+                    if (instantiateParent.transform.childCount > 1)
+                    {
+                        Debug.LogWarning($"More than one scene loaded for {fileName}");
+                    }
+
+                    cacheEntry.Model = instantiateParent.transform.GetChild(0).gameObject;
+                    cacheEntry.Model.transform.SetParent(transform);
+                    Destroy(instantiateParent);
                 }
 
                 Animation[] animations = cacheEntry.Model.GetComponents<Animation>();
@@ -205,24 +207,26 @@ namespace MagicLeap
                     animations[0].Play();
                 }
 
-                MeshCollider[] colliders = cacheEntry.Model.GetComponentsInChildren<MeshCollider>();
-                foreach (MeshCollider collider in colliders)
+                foreach (Renderer renderer in
+                         cacheEntry.Model.GetComponentsInChildren<Renderer>())
                 {
-                    Rigidbody rigidbody = collider.gameObject.AddComponent<Rigidbody>();
-                    rigidbody.useGravity = false;
-                    rigidbody.isKinematic = true;
-                    rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+                    if (renderer is MeshRenderer
+                        && !renderer.gameObject.GetComponent<MeshCollider>())
+                    {
+                        renderer.gameObject.AddComponent<MeshCollider>();
+                    }
+
+                    renderer.receiveShadows = false;
+                    renderer.shadowCastingMode = ShadowCastingMode.Off;
                 }
 
                 cacheEntry.Model.SetActive(false);
 
-                Instantiate(cacheEntry.Model, external3DModel.transform).SetActive(true);
-                external3DModel.OnLoadCompleted();
+                InstantiateModelInstanceAndAttach(external3DModel, cacheEntry.Model);
 
                 foreach (External3DModel otherModel in cacheEntry.ModelLoadQueue)
                 {
-                    Instantiate(cacheEntry.Model, otherModel.transform).SetActive(true);
-                    otherModel.OnLoadCompleted();
+                    InstantiateModelInstanceAndAttach(otherModel, cacheEntry.Model);
                 }
                 cacheEntry.ModelLoadQueue.Clear();
             }
@@ -256,29 +260,30 @@ namespace MagicLeap
                     _modelCache.Remove(fileName);
                 }
             }
-            finally
-            {
-                if (importOptions.DataLoader != null)
-                {
-                    sceneImporter?.Dispose();
-                    importOptions.DataLoader = null;
-                }
-            }
+        }
+
+        private void InstantiateModelInstanceAndAttach(
+            External3DModel external3DModel, GameObject cachedModel)
+        {
+            GameObject modelInstance = Instantiate(cachedModel, external3DModel.transform);
+            modelInstance.SetActive(true);
+            external3DModel.OnLoadCompleted(modelInstance);
         }
 
         private Dictionary<string, ModelInfo> GetBuiltIn3DModelInfos()
         {
             Dictionary<string, ModelInfo> modelInfos = new();
-            foreach (GameObject gameObject in _builtIn3DModels)
+            foreach (BuiltIn3DModel builtIn3dModel in _builtIn3DModels)
             {
-                if (gameObject == null)
+                if (builtIn3dModel.Prefab == null)
                 {
                     Debug.LogError("Built in 3D Model asset missing!");
                     continue;
                 }
                 ModelInfo modelInfo = new();
-                modelInfo.FileName = gameObject.name + ".glb";
-                modelInfo.Prefab = gameObject;
+                modelInfo.FileName = builtIn3dModel.Prefab.name + ".glb";
+                modelInfo.Prefab = builtIn3dModel.Prefab;
+                modelInfo.Scale = builtIn3dModel.Scale;
                 modelInfos.Add(modelInfo.FileName, modelInfo);
             }
 

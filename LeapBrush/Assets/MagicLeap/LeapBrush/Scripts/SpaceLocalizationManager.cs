@@ -11,23 +11,25 @@ namespace MagicLeap.LeapBrush
     /// </summary>
     public class SpaceLocalizationManager : MonoBehaviour
     {
-        public AnchorsApi.LocalizationInfo LocalizationInfo => _localizationInfo;
+        public AnchorsApi.LocalizationInfo LocalizationInfo
+        {
+            get
+            {
+                lock (_localizationInfoLock)
+                {
+                    return _localizationInfo;
+                }
+            }
+        }
 
         public event Action<AnchorsApi.LocalizationInfo> OnLocalizationInfoChanged;
 
         private const float LocalizationStatusUpdateDelaySeconds = .05f;
 
+        private AnchorsApi.LocalizationInfo _pendingLocalizationInfo;
         private AnchorsApi.LocalizationInfo _localizationInfo;
+        private object _localizationInfoLock = new();
         private IEnumerator _updateLocalizationStatusCoroutine;
-
-        private void Awake()
-        {
-#if !UNITY_EDITOR && UNITY_ANDROID
-            // Side effect: Ensure MLDevice is initialized early
-            Debug.Log("MapLocalizationManager Awake: MLDevice Platform Level: "
-                      + MLDevice.PlatformLevel);
-#endif
-        }
 
         void Start()
         {
@@ -42,32 +44,42 @@ namespace MagicLeap.LeapBrush
 
         private IEnumerator UpdateLocalizationStatusPeriodically()
         {
+            Action updateLocalizationAction = UpdateLocalizationStatusOnWorkerThread;
+            YieldInstruction localizationUpdateDelay = new WaitForSeconds(
+                LocalizationStatusUpdateDelaySeconds);
+
             while (true)
             {
-                ThreadDispatcher.ScheduleWork(UpdateLocalizationStatusOnWorkerThread);
+                ThreadDispatcher.ScheduleWork(updateLocalizationAction);
 
                 // Wait before querying again for localization status
-                yield return new WaitForSeconds(LocalizationStatusUpdateDelaySeconds);
+                yield return localizationUpdateDelay;
             }
         }
 
         private void UpdateLocalizationStatusOnWorkerThread()
         {
-            AnchorsApi.LocalizationInfo localizationInfo;
-            MLResult result = AnchorsApi.GetLocalizationInfo(out localizationInfo);
-            if (result.IsOk)
+            MLResult result = AnchorsApi.GetLocalizationInfo(ref _pendingLocalizationInfo);
+            if (!result.IsOk)
             {
-                ThreadDispatcher.ScheduleMain(() => UpdateLocalizationStatusOnMainThread(
-                    localizationInfo));
+                return;
+            }
+
+            lock (_localizationInfoLock)
+            {
+                if (!_localizationInfo.Equals(_pendingLocalizationInfo))
+                {
+                    _localizationInfo = _pendingLocalizationInfo.Clone();
+                    ThreadDispatcher.ScheduleMain(DispatchLocalizationInfoChangeOnMainThread);
+                }
             }
         }
 
-        private void UpdateLocalizationStatusOnMainThread(AnchorsApi.LocalizationInfo info)
+        private void DispatchLocalizationInfoChangeOnMainThread()
         {
-            if (!_localizationInfo.Equals(info))
+            lock (_localizationInfoLock)
             {
-                _localizationInfo = info;
-                OnLocalizationInfoChanged?.Invoke(info);
+                OnLocalizationInfoChanged?.Invoke(_localizationInfo);
             }
         }
     }

@@ -55,7 +55,7 @@
         ]},
         {"KeyRow":[
           {"KeyTypeID":"kShift", "DefaultChar":"Shift"},
-          {"KeyTypeID":"kSubPanel", "DefaultChar":"“", "KeyButtonStyle":"kMedium", "SubPanelID":"ArAccents"},
+          {"KeyTypeID":"kSubPanel", "DefaultChar":"“", "KeyButtonStyle":"kMedium", "SubPanelID":"ArAccents", "FontSizeMax":12, "LabelMargins":{"Top":-5.0, "Bottom":3.0}, "ShowAccentEllipse":"true"},
           {"KeyTypeID":"kCharacter", "DefaultChar":"ظ", "AlternateKeySelectorID":"arDhaKeys"},
           {"KeyTypeID":"kCharacter", "DefaultChar":"ط", "AlternateKeySelectorID":"arTa2Keys"},
           {"KeyTypeID":"kCharacter", "DefaultChar":"ذ", "AlternateKeySelectorID":"arDhalKeys"},
@@ -70,8 +70,7 @@
         ]},
         {"KeyRow":[
           {"KeyTypeID":"kChangeLocale", "DefaultChar":"Lan", "SubPanelID":"LanguagePanel"},
-          {"KeyTypeID":"kSpacebar", "WidthWeight":11.0},
-          {"KeyTypeID":"kRayDrumstickSwitch", "DefaultChar":"Switch"},
+          {"KeyTypeID":"kSpacebar", "WidthWeight":12.0},
           {"KeyTypeID":"kHideKeyboard", "DefaultChar":"HideKeyboard"}
         ]}
       ],
@@ -105,14 +104,14 @@
         ]},
         {"KeyRow":[
           {"KeyTypeID":"kTab", "DefaultChar":"Tab"},
-          {"KeyTypeID":"kTashkeel", "DefaultChar": "َ"},
-          {"KeyTypeID":"kTashkeel", "DefaultChar": "ً"},
-          {"KeyTypeID":"kTashkeel", "DefaultChar":"ِ"},
-          {"KeyTypeID":"kTashkeel", "DefaultChar":"ٍ"},
-          {"KeyTypeID":"kTashkeel", "DefaultChar": "ُ"},
-          {"KeyTypeID":"kTashkeel", "DefaultChar": "ٌ"},
-          {"KeyTypeID":"kTashkeel", "DefaultChar": "ْ"},
-          {"KeyTypeID":"kTashkeel", "DefaultChar": "ّ"},
+          {"KeyTypeID":"kTashkeel", "DefaultChar": "َ", "LabelMargins":{"Top":-5.0,"Right":3.5}, "ShowAccentEllipse":"true"},
+          {"KeyTypeID":"kTashkeel", "DefaultChar": "ً", "LabelMargins":{"Top":-5.0,"Right":3.5}, "ShowAccentEllipse":"true"},
+          {"KeyTypeID":"kTashkeel", "DefaultChar":"ِ", "LabelMargins":{"Bottom":-5.0,"Right":2.5}, "ShowAccentEllipse":"true"},
+          {"KeyTypeID":"kTashkeel", "DefaultChar":"ٍ", "LabelMargins":{"Bottom":-5.0,"Right":2.5}, "ShowAccentEllipse":"true"},
+          {"KeyTypeID":"kTashkeel", "DefaultChar": "ُ", "LabelMargins":{"Top":-5.0,"Right":3.5}, "ShowAccentEllipse":"true"},
+          {"KeyTypeID":"kTashkeel", "DefaultChar": "ٌ", "LabelMargins":{"Top":-5.0,"Right":1.15}, "ShowAccentEllipse":"true"},
+          {"KeyTypeID":"kTashkeel", "DefaultChar": "ْ", "LabelMargins":{"Top":-5.0,"Right":1.15}, "ShowAccentEllipse":"true"},
+          {"KeyTypeID":"kTashkeel", "DefaultChar": "ّ", "LabelMargins":{"Top":-5.0,"Right":1.15}, "ShowAccentEllipse":"true"},
           {"KeyTypeID":"kCharacter", "DefaultChar":"]"},
           {"KeyTypeID":"kCharacter", "DefaultChar":"["},
           {"KeyTypeID":"kCharacter", "DefaultChar":"}", "KeyButtonStyle":"kMedium"},
@@ -124,10 +123,10 @@
           {"KeyTypeID":"kCharacter", "DefaultChar":"»"},
           {"KeyTypeID":"kCharacter", "DefaultChar":"«"},
           {"KeyTypeID":"kCharacter", "DefaultChar":"ى"},
-          {"KeyTypeID":"kTashkeel", "DefaultChar":" ٓ"},
-          {"KeyTypeID":"kTashkeel", "DefaultChar":" ٰ"},
+          {"KeyTypeID":"kTashkeel", "DefaultChar":" ٓ", "LabelMargins":{"Top":-5.0,"Right":3.5}, "ShowAccentEllipse":"true"},
+          {"KeyTypeID":"kTashkeel", "DefaultChar":" ٰ", "LabelMargins":{"Top":-5.0, "Right":1.15}, "ShowAccentEllipse":"true"},
           {"KeyTypeID":"kCharacter", "DefaultChar":"آ"},
-          {"KeyTypeID":"kTashkeel", "DefaultChar":"ـ"},
+          {"KeyTypeID":"kCharacter", "DefaultChar":"ـ"},
           {"KeyTypeID":"kCharacter", "DefaultChar":"٫"},
           {"KeyTypeID":"kCharacter", "DefaultChar":"٬"},
           {"KeyTypeID":"kCharacter", "DefaultChar":":"},
@@ -151,8 +150,7 @@
         ]},
         {"KeyRow":[
           {"KeyTypeID":"kChangeLocale", "DefaultChar":"Lan", "SubPanelID":"LanguagePanel"},
-          {"KeyTypeID":"kSpacebar", "WidthWeight":11.0},
-          {"KeyTypeID":"kRayDrumstickSwitch", "DefaultChar":"Switch"},
+          {"KeyTypeID":"kSpacebar", "WidthWeight":12.0},
           {"KeyTypeID":"kHideKeyboard", "DefaultChar":"HideKeyboard"}
         ]}
       ],
@@ -217,7 +215,7 @@
         ]},
         {"KeyRow":[
           {"KeyTypeID":"kShift", "DefaultChar":"Shift"},
-          {"KeyTypeID":"kSubPanel", "DefaultChar":"“", "KeyButtonStyle":"kMedium", "SubPanelID":"ArAccents"},
+          {"KeyTypeID":"kSubPanel", "DefaultChar":"“", "KeyButtonStyle":"kMedium", "SubPanelID":"ArAccents", "FontSizeMax":12, "LabelMargins":{"Top":-5.0, "Bottom":3.0}, "ShowAccentEllipse":"true"},
           {"KeyTypeID":"kCharacter", "DefaultChar":"ظ", "AlternateKeySelectorID":"arDhaKeys"},
           {"KeyTypeID":"kCharacter", "DefaultChar":"ط", "AlternateKeySelectorID":"arTa2Keys"},
           {"KeyTypeID":"kCharacter", "DefaultChar":"ذ", "AlternateKeySelectorID":"arDhalKeys"},
@@ -232,8 +230,7 @@
         ]},
         {"KeyRow":[
           {"KeyTypeID":"kChangeLocale", "DefaultChar":"Lan", "SubPanelID":"LanguagePanel"},
-          {"KeyTypeID":"kSpacebar", "WidthWeight":11.0},
-          {"KeyTypeID":"kRayDrumstickSwitch", "DefaultChar":"Switch"},
+          {"KeyTypeID":"kSpacebar", "WidthWeight":12.0},
           {"KeyTypeID":"kHideKeyboard", "DefaultChar":"HideKeyboard"}
         ]}
       ],
@@ -268,7 +265,8 @@
         {
           "PageLayoutID":"kCapsLock",
           "KeyPage":[
-            {"KeyTypeID":"kCapsLock", "PageLayoutID":"kLowerLetters"}
+            {"KeyTypeID":"kCapsLock", "PageLayoutID":"kLowerLetters"},
+            {"KeyTypeID":"kShift", "PageLayoutID":"kUpperLetters"}
           ]
         }
       ],
@@ -293,19 +291,23 @@
     {"KeyTypeID":"kJPSpacebar", "AudioAssetType": "kSpace"},
     {"KeyTypeID":"kTab", "AudioAssetType": "kTab"},
     {"KeyTypeID":"kCharacterSpecial", "AudioAssetType": "kKeyDown"},
-    {"KeyTypeID":"kSuggestion", "AudioAssetType": "kSelect"},
+    {"KeyTypeID":"kSuggestion", "AudioAssetType": "kSelectExited"},
     {"KeyTypeID":"kHiragana", "AudioAssetType": "kKeyDown"},
     {"KeyTypeID":"kKatakana", "AudioAssetType": "kKeyDown"},
     {"KeyTypeID":"kBlank", "AudioAssetType": "kKeyDown"},
     {"KeyTypeID":"kJPNumSym", "AudioAssetType": "kSwitchLayout"},
     {"KeyTypeID":"kJPEnter", "AudioAssetType": "kSubmit"},
     {"KeyTypeID":"kJPNewLine", "AudioAssetType": "kSubmit"},
-    {"KeyTypeID":"kRayDrumstickSwitch", "AudioAssetType": "kKeyDown"},
     {"KeyTypeID":"kJPNextSuggestion", "AudioAssetType": "kNav"},
     {"KeyTypeID":"kAccent", "AudioAssetType": "kKeyDown"},
     {"KeyTypeID":"kChangeLocaleEn", "AudioAssetType": "kSwitchLayout"},
     {"KeyTypeID":"kChangeLocaleJP", "AudioAssetType": "kSwitchLayout"},
     {"KeyTypeID":"kChangeLocaleAR", "AudioAssetType": "kSwitchLayout"},
+    {"KeyTypeID":"kChangeLocaleDE", "AudioAssetType": "kSwitchLayout"},
+    {"KeyTypeID":"kChangeLocaleFR", "AudioAssetType": "kSwitchLayout"},
+    {"KeyTypeID":"kChangeLocaleES", "AudioAssetType": "kSwitchLayout"},
+    {"KeyTypeID":"kChangeLocalePT", "AudioAssetType": "kSwitchLayout"},
+    {"KeyTypeID":"kChangeLocaleIT", "AudioAssetType": "kSwitchLayout"},
     {"KeyTypeID":"kPageDownExpanded", "AudioAssetType": "kNav"},
     {"KeyTypeID":"kPageUpExpanded", "AudioAssetType": "kNav"},
     {"KeyTypeID":"kPageUpCollapsed", "AudioAssetType": "kNav"},

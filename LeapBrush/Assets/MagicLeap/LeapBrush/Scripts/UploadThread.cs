@@ -27,6 +27,12 @@ namespace MagicLeap.LeapBrush
             }
         }
 
+        public enum HandType
+        {
+            Right,
+            Left
+        }
+
         private const float MinServerUpdateIntervalSeconds = .03f;
         private const float ServerPingIntervalSeconds = 2.0f;
 
@@ -38,7 +44,8 @@ namespace MagicLeap.LeapBrush
         private readonly object _lock = new();
         private bool _lastUploadOk;
         private string _headClosestAnchorId;
-        private Pose _controlPoseRelativeToAnchor = Pose.identity;
+        private ControllerStateProto _controllerState;
+        private Dictionary<HandType, HandStateProto> _handStateMap = new();
         private Pose _headPoseRelativeToAnchor = Pose.identity;
         private bool _serverEchoEnabled;
         private string _userDisplayName;
@@ -50,23 +57,37 @@ namespace MagicLeap.LeapBrush
         private LinkedList<BrushStrokeRemoveRequest> _brushStrokesToRemove = new();
         private Dictionary<string, ExternalModelProto> _externalModelsToUpdate = new();
         private LinkedList<ExternalModelRemoveRequest> _externalModelsToRemove = new();
-        private BrushStrokeProto _currentBrushStroke;
+        private Dictionary<BrushBase, BrushStrokeProto> _currentBrushStrokes = new();
 
         public object Lock => _lock;
-        public BrushStrokeProto CurrentBrushStroke
+
+        /// <summary>
+        /// Get the current brush stroke proto in use for <paramref name="brushTool" />
+        /// The caller must hold <see cref="Lock"/> when using this return value.
+        /// </summary>
+        public BrushStrokeProto GetCurrentBrushStroke(BrushBase brushTool)
         {
-            get => _currentBrushStroke;
-            set => _currentBrushStroke = value;
+            return _currentBrushStrokes.GetValueOrDefault(brushTool, null);
+        }
+
+        /// <summary>
+        /// Set the current brush stroke proto in use for <paramref name="brushTool" />
+        /// The caller must hold <see cref="Lock"/> while calling this method.
+        /// </summary>
+        public void SetCurrentBrushStroke(BrushBase brushTool, BrushStrokeProto brushStrokeProto)
+        {
+            _currentBrushStrokes[brushTool] = brushStrokeProto;
         }
 
         public UploadThread(LeapBrushApiBase.LeapBrushClient leapBrushClient,
             CancellationTokenSource shutDownTokenSource,
-            string userName)
+            string userName, string userDisplayName)
         {
             _thread = new Thread(Run);
             _leapBrushClient = leapBrushClient;
             _shutDownTokenSource = shutDownTokenSource;
             _userName = userName;
+            _userDisplayName = userDisplayName;
         }
 
         public void Start() => _thread.Start();
@@ -80,11 +101,61 @@ namespace MagicLeap.LeapBrush
             }
         }
 
-        public void SetControlPoseRelativeToAnchor(Pose pose)
+        public void ClearAnchorAttachedStates()
         {
             lock (_lock)
             {
-                _controlPoseRelativeToAnchor = pose;
+                _headClosestAnchorId = null;
+                _headPoseRelativeToAnchor = Pose.identity;
+                _controllerState = null;
+                _handStateMap.Clear();
+            }
+        }
+
+        public void SetControllerStateRelativeToAnchor(Pose pose, float toolOffsetZ,
+            float selectProgress, Vector3[] rayPoints)
+        {
+            lock (_lock)
+            {
+                if (_controllerState == null)
+                {
+                    _controllerState = new();
+                }
+                _controllerState.Pose = ProtoUtils.ToProto(pose, _controllerState.Pose);
+                _controllerState.ToolOffsetZ = toolOffsetZ;
+                _controllerState.SelectProgress = selectProgress;
+                ProtoUtils.ToProto(rayPoints, _controllerState.RayPoints);
+            }
+        }
+
+        public void ClearControllerState()
+        {
+            lock (_lock)
+            {
+                _controllerState = null;
+            }
+        }
+
+        public void SetHandStateRelativeToAnchor(HandType hand, Pose toolPose,
+            float selectProgress, Vector3[] rayPoints)
+        {
+            lock (_lock)
+            {
+                if (!_handStateMap.TryGetValue(hand, out HandStateProto handState))
+                {
+                    handState = _handStateMap[hand] = new HandStateProto();
+                }
+                handState.ToolPose = ProtoUtils.ToProto(toolPose, handState.ToolPose);
+                handState.SelectProgress = selectProgress;
+                ProtoUtils.ToProto(rayPoints, handState.RayPoints);
+            }
+        }
+
+        public void ClearHandState(HandType hand)
+        {
+            lock (_lock)
+            {
+                _handStateMap.Remove(hand);
             }
         }
 
@@ -141,7 +212,7 @@ namespace MagicLeap.LeapBrush
                 _spaceInfo.SpaceName = localizationInfo.SpaceName ?? "";
                 _spaceInfo.MappingMode = ProtoUtils.ToProto(localizationInfo.MappingMode);
                 _spaceInfo.TargetSpaceOrigin = ProtoUtils.ToProto(
-                    localizationInfo.TargetSpaceOriginPose);
+                    localizationInfo.TargetSpaceOriginPose, _spaceInfo.TargetSpaceOrigin);
                 _spaceInfo.UsingImportedAnchors = isUsingImportedAnchors;
 
                 if (_spaceInfo.Anchor.Count > anchors.Length)
@@ -160,7 +231,7 @@ namespace MagicLeap.LeapBrush
 
                     AnchorProto anchorProto = _spaceInfo.Anchor[i];
                     anchorProto.Id = anchor.Id;
-                    anchorProto.Pose = ProtoUtils.ToProto(anchor.Pose);
+                    anchorProto.Pose = ProtoUtils.ToProto(anchor.Pose, anchorProto.Pose);
                 }
             }
         }
@@ -293,9 +364,7 @@ namespace MagicLeap.LeapBrush
                     sendUpdate = !_lastUploadOk || lastUpdateTime
                         + TimeSpan.FromSeconds(ServerPingIntervalSeconds) < DateTimeOffset.Now;
 
-                    if (UpdateUserStateGetWasChanged(userState, _userDisplayName, _headClosestAnchorId,
-                            _headPoseRelativeToAnchor, _controlPoseRelativeToAnchor,
-                            _currentToolState, _currentToolColor, _batteryStatus))
+                    if (UpdateUserStateGetWasChangedLocked(userState))
                     {
                         sendUpdate = true;
                     }
@@ -312,27 +381,49 @@ namespace MagicLeap.LeapBrush
                         updateRequest.Echo = _serverEchoEnabled;
                     }
 
-                    if (_currentBrushStroke != null && _currentBrushStroke.BrushPose.Count > 0)
+                    int maxPendingBrushPoses = 0;
+                    foreach (var entry in _currentBrushStrokes)
                     {
-                        sendUpdate = true;
-                        BrushStrokeProto brushStrokeProto = new();
-                        if (_currentBrushStroke.StartIndex == 0)
+                        if (entry.Value != null)
                         {
-                            brushStrokeProto.MergeFrom(_currentBrushStroke);
+                            maxPendingBrushPoses = Math.Max(
+                                maxPendingBrushPoses, entry.Value.BrushPose.Count);
+                        }
+                    }
+
+                    // Send the pending brush stroke that has the largest number of
+                    // pending brush poses present. This will ensure each upload cycle picks
+                    // off the largest pending brush avoiding starvation.
+                    foreach (var entry in _currentBrushStrokes)
+                    {
+                        if (entry.Value == null
+                            || entry.Value.BrushPose.Count < maxPendingBrushPoses)
+                        {
+                            continue;
+                        }
+
+                        sendUpdate = true;
+
+                        BrushStrokeProto brushStrokeProto = new();
+                        if (entry.Value.StartIndex == 0)
+                        {
+                            brushStrokeProto.MergeFrom(entry.Value);
                         }
                         else
                         {
-                            brushStrokeProto.Id = _currentBrushStroke.Id;
-                            brushStrokeProto.AnchorId = _currentBrushStroke.AnchorId;
-                            brushStrokeProto.StartIndex = _currentBrushStroke.StartIndex;
-                            brushStrokeProto.BrushPose.AddRange(_currentBrushStroke.BrushPose);
+                            brushStrokeProto.Id = entry.Value.Id;
+                            brushStrokeProto.AnchorId = entry.Value.AnchorId;
+                            brushStrokeProto.StartIndex = entry.Value.StartIndex;
+                            brushStrokeProto.BrushPose.AddRange(entry.Value.BrushPose);
                         }
 
                         updateRequest.BrushStrokeAdd = new BrushStrokeAddRequest {BrushStroke = brushStrokeProto};
-                        _currentBrushStroke.StartIndex += _currentBrushStroke.BrushPose.Count;
-                        _currentBrushStroke.BrushPose.Clear();
+                        entry.Value.StartIndex += entry.Value.BrushPose.Count;
+                        entry.Value.BrushPose.Clear();
+                        break;
                     }
-                    else if (_brushStrokesToUpload.Count > 0)
+
+                    if (updateRequest.BrushStrokeAdd == null && _brushStrokesToUpload.Count > 0)
                     {
                         sendUpdate = true;
                         updateRequest.BrushStrokeAdd = new BrushStrokeAddRequest {BrushStroke = _brushStrokesToUpload.First.Value};
@@ -392,49 +483,119 @@ namespace MagicLeap.LeapBrush
             }
         }
 
-        private static bool UpdateUserStateGetWasChanged(UserStateProto userState,
-            string userDisplayName, string headClosestAnchorId, Pose headPoseRelativeToAnchor,
-            Pose controlPoseRelativeToAnchor, UserStateProto.Types.ToolState currentToolState,
-            Color32 currentToolColor, BatteryStatusProto batteryStatus)
+        private bool UpdateUserStateGetWasChangedLocked(UserStateProto userState)
         {
-            if (userState.AnchorId.Length > 0 && headClosestAnchorId == null)
+            if (userState.AnchorId.Length > 0 && _headClosestAnchorId == null)
             {
                 userState.AnchorId = "";
                 userState.HeadPose = null;
-                userState.ControlPose = null;
+                userState.ControllerState = null;
+                userState.LeftHandState = null;
+                userState.RightHandState = null;
                 return true;
             }
-            if (userState.AnchorId.Length == 0 && headClosestAnchorId != null)
-            {
-                userState.AnchorId = headClosestAnchorId;
-                userState.HeadPose = ProtoUtils.ToProto(headPoseRelativeToAnchor);
-                userState.ControlPose = ProtoUtils.ToProto(controlPoseRelativeToAnchor);
-                return true;
-            }
-            if (userState.AnchorId.Length == 0 && headClosestAnchorId == null)
+            if (userState.AnchorId.Length == 0 && _headClosestAnchorId == null)
             {
                 return false;
             }
 
-            uint currentToolColorUint = ColorUtils.ToRgbaUint(currentToolColor);
+            bool changed = UpdateControllerStateGetWasChangedLocked(userState);
+            changed = UpdateLeftHandStateGetWasChangedLocked(userState) || changed;
+            changed = UpdateRightHandStateGetWasChangedLocked(userState) || changed;
 
-            if (ProtoUtils.EpsilonEquals(headPoseRelativeToAnchor, userState.HeadPose)
-                && ProtoUtils.EpsilonEquals(controlPoseRelativeToAnchor, userState.ControlPose)
-                && currentToolState == userState.ToolState
+            uint currentToolColorUint = ColorUtils.ToRgbaUint(_currentToolColor);
+            if (!changed
+                && userState.AnchorId == _headClosestAnchorId
+                && ProtoUtils.EpsilonEquals(_headPoseRelativeToAnchor, userState.HeadPose)
+                && _currentToolState == userState.ToolState
                 && currentToolColorUint == userState.ToolColorRgb
-                && userDisplayName == userState.UserDisplayName
-                && batteryStatus.Equals(userState.HeadsetBattery))
+                && _userDisplayName == userState.UserDisplayName
+                && _batteryStatus.Equals(userState.HeadsetBattery))
             {
                 return false;
             }
 
-            userState.AnchorId = headClosestAnchorId;
-            userState.HeadPose = ProtoUtils.ToProto(headPoseRelativeToAnchor);
-            userState.ControlPose = ProtoUtils.ToProto(controlPoseRelativeToAnchor);
-            userState.ToolState = currentToolState;
+            userState.AnchorId = _headClosestAnchorId;
+            userState.HeadPose = ProtoUtils.ToProto(_headPoseRelativeToAnchor, userState.HeadPose);
+            userState.ToolState = _currentToolState;
             userState.ToolColorRgb = currentToolColorUint;
-            userState.UserDisplayName = userDisplayName;
-            userState.HeadsetBattery = batteryStatus.Clone();
+            userState.UserDisplayName = _userDisplayName;
+            userState.HeadsetBattery = _batteryStatus.Clone();
+            return true;
+        }
+
+        private bool UpdateControllerStateGetWasChangedLocked(UserStateProto userState)
+        {
+            if ((userState.ControllerState == null) != (_controllerState == null))
+            {
+                userState.ControllerState = _controllerState?.Clone();
+                return true;
+            }
+            if (_controllerState == null)
+            {
+                return false;
+            }
+
+            if (ProtoUtils.EpsilonEquals(_controllerState.Pose, userState.ControllerState.Pose)
+                && ProtoUtils.EpsilonEquals(_controllerState.ToolOffsetZ,
+                    userState.ControllerState.ToolOffsetZ)
+                && ProtoUtils.EpsilonEquals(
+                    _controllerState.RayPoints, userState.ControllerState.RayPoints))
+            {
+                return false;
+            }
+
+            userState.ControllerState = _controllerState.Clone();
+            return true;
+        }
+
+        private bool UpdateLeftHandStateGetWasChangedLocked(UserStateProto userState)
+        {
+            _handStateMap.TryGetValue(HandType.Left, out HandStateProto handState);
+
+            if ((userState.LeftHandState == null) != (handState == null))
+            {
+                userState.LeftHandState = handState?.Clone();
+                return true;
+            }
+            if (handState == null)
+            {
+                return false;
+            }
+
+            if (ProtoUtils.EpsilonEquals(handState.ToolPose, userState.LeftHandState.ToolPose)
+                && ProtoUtils.EpsilonEquals(
+                    handState.RayPoints, userState.LeftHandState.RayPoints))
+            {
+                return false;
+            }
+
+            userState.LeftHandState = handState.Clone();
+            return true;
+        }
+
+        private bool UpdateRightHandStateGetWasChangedLocked(UserStateProto userState)
+        {
+            _handStateMap.TryGetValue(HandType.Right, out HandStateProto handState);
+
+            if ((userState.RightHandState == null) != (handState == null))
+            {
+                userState.RightHandState = handState?.Clone();
+                return true;
+            }
+            if (handState == null)
+            {
+                return false;
+            }
+
+            if (ProtoUtils.EpsilonEquals(handState.ToolPose, userState.RightHandState.ToolPose)
+                && ProtoUtils.EpsilonEquals(
+                    handState.RayPoints, userState.RightHandState.RayPoints))
+            {
+                return false;
+            }
+
+            userState.RightHandState = handState.Clone();
             return true;
         }
 

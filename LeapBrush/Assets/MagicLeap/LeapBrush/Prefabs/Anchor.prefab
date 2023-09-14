@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 595626083}
   - component: {fileID: 595626085}
   - component: {fileID: 595626084}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ZAxisPositive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,8 +30,8 @@ Transform:
   m_LocalScale: {x: 0.005, y: 0.005, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3306625251029980715}
-  m_RootOrder: 4
+  m_Father: {fileID: 4618348645458875952}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &595626085
 MeshFilter:
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 1667325905}
   - component: {fileID: 1667325907}
   - component: {fileID: 1667325906}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: YAxisPositive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,8 +113,8 @@ Transform:
   m_LocalScale: {x: 0.005, y: 0.1, z: 0.005}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3306625251029980715}
-  m_RootOrder: 2
+  m_Father: {fileID: 4618348645458875952}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1667325907
 MeshFilter:
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 1869911108}
   - component: {fileID: 1869911110}
   - component: {fileID: 1869911109}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: XAxisPositive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -196,8 +196,8 @@ Transform:
   m_LocalScale: {x: 0.1, y: 0.005, z: 0.005}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3306625251029980715}
-  m_RootOrder: 0
+  m_Father: {fileID: 4618348645458875952}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1869911110
 MeshFilter:
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 7356608805551041659}
   - component: {fileID: 6985711622993974103}
   - component: {fileID: 6265848638660110386}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ZAxisNegative
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -279,8 +279,8 @@ Transform:
   m_LocalScale: {x: 0.0025, y: 0.0025, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3306625251029980715}
-  m_RootOrder: 5
+  m_Father: {fileID: 4618348645458875952}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6985711622993974103
 MeshFilter:
@@ -377,10 +377,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c63d1d9c45ec64aa4a0778017de4041c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _statusLayout: {fileID: 3561775636513236895}
+  _annotationBillboard: {fileID: 3561775636513236895}
   _statusText: {fileID: 1817669512729856739}
-  _colliderAndVisualization: {fileID: 7075012453145944239}
-  _visualization: {fileID: 3737197911176436373}
+  _visualization: {fileID: 7075012453145944239}
+  _annotation: {fileID: 3737197911176436373}
   _leaderLine: {fileID: 3401425973045352155}
 --- !u!1 &2565467289784214098
 GameObject:
@@ -393,7 +393,7 @@ GameObject:
   - component: {fileID: 7803332033455191134}
   - component: {fileID: 1088068428615287227}
   - component: {fileID: 2745164824260308805}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: XAxisNegative
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -412,8 +412,8 @@ Transform:
   m_LocalScale: {x: 0.1, y: 0.0025, z: 0.0025}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3306625251029980715}
-  m_RootOrder: 1
+  m_Father: {fileID: 4618348645458875952}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1088068428615287227
 MeshFilter:
@@ -476,7 +476,7 @@ GameObject:
   - component: {fileID: 8338105489944563347}
   - component: {fileID: 2655165154597841376}
   - component: {fileID: 4001713917712970799}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: YAxisNegative
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -495,8 +495,8 @@ Transform:
   m_LocalScale: {x: 0.0025, y: 0.1, z: 0.0025}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3306625251029980715}
-  m_RootOrder: 3
+  m_Father: {fileID: 4618348645458875952}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2655165154597841376
 MeshFilter:
@@ -560,7 +560,7 @@ GameObject:
   - component: {fileID: 2985916702316462480}
   - component: {fileID: 7084047543439851566}
   m_Layer: 0
-  m_Name: Leader Line
+  m_Name: LeaderLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -578,7 +578,7 @@ Transform:
   m_LocalScale: {x: 0.002, y: 0.002, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4618348645458875952}
+  m_Father: {fileID: 3306625251029980715}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &2985916702316462480
@@ -641,7 +641,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1408482104664201905}
   m_Layer: 0
-  m_Name: '[Layout]'
+  m_Name: Billboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -655,7 +655,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3561775636513236895}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.04}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -675,8 +675,8 @@ GameObject:
   - component: {fileID: 8318325058906743053}
   - component: {fileID: 6358702659714361334}
   - component: {fileID: 4285882244135155249}
-  m_Layer: 2
-  m_Name: Visualization
+  m_Layer: 6
+  m_Name: Annotation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -694,13 +694,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1869911108}
-  - {fileID: 7803332033455191134}
-  - {fileID: 1667325905}
-  - {fileID: 8338105489944563347}
-  - {fileID: 595626083}
-  - {fileID: 7356608805551041659}
   - {fileID: 1408482104664201905}
+  - {fileID: 4074945188707829364}
   m_Father: {fileID: 4618348645458875952}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -765,7 +760,7 @@ SpringJoint:
   m_AutoConfigureConnectedAnchor: 1
   m_ConnectedAnchor: {x: 0, y: 0, z: 0}
   serializedVersion: 2
-  m_Spring: 10
+  m_Spring: 1
   m_Damper: 0.4
   m_MinDistance: 0.0001
   m_MaxDistance: 0
@@ -788,7 +783,7 @@ GameObject:
   - component: {fileID: 6035012852490191726}
   - component: {fileID: 1817669512729856739}
   m_Layer: 0
-  m_Name: Text - Status
+  m_Name: Text_Status
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -802,7 +797,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3923152714290512169}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.05}
   m_LocalScale: {x: 0.015, y: 0.015, z: 0.015}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -919,15 +914,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 0
   m_isCullingEnabled: 0
@@ -959,7 +956,7 @@ GameObject:
   - component: {fileID: 4618348645458875952}
   - component: {fileID: 7633557891121867501}
   m_Layer: 0
-  m_Name: ColliderAndVisualization
+  m_Name: Visualization
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -977,8 +974,13 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1869911108}
+  - {fileID: 7803332033455191134}
+  - {fileID: 1667325905}
+  - {fileID: 8338105489944563347}
+  - {fileID: 595626083}
+  - {fileID: 7356608805551041659}
   - {fileID: 3306625251029980715}
-  - {fileID: 4074945188707829364}
   m_Father: {fileID: 4966635130975315216}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1005,7 +1007,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0

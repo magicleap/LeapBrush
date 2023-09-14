@@ -1,0 +1,38 @@
+{
+    "name": "com.magicleap.mrtk3",
+    "displayName": "Magic Leap MRTK3",
+    "version": "1.0.0-pre.5",
+    "unity": "2022.2",
+    "description": "Magic Leap MRTK3 Package",
+    "dependencies": {
+      "com.magicleap.unitysdk": "1.8.0",
+      "org.mixedrealitytoolkit.core": "3.0.0",
+      "org.mixedrealitytoolkit.input": "3.0.0",
+      "org.mixedrealitytoolkit.uxcomponents": "3.0.0",
+      "com.unity.inputsystem": "1.3.0",
+      "com.unity.textmeshpro": "3.0.6",
+      "com.unity.xr.core-utils": "2.1.0",
+      "com.unity.xr.interaction.toolkit": "2.2.0"
+    },
+    "author": {
+        "name": "Magic Leap",
+        "url": "https://developer.magicleap.com/"
+    },
+    "samples": [
+      {
+        "displayName": "Hand And Controller Interaction Examples",
+        "description": "Example scene demonstrating both hand and MagicLeap controller interactions.",
+        "path": "Samples~/HandAndControllerInteractionExamples"
+      },
+      {
+        "displayName": "Eye Tracking Examples",
+        "description": "Example scene demonstrating eye tracking interactions.",
+        "path": "Samples~/EyeTrackingExamples"
+      },
+      {
+        "displayName": "Spatial Awareness Examples",
+        "description": "Example scene demonstrating scene reconstruction.",
+        "path": "Samples~/SpatialAwareness"
+      }
+    ]
+}

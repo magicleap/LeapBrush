@@ -1,0 +1,19 @@
+{
+  "IsVertical":"true",
+  "LanguageID":"kJp_JP_Unity",
+  "SubPanelID":"JpAccents",
+  "Keys":[
+    {"KeyTypeID":"kCharacter", "DefaultChar":"、"},
+    {"KeyTypeID":"kCharacter", "DefaultChar":"。"},
+    {"KeyTypeID":"kCharacter", "DefaultChar":"?"},
+    {"KeyTypeID":"kCharacter", "DefaultChar":"!"},
+    {"KeyTypeID":"kCharacter", "DefaultChar":"\\"}
+  ],
+  "DefaultKeySizeX":25,
+  "DefaultKeySizeY":25,
+  "DefaultKeySizeZ":25,
+  "MotionRangeZStart":0,
+  "MotionRangeZEnd":2.33,
+  "FrontSideDetectThreshold":5.83,
+  "KeyGap":3
+}

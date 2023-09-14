@@ -433,6 +433,72 @@
     ]
   },
   {
+    "AlternateKeyGroupID":"àKeysUpper",
+    "AlternateKeys":[
+      {"Key":"à"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"ëKeysUpper",
+    "AlternateKeys":[
+      {"Key":"ë"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"éKeysUpper",
+    "AlternateKeys":[
+      {"Key":"é"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"èKeysUpper",
+    "AlternateKeys":[
+      {"Key":"è"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"êKeysUpper",
+    "AlternateKeys":[
+      {"Key":"ê"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"ùKeysLower",
+    "AlternateKeys":[
+      {"Key":"ù"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"çKeysUpper",
+    "AlternateKeys":[
+      {"Key":"ç"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"çKeysLower",
+    "AlternateKeys":[
+      {"Key":"Ç"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"ñKeysUpper",
+    "AlternateKeys":[
+      {"Key":"ñ"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"ñKeysLower",
+    "AlternateKeys":[
+      {"Key":"Ñ"}
+    ]
+  },
+  {
+    "AlternateKeyGroupID":"œKeysLower",
+    "AlternateKeys":[
+      {"Key":"œ"}
+    ]
+  },
+  {
     "AlternateKeyGroupID":"periodKeys",
     "AlternateKeys":[
       {"Key":"…"}

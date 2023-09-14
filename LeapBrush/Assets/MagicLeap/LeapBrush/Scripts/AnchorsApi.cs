@@ -12,10 +12,16 @@ namespace MagicLeap.LeapBrush
     {
         private static AnchorsApi _instance;
 
+        [SerializeField]
+        private ImportedAnchor _defaultAnchor;
+
+        [SerializeField]
+        private LocalizationInfo _defaultLocalizationInfo;
+
         private Anchor[] _importedAnchors;
 
         [Serializable]
-        public struct LocalizationInfo
+        public struct LocalizationInfo : IEquatable<LocalizationInfo>
         {
             /// <summary>
             /// The localization status at the time this structure was returned.
@@ -45,11 +51,11 @@ namespace MagicLeap.LeapBrush
             public LocalizationInfo(MLAnchors.LocalizationStatus localizationStatus, MLAnchors.MappingMode mappingMode,
                 string spaceName, string spaceId, Pose targetSpaceOriginPose)
             {
-                this.LocalizationStatus = localizationStatus;
-                this.MappingMode = mappingMode;
-                this.SpaceName = spaceName;
-                this.SpaceId = spaceId;
-                this.TargetSpaceOriginPose = targetSpaceOriginPose;
+                LocalizationStatus = localizationStatus;
+                MappingMode = mappingMode;
+                SpaceName = spaceName;
+                SpaceId = spaceId;
+                TargetSpaceOriginPose = targetSpaceOriginPose;
             }
 
             public LocalizationInfo Clone()
@@ -64,10 +70,48 @@ namespace MagicLeap.LeapBrush
                 };
             }
 
-            public override string ToString() => $"LocalizationStatus: {this.LocalizationStatus}, MappingMode: {this.MappingMode},\nSpaceName: {this.SpaceName}, SpaceId: {this.SpaceId}";
+            public override string ToString() => $"LocalizationStatus: {LocalizationStatus}, MappingMode: {MappingMode},\nSpaceName: {SpaceName}, SpaceId: {SpaceId}";
+
+            public bool Equals(LocalizationInfo other)
+            {
+                return LocalizationStatus == other.LocalizationStatus
+                       && MappingMode == other.MappingMode
+                       && SpaceName == other.SpaceName
+                       && SpaceId == other.SpaceId
+                       && TargetSpaceOriginPose.Equals(other.TargetSpaceOriginPose);
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is LocalizationInfo other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine((int) LocalizationStatus,
+                    (int) MappingMode, SpaceName, SpaceId, TargetSpaceOriginPose);
+            }
+
+            public void CopyFrom(LocalizationInfo other)
+            {
+                LocalizationStatus = other.LocalizationStatus;
+                MappingMode = other.MappingMode;
+                SpaceName = other.SpaceName;
+                SpaceId = other.SpaceId;
+                TargetSpaceOriginPose = other.TargetSpaceOriginPose;
+            }
+
+            public void CopyFrom(MLAnchors.LocalizationInfo other)
+            {
+                LocalizationStatus = other.LocalizationStatus;
+                MappingMode = other.MappingMode;
+                SpaceName = other.SpaceName;
+                SpaceId = other.SpaceId;
+                TargetSpaceOriginPose = other.SpaceOrigin;
+            }
         }
 
-        public abstract class Anchor
+        public abstract class Anchor : IEquatable<Anchor>
         {
             /// <summary>
             /// The anchor's unique ID.  This is a unique identifier for a single Spatial Anchor that is generated and managed by the
@@ -97,7 +141,52 @@ namespace MagicLeap.LeapBrush
             /// </summary>
             public bool IsPersisted;
 
+            /// <summary>
+            /// Publish this anchor so it persists across sessions.
+            /// </summary>
             public abstract MLResult Publish();
+
+            public abstract Anchor Clone();
+
+            public static bool ArraysEqual(Anchor[] a, Anchor[] b)
+            {
+                if (a.Length != b.Length)
+                {
+                    return false;
+                }
+
+                for (int i = 0; i < a.Length; i++)
+                {
+                    if (!a[i].Equals(b[i]))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            public bool Equals(Anchor other)
+            {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return Id == other.Id && SpaceId == other.SpaceId && Pose.Equals(other.Pose)
+                       && ExpirationTimeStamp == other.ExpirationTimeStamp
+                       && IsPersisted == other.IsPersisted;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((Anchor) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(Id, SpaceId, Pose, ExpirationTimeStamp, IsPersisted);
+            }
         }
 
         /// <summary>
@@ -116,13 +205,34 @@ namespace MagicLeap.LeapBrush
             {
                 return MLResult.Create(MLResult.Code.NotImplemented);
             }
+
+            public override Anchor Clone()
+            {
+                return new ImportedAnchor
+                {
+                    Id = Id,
+                    SpaceId = SpaceId,
+                    Pose = Pose,
+                    ExpirationTimeStamp = ExpirationTimeStamp,
+                    IsPersisted = IsPersisted
+                };
+            }
+
+            public void CopyFrom(ImportedAnchor other)
+            {
+                Id = other.Id;
+                SpaceId = other.SpaceId;
+                Pose = other.Pose;
+                ExpirationTimeStamp = other.ExpirationTimeStamp;
+                IsPersisted = other.IsPersisted;
+            }
         }
 
-        public static MLResult GetLocalizationInfo(out LocalizationInfo info) =>
-            _instance.GetLocalizationInfoImpl(out info);
+        public static MLResult GetLocalizationInfo(ref LocalizationInfo info) =>
+            _instance.GetLocalizationInfoImpl(ref info);
 
-        public static MLResult QueryAnchors(out Anchor[] anchors, out bool isUsingImportedAnchors)
-            => _instance.QueryAnchorsImpl(out anchors, out isUsingImportedAnchors);
+        public static MLResult QueryAnchors(ref Anchor[] anchors, out bool isUsingImportedAnchors)
+            => _instance.QueryAnchorsImpl(ref anchors, out isUsingImportedAnchors);
 
         public static MLResult CreateAnchor(Pose pose, ulong expirationTimeStamp,
             out Anchor anchor) =>
@@ -139,17 +249,27 @@ namespace MagicLeap.LeapBrush
 
             public AnchorImpl(MLAnchors.Anchor mlAnchor)
             {
-                _mlAnchor = mlAnchor;
-                Id = _mlAnchor.Id;
-                SpaceId = _mlAnchor.SpaceId;
-                Pose = mlAnchor.Pose;
-                ExpirationTimeStamp = mlAnchor.ExpirationTimeStamp;
-                IsPersisted = mlAnchor.IsPersisted;
+                CopyFrom(mlAnchor);
             }
 
             public override MLResult Publish()
             {
                 return _mlAnchor.Publish();
+            }
+
+            public override Anchor Clone()
+            {
+                return new AnchorImpl(_mlAnchor);
+            }
+
+            public void CopyFrom(MLAnchors.Anchor other)
+            {
+                _mlAnchor = other;
+                Id = other.Id;
+                SpaceId = other.SpaceId;
+                Pose = other.Pose;
+                ExpirationTimeStamp = other.ExpirationTimeStamp;
+                IsPersisted = other.IsPersisted;
             }
         }
 
@@ -158,23 +278,23 @@ namespace MagicLeap.LeapBrush
             _instance = this;
         }
 
-        private MLResult GetLocalizationInfoImpl(out LocalizationInfo info)
+        private MLResult GetLocalizationInfoImpl(ref LocalizationInfo info)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             MLAnchors.LocalizationInfo mlInfo;
             MLResult result = MLAnchors.GetLocalizationInfo(out mlInfo);
-            info = new AnchorsApi.LocalizationInfo(mlInfo.LocalizationStatus, mlInfo.MappingMode,
-                mlInfo.SpaceName, mlInfo.SpaceId, mlInfo.SpaceOrigin);
+            if (result.IsOk)
+            {
+                info.CopyFrom(mlInfo);
+            }
             return result;
 #else
-            info = new LocalizationInfo(
-                MLAnchors.LocalizationStatus.NotLocalized, MLAnchors.MappingMode.OnDevice,
-                "Default", "DEFAULT_SPACE_ID", Pose.identity);
+            info.CopyFrom(_defaultLocalizationInfo);
             return MLResult.Create(MLResult.Code.Ok);
 #endif
         }
 
-        private MLResult QueryAnchorsImpl(out Anchor[] anchors, out bool isUsingImportedAnchors)
+        private MLResult QueryAnchorsImpl(ref Anchor[] anchors, out bool isUsingImportedAnchors)
         {
             lock (this)
             {
@@ -189,13 +309,12 @@ namespace MagicLeap.LeapBrush
             isUsingImportedAnchors = false;
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-            anchors = Array.Empty<Anchor>();
-
             MLAnchors.Request request = new MLAnchors.Request();
             MLAnchors.Request.Params queryParams = new MLAnchors.Request.Params();
             MLResult result = request.Start(queryParams);
             if (!result.IsOk)
             {
+                anchors = Array.Empty<Anchor>();
                 return result;
             }
 
@@ -203,23 +322,38 @@ namespace MagicLeap.LeapBrush
             result = request.TryGetResult(out resultData);
             if (result.IsOk)
             {
-                anchors = new Anchor[resultData.anchors.Length];
+                if (anchors.Length != resultData.anchors.Length)
+                {
+                    anchors = new Anchor[resultData.anchors.Length];
+                }
                 for (int i = 0; i < anchors.Length; ++i)
                 {
-                    anchors[i] = new AnchorImpl(resultData.anchors[i]);
+                    if (anchors[i] is AnchorImpl existingAnchor)
+                    {
+                        existingAnchor.CopyFrom(resultData.anchors[i]);
+                    }
+                    else
+                    {
+                        anchors[i] = new AnchorImpl(resultData.anchors[i]);
+                    }
                 }
             }
             return result;
 #else
             // Return a default anchor for non-ML2 applications.
-            anchors = new Anchor[]
+            if (anchors.Length != 1)
             {
-                new ImportedAnchor
-                {
-                    Id = "DEFAULT_ANCHOR_ID",
-                    Pose = Pose.identity
-                }
-            };
+                anchors = new Anchor[1];
+            }
+
+            if (anchors[0] is ImportedAnchor existingAnchor)
+            {
+                existingAnchor.CopyFrom(_defaultAnchor);
+            }
+            else
+            {
+                anchors[0] = _defaultAnchor.Clone();
+            }
             return MLResult.Create(MLResult.Code.Ok);
 #endif
         }

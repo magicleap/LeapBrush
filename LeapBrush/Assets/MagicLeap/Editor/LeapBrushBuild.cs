@@ -11,6 +11,11 @@ namespace MagicLeap
 {
     public class LeapBrushBuild
     {
+        public static Func<BuildPlayerOptions, BuildReport> BuildPlayer = (options) =>
+        {
+            return BuildPipeline.BuildPlayer(options);
+        };
+
         public static void CommandLineBuild()
         {
             LeapBrushBuildUserSettings settings =
@@ -56,8 +61,16 @@ namespace MagicLeap
 #endif
 
             BuildPlayerOptions buildPlayerOptions = new();
-            buildPlayerOptions.scenes = new string[1];
-            buildPlayerOptions.scenes[0] = "Assets/MagicLeap/LeapBrush/Scenes/LeapBrush.unity";
+
+            List<string> scenePaths = new();
+            foreach (var sceneInfo in EditorBuildSettings.scenes)
+            {
+                if (sceneInfo.enabled)
+                {
+                    scenePaths.Add(sceneInfo.path);
+                }
+            }
+            buildPlayerOptions.scenes = scenePaths.ToArray();
 
             if (!Directory.Exists(settings.OutputPath))
             {
@@ -87,7 +100,7 @@ namespace MagicLeap
                     Path.Join(outputDirWithVersion,
                         "LeapBrush-Mac-" + versionString + ".app");
 
-                report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+                report = BuildPlayer(buildPlayerOptions);
 
                 if (report.summary.result == BuildResult.Succeeded)
                 {
@@ -112,7 +125,7 @@ namespace MagicLeap
                 buildPlayerOptions.locationPathName =
                     Path.Join(linuxParentDir, "LeapBrush.x86_64");
 
-                report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+                report = BuildPlayer(buildPlayerOptions);
 
                 if (report.summary.result == BuildResult.Succeeded)
                 {
@@ -139,7 +152,7 @@ namespace MagicLeap
                 buildPlayerOptions.locationPathName =
                     Path.Join(windowsParentDir, "LeapBrush.exe");
 
-                report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+                report = BuildPlayer(buildPlayerOptions);
 
                 if (report.summary.result == BuildResult.Succeeded)
                 {
@@ -156,11 +169,15 @@ namespace MagicLeap
             }
             else if (buildTarget == BuildTarget.Android)
             {
-                buildPlayerOptions.locationPathName =
-                    Path.Join(outputDirWithVersion,
-                        Application.identifier + "-" + versionString + ".apk");
+                using (CreateAndroidSigningContext())
+                {
 
-                report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+                    buildPlayerOptions.locationPathName =
+                        Path.Join(outputDirWithVersion,
+                            Application.identifier + "-" + versionString + ".apk");
+
+                    report = BuildPlayer(buildPlayerOptions);
+                }
             }
             else
             {
@@ -175,6 +192,63 @@ namespace MagicLeap
             }
 
             Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
+        }
+
+        class AndroidSigningContext : IDisposable
+        {
+            private readonly bool _enabled;
+            private readonly string _oldKeystoreName;
+            private readonly bool _oldUseCustomKeystore;
+            private readonly string _oldKeystorePass;
+            private readonly string _oldKeyaliasName;
+            private readonly string _oldKeyaliasPass;
+
+            public AndroidSigningContext()
+            {
+                String keystorePath = Environment.GetEnvironmentVariable("UNITY_KEYSTORE_PATH");
+                _enabled = !string.IsNullOrEmpty(keystorePath);
+                if (!_enabled)
+                {
+                    return;
+                }
+
+                _oldKeystoreName = PlayerSettings.Android.keystoreName;
+                PlayerSettings.Android.keystoreName = keystorePath;
+
+                _oldUseCustomKeystore = PlayerSettings.Android.useCustomKeystore;
+                PlayerSettings.Android.useCustomKeystore = true;
+
+                _oldKeystorePass = PlayerSettings.Android.keystorePass;
+                PlayerSettings.Android.keystorePass =
+                    Environment.GetEnvironmentVariable("UNITY_KEYSTORE_PASS");
+
+                _oldKeyaliasName = PlayerSettings.Android.keyaliasName;
+                PlayerSettings.Android.keyaliasName =
+                    Environment.GetEnvironmentVariable("UNITY_KEYALIAS_NAME");
+
+                _oldKeyaliasPass = PlayerSettings.Android.keyaliasPass;
+                PlayerSettings.Android.keyaliasPass =
+                    Environment.GetEnvironmentVariable("UNITY_KEYALIAS_PASS");
+            }
+
+            public void Dispose()
+            {
+                if (!_enabled)
+                {
+                    return;
+                }
+
+                PlayerSettings.Android.keystoreName = _oldKeystoreName;
+                PlayerSettings.Android.useCustomKeystore = _oldUseCustomKeystore;
+                PlayerSettings.Android.keystorePass = _oldKeystorePass;
+                PlayerSettings.Android.keyaliasName = _oldKeyaliasName;
+                PlayerSettings.Android.keyaliasPass = _oldKeyaliasPass;
+            }
+        }
+
+        private static IDisposable CreateAndroidSigningContext()
+        {
+            return new AndroidSigningContext();
         }
 
         private static void CreateZip(string outputZipPath, string sourcePath,

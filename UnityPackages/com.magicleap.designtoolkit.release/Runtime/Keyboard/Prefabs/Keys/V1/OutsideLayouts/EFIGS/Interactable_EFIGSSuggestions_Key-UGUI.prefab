@@ -13,6 +13,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Interactable_EFIGSSuggestions_Key-UGUI
       objectReference: {fileID: 0}
+    - target: {fileID: 2243836927154965698, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: _hoverSound
+      value: 
+      objectReference: {fileID: 11400000, guid: cbd77bdb16b875c4dad110a082f00e46,
+        type: 2}
+    - target: {fileID: 2243836927154965698, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: _selectSound
+      value: 
+      objectReference: {fileID: 11400000, guid: 840aae95d0c419e4db801fccb0e56a0f,
+        type: 2}
+    - target: {fileID: 3242810497186034272, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: _hoverSound
+      value: 
+      objectReference: {fileID: 11400000, guid: cbd77bdb16b875c4dad110a082f00e46,
+        type: 2}
+    - target: {fileID: 3242810497186034272, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: _selectSound
+      value: 
+      objectReference: {fileID: 11400000, guid: 840aae95d0c419e4db801fccb0e56a0f,
+        type: 2}
     - target: {fileID: 3459781442559548508, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -22,6 +46,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.y
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151889175799926778, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151889175799926778, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151889175799926778, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151889175799926778, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151889175799926778, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7151889175799926778, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8298278954184968290, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
         type: 3}
@@ -128,6 +182,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8311652441434848768, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8311652441434848768, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8311652441434848773, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8311652441434848773, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8311652441434848799, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: m_Name
+      value: Interactable_EFIGSSuggestions_Key-UGUI
+      objectReference: {fileID: 0}
     - target: {fileID: 8894246593502882497, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -141,7 +220,12 @@ PrefabInstance:
     - target: {fileID: 8894246593502882497, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8957985711167759147, guid: e337ba9f52982bf4db0ffcc1b44d6d6f,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 7.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

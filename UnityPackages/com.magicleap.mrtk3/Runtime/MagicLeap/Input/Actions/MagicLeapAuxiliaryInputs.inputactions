@@ -1,0 +1,342 @@
+{
+    "name": "MagicLeapAuxiliaryInputs",
+    "maps": [
+        {
+            "name": "Aux LeftHand",
+            "id": "3c680175-a0bd-44da-bd87-bd8a234a4fb6",
+            "actions": [
+                {
+                    "name": "DevicePosition",
+                    "type": "Value",
+                    "id": "594f6a96-3252-4453-954d-8d5191cff5d5",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "DeviceRotation",
+                    "type": "Value",
+                    "id": "8e5a2d07-3295-4436-919f-b6e7b9db41bf",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "TrackingState",
+                    "type": "Value",
+                    "id": "1f517653-89a3-4c2a-a3db-4ffa3e6e9e22",
+                    "expectedControlType": "Integer",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "IsTracked",
+                    "type": "Button",
+                    "id": "ee846590-011f-45ec-97f9-0a6a75f7039a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Select",
+                    "type": "Button",
+                    "id": "14fb9b18-5503-455e-a8b6-b37c438c908f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Select Value",
+                    "type": "Value",
+                    "id": "8086f124-00e1-45fd-bd6a-9367e86e4f3e",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PointerPosition",
+                    "type": "Value",
+                    "id": "094eb9cb-2f33-4663-b1c2-0ac558fa907f",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PointerRotation",
+                    "type": "Value",
+                    "id": "76bb3fb9-c1c9-46a1-900d-774d3b6ab6b4",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2a8a68e1-8400-4811-935a-8313a4ede4bd",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{LeftHand}/devicePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DevicePosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7be402aa-20db-45bc-9406-da0ddcbdbd9f",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{LeftHand}/deviceRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DeviceRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "59f5390b-f50b-4f19-81ba-cffaf8ba0e74",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{LeftHand}/trackingState",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TrackingState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eebf0dfb-a93f-4eb0-b3d0-0cde37e1d5da",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{LeftHand}/pinchPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6192226a-5d25-46c0-a8a1-905a1ec3baa9",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{LeftHand}/pinch",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select Value",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6f73b363-000a-4ccb-a746-a73d27069743",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{LeftHand}/pointerPosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c40eba13-2963-4cda-9b74-1afb5130b03e",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{LeftHand}/pointerRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3a83b5b0-8edb-42ae-ba23-e63fe8fe94fb",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{LeftHand}/isTracked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsTracked",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Aux RightHand",
+            "id": "60619889-2cc5-4b5b-8cd8-5190eee437e7",
+            "actions": [
+                {
+                    "name": "DevicePosition",
+                    "type": "Value",
+                    "id": "059791a0-c66e-4651-944a-64395754453d",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "DeviceRotation",
+                    "type": "Value",
+                    "id": "99aed2cd-069a-46bd-bcca-950ba9a8fa07",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "TrackingState",
+                    "type": "Value",
+                    "id": "dac733d7-0b00-4271-ae7b-2ff5a0afe7e1",
+                    "expectedControlType": "Integer",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "IsTracked",
+                    "type": "Button",
+                    "id": "86e9a06d-8615-48be-930b-53735603c7a7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Select",
+                    "type": "Button",
+                    "id": "ba13ef5f-4c50-429d-99fa-656d2eab0a05",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Select Value",
+                    "type": "Value",
+                    "id": "56810881-7000-47dd-a7aa-cec0b2b5ceeb",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PointerPosition",
+                    "type": "Value",
+                    "id": "0e8bdb34-5077-4d8b-8519-11b3613e8947",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PointerRotation",
+                    "type": "Value",
+                    "id": "331d198a-e2ac-4d8b-829a-49478038dad2",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "8d36ccb3-9071-4703-b313-b3afe4194ae9",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{RightHand}/devicePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DevicePosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d47f8322-0f62-48b4-ba8e-96e9fbd625fd",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{RightHand}/deviceRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DeviceRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b5a3db02-90e7-40a7-b416-c2ccce2fe34c",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{RightHand}/trackingState",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TrackingState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1b96ba84-5ecc-4009-9734-23e181d5dab7",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{RightHand}/pinchPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "db1876db-e91d-4bca-94cc-b8e37efc30c1",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{RightHand}/pinch",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select Value",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fafbe422-5a54-4db9-86c1-93f8832a562f",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{RightHand}/pointerPosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c0e8da43-3226-4f77-8f0a-e772802cc2ed",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{RightHand}/pointerRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a6a74419-9572-4ec4-a1c6-84f61095ec88",
+                    "path": "<MagicLeapAuxiliaryHandDevice>{RightHand}/isTracked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IsTracked",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

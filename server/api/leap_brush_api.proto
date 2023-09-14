@@ -57,6 +57,26 @@ message BatteryStatusProto {
   BatteryState state = 2;
 }
 
+message ControllerStateProto {
+  // Pose for the user's Controller relative to the closest spatial anchor
+  PoseProto pose = 1;
+  // Z offset of the tool attached to this Controller.
+  float tool_offset_z = 2;
+  // The laser ray points for the laser pointer if active
+  repeated Vector3Proto ray_points = 3;
+  // The current selection progress for the controller (trigger button).
+  float select_progress = 4;
+}
+
+message HandStateProto {
+  // Pose of the tool attached to this hand, relative to the closest spatial anchor.
+  PoseProto tool_pose = 1;
+  // The laser ray points for the laser pointer if active
+  repeated Vector3Proto ray_points = 2;
+  // The current selection progress for the hand (pinch degree, etc)
+  float select_progress = 3;
+}
+
 message UserStateProto {
   enum ToolState {
     MENU = 0;
@@ -77,14 +97,16 @@ message UserStateProto {
   string anchor_id = 2;
   // Pose for the user's Headset relative to the closest spatial anchor
   PoseProto head_pose = 5;
-  // Pose for the user's Controller relative to the closest spatial anchor
-  PoseProto control_pose = 6;
+  // State of the user's Controller if active
+  optional ControllerStateProto controller_state = 13;
+  // State of the user's left hand if active
+  optional HandStateProto left_hand_state = 14;
+  // State of the user's right hand if active
+  optional HandStateProto right_hand_state = 15;
   // Current tool being used by the user
   ToolState tool_state = 7;
   // The color of the tool in use
   uint32 tool_color_rgb = 8;
-  // The length in meters of the tool being used (e.g. the length of the laser pointer)
-  float tool_length = 9;
   // The user's display name
   string user_display_name = 10;
   // The type of device that this client is running on

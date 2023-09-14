@@ -1,0 +1,4 @@
+TextMeshPro assets are imported into the scene using a built in import
+tool that is part of the com.unity.textmeshpro package. The imported
+assets should be updated whenever the com.unity.textmeshpro package is
+updated.
