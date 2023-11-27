@@ -5,7 +5,7 @@ Leap Brush is Magic Leap's AR Cloud reference application that lets you draw in 
 ## Spectator App
 A spectator user observing a space being modified in realtime.
 
-[![Spectator Application](docs/spectator_app_screenshot_small.png?raw=true "Spectator Application")](docs/spectator_app_screenshot.png)
+[![Spectator Application](docs/spectator_app_screenshot_v70_small.png?raw=true "Spectator Application")](docs/spectator_app_screenshot_v70.png)
 
 ## Magic Leap App
 A Magic Leap 2 user watching another user draw in realtime.
@@ -85,7 +85,7 @@ A Magic Leap 2 user watching another user draw in realtime.
 
 * The Brush and Poly Style Dialog lets you select a stroke color, but also a fill color which may be partially transparent or may include real darkness (Using [Segmented Dimming](https://developer-docs.magicleap.cloud/docs/guides/best-practices/dimming/dimmer-design-guidelines)).
 
-[![Brush and Poly Style Dialog](docs/brush_and_poly_style_dialog_screenshot_small.png?raw=true "Brush and Poly Style Dialog")](docs/brush_and_poly_style_dialog_screenshot.png)
+[![Brush and Poly Style Dialog](docs/brush_and_poly_style_dialog_screenshot_v70_small.png?raw=true "Brush and Poly Style Dialog")](docs/brush_and_poly_style_dialog_screenshot_v70.png)
 
 ## Spectator App Instructions
 
