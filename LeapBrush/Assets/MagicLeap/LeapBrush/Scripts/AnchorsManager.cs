@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap.LeapBrush
 {
@@ -23,9 +22,9 @@ namespace MagicLeap.LeapBrush
         public bool IsUsingImportedAnchors => _isUsingImportedAnchors;
 
         /// <summary>
-        /// Get whether the last query for anchors was successful.
+        /// Get whether the last anchor query was received and contains good anchors.
         /// </summary>
-        public bool LastQuerySuccessful => _lastQuerySuccessful;
+        public bool QueryReceivedOk => _queryReceivedOk;
 
         [SerializeField, Tooltip("The parent node where anchor game objects should be added.")]
         private GameObject _anchorContainer;
@@ -47,15 +46,11 @@ namespace MagicLeap.LeapBrush
                                  " still animating to the new rotation (in degrees)")]
         private float _maxRotationAngleChangeToAnimate = 15.0f;
 
-        private const float AnchorsUpdateDelaySeconds = .1f;
+        private const float AnchorsUpdateDelaySeconds = .5f;
 
-        private AnchorsApi.Anchor[] _queryAnchors = Array.Empty<AnchorsApi.Anchor>();
-        private AnchorsApi.Anchor[] _pendingAnchors = Array.Empty<AnchorsApi.Anchor>();
         private AnchorsApi.Anchor[] _anchors = Array.Empty<AnchorsApi.Anchor>();
-        private bool _pendingIsUsingImportedAnchors;
         private bool _isUsingImportedAnchors;
-        private bool _pendingLastQuerySuccessful;
-        private bool _lastQuerySuccessful;
+        private bool _queryReceivedOk;
 
         private Dictionary<string, GameObject> _anchorGameObjectsMap = new();
         private IEnumerator _updateAnchorsCoroutine;
@@ -83,6 +78,8 @@ namespace MagicLeap.LeapBrush
 
         private void OnEnable()
         {
+            AnchorsApi.OnAnchorsUpdatedEvent += UpdateAnchors;
+
             _updateAnchorsCoroutine = UpdateAnchorsPeriodically();
             StartCoroutine(_updateAnchorsCoroutine);
 
@@ -92,6 +89,8 @@ namespace MagicLeap.LeapBrush
 
         private void OnDisable()
         {
+            AnchorsApi.OnAnchorsUpdatedEvent -= UpdateAnchors;
+
             StopCoroutine(_updateAnchorsCoroutine);
 
             _preferences.ShowSpatialAnchors.OnChanged -= OnShowSpatialAnchorsPreferenceChanged;
@@ -108,81 +107,53 @@ namespace MagicLeap.LeapBrush
 
         private IEnumerator UpdateAnchorsPeriodically()
         {
-            Action updateAnchorsAction = UpdateAnchorsOnWorkerThread;
             YieldInstruction anchorsUpdateDelay = new WaitForSeconds(AnchorsUpdateDelaySeconds);
 
             while (true)
             {
-                ThreadDispatcher.ScheduleWork(updateAnchorsAction);
+                if (AnchorsApi.IsReady && !AnchorsApi.QueryAnchors())
+                {
+                    Debug.LogError("Error querying anchors.");
+                }
 
                 // Wait before querying again for localization status
                 yield return anchorsUpdateDelay;
             }
         }
 
-        private void UpdateAnchorsOnWorkerThread()
+        private void UpdateAnchors(AnchorsApi.Anchor[] anchors, bool isUsingImportedAnchors)
         {
-            bool isUsingImportedAnchors;
-            MLResult result = AnchorsApi.QueryAnchors(ref _queryAnchors,
-                out isUsingImportedAnchors);
-            if (result.IsOk)
+            bool hasValidPoses = true;
+            for (var i = 0; i < anchors.Length; i++)
             {
-                bool hasValidPoses = true;
-                for (var i = 0; i < _queryAnchors.Length; i++)
+                AnchorsApi.Anchor anchor = anchors[i];
+                if (anchor.Pose.rotation.x == 0 && anchor.Pose.rotation.y == 0 &&
+                    anchor.Pose.rotation.z == 0 && anchor.Pose.rotation.w == 0)
                 {
-                    AnchorsApi.Anchor anchor = _queryAnchors[i];
-                    if (anchor.Pose.rotation.x == 0 && anchor.Pose.rotation.y == 0 &&
-                        anchor.Pose.rotation.z == 0 && anchor.Pose.rotation.w == 0)
-                    {
-                        hasValidPoses = false;
-                    }
+                    hasValidPoses = false;
                 }
-
-                if (hasValidPoses)
-                {
-                    Array.Sort(_queryAnchors, (a, b) =>
-                        string.CompareOrdinal(a.Id, b.Id));
-
-                    if (!_pendingLastQuerySuccessful
-                        || isUsingImportedAnchors != _pendingIsUsingImportedAnchors
-                        || !AnchorsApi.Anchor.ArraysEqual(_queryAnchors, _pendingAnchors))
-                    {
-                        _pendingAnchors = new AnchorsApi.Anchor[_queryAnchors.Length];
-                        for (int i = 0; i < _queryAnchors.Length; i++)
-                        {
-                            _pendingAnchors[i] = _queryAnchors[i].Clone();
-                        }
-                        _pendingLastQuerySuccessful = true;
-                        _pendingIsUsingImportedAnchors = isUsingImportedAnchors;
-
-                        ThreadDispatcher.ScheduleMain(() => HandleAnchorsChangedOnMainThread(
-                            _pendingAnchors, _pendingIsUsingImportedAnchors));
-                    }
-                    return;
-                }
-
-                // TODO(ghazen): Find and report the root cause for invalid anchor poses.
-                Debug.LogError("UpdateAnchorsOnWorkerThread: some anchors have invalid poses");
-            }
-            else
-            {
-                Debug.LogError("UpdateAnchorsOnWorkerThread: failed to query anchors "
-                               + result);
             }
 
-            _pendingLastQuerySuccessful = false;
-            ThreadDispatcher.ScheduleMain(() =>
+            _queryReceivedOk = hasValidPoses;
+
+            if (hasValidPoses)
             {
-                 _lastQuerySuccessful = false;
-            });
+                Array.Sort(anchors, (a, b) =>
+                    string.CompareOrdinal(a.Id, b.Id));
+
+                UpdateAnchorObjects(anchors, isUsingImportedAnchors);
+                return;
+            }
+
+            // TODO(ghazen): Find and report the root cause for invalid anchor poses.
+            Debug.LogError("UpdateAnchors: some anchors have invalid poses");
         }
 
-        private void HandleAnchorsChangedOnMainThread(
+        private void UpdateAnchorObjects(
             AnchorsApi.Anchor[] anchors, bool isUsingImportedAnchors)
         {
             _anchors = anchors;
             _isUsingImportedAnchors = isUsingImportedAnchors;
-            _lastQuerySuccessful = true;
 
             HashSet<string> removedAnchorIds = new HashSet<string>();
             foreach (KeyValuePair<string, GameObject> anchorEntry in _anchorGameObjectsMap)

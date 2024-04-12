@@ -1,8 +1,8 @@
 using System;
 using Google.Protobuf.Collections;
 using MagicLeap.LeapBrush;
+using MagicLeap.OpenXR.Features.LocalizationMaps;
 using UnityEngine;
-using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap
 {
@@ -149,16 +149,16 @@ namespace MagicLeap
         public static PoseAndScale FromProto(TransformProto transformProto)
         {
             PoseAndScale poseAndScale = new PoseAndScale();
-            poseAndScale.Pose = new Pose(ProtoUtils.FromProto(transformProto.Position),
-                ProtoUtils.FromProto(transformProto.Rotation));
-            poseAndScale.Scale = ProtoUtils.FromProto(transformProto.Scale);
+            poseAndScale.Pose = new Pose(FromProto(transformProto.Position),
+                FromProto(transformProto.Rotation));
+            poseAndScale.Scale = FromProto(transformProto.Scale);
             return poseAndScale;
         }
 
         public static Pose FromProto(PoseProto poseProto)
         {
-            return new Pose(ProtoUtils.FromProto(poseProto.Position),
-                ProtoUtils.FromProto(poseProto.Rotation));
+            return new Pose(FromProto(poseProto.Position),
+                FromProto(poseProto.Rotation));
         }
 
         public static Vector3 FromProto(Vector3Proto p)
@@ -181,28 +181,28 @@ namespace MagicLeap
             return poses;
         }
 
-        public static SpaceInfoProto.Types.MappingMode ToProto(MLAnchors.MappingMode mappingMode)
+        public static SpaceInfoProto.Types.MappingMode ToProto(LocalizationMapType mapType)
         {
-            switch (mappingMode)
+            switch (mapType)
             {
-                case MLAnchors.MappingMode.OnDevice:
+                case LocalizationMapType.OnDevice:
                     return SpaceInfoProto.Types.MappingMode.OnDevice;
-                case MLAnchors.MappingMode.ARCloud:
+                case LocalizationMapType.Cloud:
                     return SpaceInfoProto.Types.MappingMode.ArCloud;
                 default:
                     throw new ArgumentOutOfRangeException(
-                        nameof(mappingMode), mappingMode, null);
+                        nameof(mapType), mapType, null);
             }
         }
 
-        public static MLAnchors.MappingMode FromProto(SpaceInfoProto.Types.MappingMode mappingMode)
+        public static LocalizationMapType FromProto(SpaceInfoProto.Types.MappingMode mappingMode)
         {
             switch (mappingMode)
             {
                 case SpaceInfoProto.Types.MappingMode.OnDevice:
-                    return MLAnchors.MappingMode.OnDevice;
+                    return LocalizationMapType.OnDevice;
                 case SpaceInfoProto.Types.MappingMode.ArCloud:
-                    return MLAnchors.MappingMode.ARCloud;
+                    return LocalizationMapType.Cloud;
                 default:
                     throw new ArgumentOutOfRangeException(
                         nameof(mappingMode), mappingMode, null);

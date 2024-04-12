@@ -45,6 +45,8 @@ namespace MagicLeap.LeapBrush
 
         protected List<Pose> _poses = new();
 
+        protected static int _lastReceivedAudioPlayFrame;
+
         public void OnDestroy()
         {
             OnDestroyed?.Invoke(this);
@@ -72,5 +74,16 @@ namespace MagicLeap.LeapBrush
         /// </param>
         public abstract void SetPosesAndTruncate(int startIndex, IList<Pose> poses,
             bool receivedDrawing);
+
+        protected bool MarkAndCheckShouldPlayReceivedDrawingAudio()
+        {
+            if (_lastReceivedAudioPlayFrame == Time.frameCount)
+            {
+                return false;
+            }
+
+            _lastReceivedAudioPlayFrame = Time.frameCount;
+            return true;
+        }
     }
 }

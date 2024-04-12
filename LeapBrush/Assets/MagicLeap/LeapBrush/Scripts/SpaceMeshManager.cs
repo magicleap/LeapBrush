@@ -163,7 +163,7 @@ namespace MagicLeap.LeapBrush
                 string meshUsdPath = Path.Join(usdDir, "mesh.usd");
                 if (!File.Exists(meshUsdPath))
                 {
-                    Debug.LogErrorFormat("No space mesh found at {0}", meshUsdPath);
+                    Debug.LogFormat("No space mesh found at {0}", meshUsdPath);
                     yield break;
                 }
 
@@ -286,7 +286,7 @@ namespace MagicLeap.LeapBrush
                     usdDir, "mesh.usd" + bundleExtension);
                 if (!File.Exists(meshBundlePath))
                 {
-                    Debug.LogErrorFormat("No space bundle found at {0}", meshBundlePath);
+                    Debug.LogFormat("No space bundle found at {0}", meshBundlePath);
                     yield break;
                 }
 

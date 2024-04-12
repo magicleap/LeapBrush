@@ -12,7 +12,6 @@
   "category": "Unity",
   "dependencies": {
     "com.unity.textmeshpro": "3.2.0-pre.4",
-    "com.unity.xr.magicleap": "7.0.0-pre.2",
     "com.unity.xr.management": "3.2.10",
     "com.unity.render-pipelines.universal": "10.3.2",
     "org.mixedrealitytoolkit.core": "file:../../UnityPackages/ThirdParty/MixedRealityToolkit-Unity/org.mixedrealitytoolkit.core",

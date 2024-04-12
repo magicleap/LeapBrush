@@ -74,8 +74,6 @@ namespace MagicLeap.LeapBrush
         {
             if (_drawing)
             {
-                transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-
                 Pose lastPose = _brush.Poses[^1];
                 Pose nextPose = new Pose(_brushControllerTransform.position,
                     _brushControllerTransform.rotation);
@@ -148,22 +146,15 @@ namespace MagicLeap.LeapBrush
 
                 OnPosesUpdated?.Invoke(this, _brush.Poses.Count - 1);
             }
-            else if (_brushControllerTransform != null)
-            {
-                // The user is not drawing currently but this is the polygon brush tool visual
-                // -- move the brush to the expected transform.
-
-                transform.SetPositionAndRotation(_brushControllerTransform.position,
-                    _brushControllerTransform.rotation);
-            }
         }
 
         private void StartDrawing()
         {
             _drawing = true;
-            _movedAwayFromPreviousSnap = false;
-
+            transform.SetParent(null);
             transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+
+            _movedAwayFromPreviousSnap = false;
 
             _brush.SetPosesAndTruncate(0, new Pose[]
             {
@@ -176,6 +167,9 @@ namespace MagicLeap.LeapBrush
         private void StopDrawing()
         {
             _drawing = false;
+            transform.SetParent(_brushControllerTransform);
+            transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+
             _snapVisualization.gameObject.SetActive(false);
 
             if (_brush.Poses.Count > 1)
@@ -196,7 +190,7 @@ namespace MagicLeap.LeapBrush
         /// </summary>
         public override void OnSelectEnded()
         {
-            if (!IsBrushControllerInFieldOfView())
+            if (_isHandControlled && !IsBrushControllerInFieldOfView())
             {
                 return;
             }

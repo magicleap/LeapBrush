@@ -1,0 +1,273 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ShaderVariants
+  m_Shaders:
+  - first: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 66, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 6, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+  - first: {fileID: 9000, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9001, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9002, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9003, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9004, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9007, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9101, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9103, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: d6dae50ee9e1bfa4db75f19f99355220, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: _OUTPUT_DEPTH
+        passType: 0
+  - first: {fileID: 4800000, guid: 65df88701913c224d95fc554db28381a, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: e7857e9d0c934dc4f83f270f8447b006, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: e6e9a19c3678ded42a3bc431ebef7dbd, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 93446b5c5339d4f00b85c159e1159b7c, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 8
+      - keywords: EVALUATE_SH_VERTEX _ADDITIONAL_LIGHTS _ALPHAPREMULTIPLY_ON _ENVIRONMENTREFLECTIONS_OFF
+          _MAIN_LIGHT_SHADOWS _RECEIVE_SHADOWS_OFF _SURFACE_TYPE_TRANSPARENT
+        passType: 13
+      - keywords: EVALUATE_SH_VERTEX _ADDITIONAL_LIGHTS _EMISSION _ENVIRONMENTREFLECTIONS_OFF
+          _MAIN_LIGHT_SHADOWS _RECEIVE_SHADOWS_OFF
+        passType: 13
+      - keywords: EVALUATE_SH_VERTEX _ADDITIONAL_LIGHTS _MAIN_LIGHT_SHADOWS _RECEIVE_SHADOWS_OFF
+        passType: 13
+  - first: {fileID: 4800000, guid: c331f6c43a2ef0945864cb668f2653c9, type: 3}
+    second:
+      variants:
+      - keywords: INSTANCING_ON _DISABLE_ALBEDO_MAP _USE_WORLD_SCALE
+        passType: 8
+      - keywords: _DIRECTIONAL_LIGHT _DISABLE_ALBEDO_MAP _USE_WORLD_SCALE
+        passType: 8
+      - keywords: _DISABLE_ALBEDO_MAP _USE_WORLD_SCALE
+        passType: 8
+      - keywords: INSTANCING_ON _BORDER_LIGHT_USES_HOVER_COLOR _DISABLE_ALBEDO_MAP
+          _USE_WORLD_SCALE
+        passType: 13
+      - keywords: INSTANCING_ON _DISABLE_ALBEDO_MAP _USE_WORLD_SCALE
+        passType: 13
+      - keywords: _BORDER_LIGHT_USES_HOVER_COLOR _DIRECTIONAL_LIGHT _DISABLE_ALBEDO_MAP
+          _SPECULAR_HIGHLIGHTS _USE_WORLD_SCALE
+        passType: 13
+      - keywords: _BORDER_LIGHT_USES_HOVER_COLOR _DISABLE_ALBEDO_MAP _SPECULAR_HIGHLIGHTS
+          _USE_WORLD_SCALE
+        passType: 13
+      - keywords: _DIRECTIONAL_LIGHT _DISABLE_ALBEDO_MAP _USE_WORLD_SCALE
+        passType: 13
+      - keywords: _DISABLE_ALBEDO_MAP _USE_WORLD_SCALE
+        passType: 13
+  - first: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 29b058829dc4dbf449bc59c038dfa631, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: _EDGE_ONLY_ _GRADIENT_DISABLED_ _IRIDESCENCE_ENABLE_ _SMOOTH_EDGES_
+        passType: 0
+      - keywords: _GRADIENT_DISABLED_
+        passType: 0
+  - first: {fileID: 4800000, guid: c5f3f59b19556b3479f929a84f25f776, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: _UI_CLIP_RECT_ROUNDED
+        passType: 0
+  - first: {fileID: -6465566751694194690, guid: ba82a1e9eaebe46ccafee44a63e33147,
+      type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: 
+        passType: 8
+  - first: {fileID: 4800000, guid: 45e7207db23579b4985a9d28edfef6f1, type: 3}
+    second:
+      variants:
+      - keywords: _BLOB_ENABLE_ _BLOB_ENABLE_2_ _UI_CLIP_RECT_ROUNDED
+        passType: 0
+  - first: {fileID: 4800000, guid: a3e1dddc96616ef4991f6d7101d161ca, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: df5380aa6ab293c4fafbb942ed5da93f, type: 3}
+    second:
+      variants:
+      - keywords: _ADDITIVE_ON _EDGE_SMOOTHING_AUTOMATIC _ROUND_CORNERS _SPECULAR_HIGHLIGHTS
+        passType: 13
+      - keywords: _ADDITIVE_ON _EDGE_SMOOTHING_AUTOMATIC _ROUND_CORNERS _SPECULAR_HIGHLIGHTS
+          _UI_CLIP_RECT_ROUNDED _USE_WORLD_SCALE _VERTEX_COLORS
+        passType: 13
+      - keywords: _ADDITIVE_ON _ROUND_CORNERS
+        passType: 13
+      - keywords: _ALPHABLEND_ON _EDGE_SMOOTHING_AUTOMATIC _GRADIENT_LINEAR _ROUND_CORNERS
+          _SPECULAR_HIGHLIGHTS
+        passType: 13
+      - keywords: _ALPHABLEND_ON _EDGE_SMOOTHING_AUTOMATIC _GRADIENT_LINEAR _ROUND_CORNERS
+          _SPECULAR_HIGHLIGHTS _UI_CLIP_RECT_ROUNDED _VERTEX_COLORS
+        passType: 13
+      - keywords: _ALPHABLEND_ON _GRADIENT_LINEAR _ROUND_CORNERS
+        passType: 13
+      - keywords: _ALPHABLEND_ON _GRADIENT_LINEAR _ROUND_CORNERS _UI_CLIP_RECT_ROUNDED
+          _VERTEX_COLORS
+        passType: 13
+      - keywords: _ALPHABLEND_ON _SPECULAR_HIGHLIGHTS _UI_CLIP_RECT_ROUNDED _USE_WORLD_SCALE
+          _VERTEX_COLORS
+        passType: 13
+      - keywords: _ALPHABLEND_ON _SPECULAR_HIGHLIGHTS _USE_WORLD_SCALE _VERTEX_COLORS
+        passType: 13
+      - keywords: _ALPHABLEND_ON _UI_CLIP_RECT_ROUNDED _USE_WORLD_SCALE _VERTEX_COLORS
+        passType: 13
+      - keywords: _ALPHABLEND_ON _USE_WORLD_SCALE _VERTEX_COLORS
+        passType: 13
+  - first: {fileID: 4800000, guid: 618b0da8e4e6bb2459a1cc27acf0dd57, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: a68807ff3cc42b24b88efce2b72e9f16, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 1e78bf4fa2e9ae0459a4b1836f7a74b5, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 109e1aab8c2f549d3855a94bf8a1885c, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: fe393ace9b354375a9cb14cdbbc28be4, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 5b0fc3431208c9e48b6e5efc383317ed, type: 3}
+    second:
+      variants:
+      - keywords: _UI_CLIP_RECT_ROUNDED
+        passType: 0
+  - first: {fileID: 4800000, guid: 821657228c4817a47a12d10a2883dda7, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: b9123526145f0d449bd2b941eb1776c3, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: UNITY_UI_CLIP_RECT
+        passType: 0
+  - first: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
+      type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 8
+      - keywords: EMISSION
+        passType: 8
+      - keywords: EMISSION OCCLUSION
+        passType: 8
+      - keywords: EMISSION EVALUATE_SH_VERTEX OCCLUSION _ADDITIONAL_LIGHTS _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: EMISSION EVALUATE_SH_VERTEX _ADDITIONAL_LIGHTS _MAIN_LIGHT_SHADOWS
+        passType: 13
+      - keywords: EVALUATE_SH_VERTEX _ADDITIONAL_LIGHTS _MAIN_LIGHT_SHADOWS
+        passType: 13
+  - first: {fileID: 4800000, guid: 36e335017ad71d54fbb10842863188ae, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0

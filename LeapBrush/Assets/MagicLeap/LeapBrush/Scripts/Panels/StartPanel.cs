@@ -21,7 +21,7 @@ namespace MagicLeap.LeapBrush
         private LeapBrushKeyboard _keyboard;
 
         [SerializeField]
-        private SpaceLocalizationManager _localizationManager;
+        private LocalizationMapManager _localizationManager;
 
         [Header("Internal Dependencies")]
 
@@ -154,7 +154,7 @@ namespace MagicLeap.LeapBrush
             OnSetUserDisplayName?.Invoke(text.Trim());
         }
 
-        private void OnLocalizationInfoChanged(AnchorsApi.LocalizationInfo localizationInfo)
+        private void OnLocalizationInfoChanged(LocalizationMapManager.LocalizationMapInfo localizationInfo)
         {
             if (isActiveAndEnabled)
             {
@@ -170,7 +170,7 @@ namespace MagicLeap.LeapBrush
             sb.Append(_userDisplayName);
 
             sb.Append("</b>, select continue to draw in the <b>");
-            sb.Append(_localizationManager.LocalizationInfo.SpaceName);
+            sb.Append(_localizationManager.LocalizationInfo.MapName);
             sb.Append("</b> space. ");
 
             if (!_drawSolo)

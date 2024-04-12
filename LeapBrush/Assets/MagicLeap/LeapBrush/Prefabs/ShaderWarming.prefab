@@ -1,0 +1,1928 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4940568161466486204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8788296219638171962}
+  - component: {fileID: 3981770589554069880}
+  m_Layer: 0
+  m_Name: ShaderWarming
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8788296219638171962
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4940568161466486204}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3981770589554069880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4940568161466486204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22707c6263d734d2ebec7c7a37a2e9be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderWarmingInfos:
+  - shader: {fileID: 4800000, guid: c331f6c43a2ef0945864cb668f2653c9, type: 3}
+    keywords:
+    - _BORDER_LIGHT_USES_HOVER_COLOR
+    - _DISABLE_ALBEDO_MAP
+    - _SPECULAR_HIGHLIGHTS
+    - _SPECULARHIGHLIGHTS_ON
+    - _USE_WORLD_SCALE
+    - _USEAMBIENT_ON
+    - _USEDIFFUSE_ON
+    - _USEMAINCOLOR_ON
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: c331f6c43a2ef0945864cb668f2653c9, type: 3}
+    keywords:
+    - _BORDER_LIGHT_USES_HOVER_COLOR
+    - _DISABLE_ALBEDO_MAP
+    - _USE_WORLD_SCALE
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: b9123526145f0d449bd2b941eb1776c3, type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: -6465566751694194690, guid: b8326fceebabf4445bef9171a0071446,
+      type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
+      type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+  - shader: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
+      type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+  - shader: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
+      type: 3}
+    keywords:
+    - EMISSION
+    - OCCLUSION
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+  - shader: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
+      type: 3}
+    keywords:
+    - OCCLUSION
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+  - shader: {fileID: 4800000, guid: a68807ff3cc42b24b88efce2b72e9f16, type: 3}
+    keywords:
+    - _ENABLE_EDGE_
+    - _SHOW_INTERNAL__ON
+    - _SHRINK_ON_PINCH__ON
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 1
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+    keywords:
+    - _ALPHAPREMULTIPLY_ON
+    - _EMISSION
+    - _RECEIVE_SHADOWS_OFF
+    - _SPECULARHIGHLIGHTS_OFF
+    - _SURFACE_TYPE_TRANSPARENT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+    keywords:
+    - _ALPHAPREMULTIPLY_ON
+    - _RECEIVE_SHADOWS_OFF
+    - _SURFACE_TYPE_TRANSPARENT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    keywords:
+    - _ALPHAPREMULTIPLY_ON
+    - _ENVIRONMENTREFLECTIONS_OFF
+    - _RECEIVE_SHADOWS_OFF
+    - _SURFACE_TYPE_TRANSPARENT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    keywords:
+    - _EMISSION
+    - _ENVIRONMENTREFLECTIONS_OFF
+    - _RECEIVE_SHADOWS_OFF
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+  - shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    keywords:
+    - _ENVIRONMENTREFLECTIONS_OFF
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
+    keywords:
+    - _EMISSION
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    keywords:
+    - _EMISSION
+    - _ENVIRONMENTREFLECTIONS_OFF
+    - _RECEIVE_SHADOWS_OFF
+    vertexDescriptors: []
+  - shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    keywords:
+    - _EMISSION
+    - _ENVIRONMENTREFLECTIONS_OFF
+    - _RECEIVE_SHADOWS_OFF
+    vertexDescriptors: []
+  - shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    keywords:
+    - _EMISSION
+    - _ENVIRONMENTREFLECTIONS_OFF
+    - _RECEIVE_SHADOWS_OFF
+    vertexDescriptors: []
+  - shader: {fileID: 4800000, guid: 109e1aab8c2f549d3855a94bf8a1885c, type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 1
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+    - attribute: 12
+      format: 0
+      dimension: 4
+      stream: 2
+    - attribute: 13
+      format: 10
+      dimension: 4
+      stream: 2
+  - shader: {fileID: 4800000, guid: a3e1dddc96616ef4991f6d7101d161ca, type: 3}
+    keywords:
+    - _ALPHABLEND_ON
+    - _BORDER_LIGHT_USES_HOVER_COLOR
+    - _EMISSION
+    - _SPECULAR_HIGHLIGHTS
+    - _VERTEX_COLORS
+    vertexDescriptors: []
+  - shader: {fileID: 4800000, guid: a3e1dddc96616ef4991f6d7101d161ca, type: 3}
+    keywords:
+    - _ALPHABLEND_ON
+    - _BORDER_LIGHT_USES_HOVER_COLOR
+    - _EMISSION
+    - _SPECULAR_HIGHLIGHTS
+    - _VERTEX_COLORS
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: a3e1dddc96616ef4991f6d7101d161ca, type: 3}
+    keywords:
+    - _ALPHABLEND_ON
+    - _BORDER_LIGHT_USES_HOVER_COLOR
+    - _EMISSION
+    - _SPECULAR_HIGHLIGHTS
+    - _VERTEX_COLORS
+    vertexDescriptors: []
+  - shader: {fileID: 4800000, guid: 1e78bf4fa2e9ae0459a4b1836f7a74b5, type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 1
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+    - attribute: 12
+      format: 0
+      dimension: 4
+      stream: 2
+    - attribute: 13
+      format: 10
+      dimension: 4
+      stream: 2
+  - shader: {fileID: 4800000, guid: 618b0da8e4e6bb2459a1cc27acf0dd57, type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 1
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+    - attribute: 12
+      format: 0
+      dimension: 4
+      stream: 2
+    - attribute: 13
+      format: 10
+      dimension: 4
+      stream: 2
+  - shader: {fileID: 4800000, guid: 821657228c4817a47a12d10a2883dda7, type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 1
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+    - attribute: 12
+      format: 0
+      dimension: 4
+      stream: 2
+    - attribute: 13
+      format: 10
+      dimension: 4
+      stream: 2
+  - shader: {fileID: 4800000, guid: 45e7207db23579b4985a9d28edfef6f1, type: 3}
+    keywords:
+    - _BLOB_ENABLE_
+    - _BLOB_ENABLE_2_
+    - _UI_CLIP_RECT_ROUNDED
+    - _USE_GLOBAL_LEFT_INDEX__ON
+    - _USE_GLOBAL_RIGHT_INDEX__ON
+    - UNITY_UI_CLIP_RECT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: 5b0fc3431208c9e48b6e5efc383317ed, type: 3}
+    keywords:
+    - _UI_CLIP_RECT_ROUNDED
+    - UNITY_UI_CLIP_RECT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: df5380aa6ab293c4fafbb942ed5da93f, type: 3}
+    keywords:
+    - _ADDITIVE_ON
+    - _EDGE_SMOOTHING_AUTOMATIC
+    - _ROUND_CORNERS
+    - _SPECULAR_HIGHLIGHTS
+    - _UI_CLIP_RECT_ROUNDED
+    - _USE_WORLD_SCALE
+    - _VERTEX_COLORS
+    - UNITY_UI_CLIP_RECT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: c5f3f59b19556b3479f929a84f25f776, type: 3}
+    keywords:
+    - UNITY_UI_CLIP_RECT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
+    keywords:
+    - UNITY_UI_CLIP_RECT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 29b058829dc4dbf449bc59c038dfa631, type: 3}
+    keywords:
+    - _EDGE_ONLY_
+    - _GRADIENT_DISABLED_
+    - _IRIDESCENCE_ENABLE_
+    - _LINE_ENABLE_
+    - _REFLECTED__ON
+    - _SMOOTH_EDGES_
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: 45e7207db23579b4985a9d28edfef6f1, type: 3}
+    keywords:
+    - _BLOB_ENABLE_
+    - _BLOB_ENABLE_2_
+    - _UI_CLIP_RECT_ROUNDED
+    - _USE_GLOBAL_LEFT_INDEX__ON
+    - _USE_GLOBAL_RIGHT_INDEX__ON
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: 5b0fc3431208c9e48b6e5efc383317ed, type: 3}
+    keywords:
+    - _UI_CLIP_RECT_ROUNDED
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: df5380aa6ab293c4fafbb942ed5da93f, type: 3}
+    keywords:
+    - _ADDITIVE_ON
+    - _DECAL_FRONT_ONLY__ON
+    - _EDGE_SMOOTHING_AUTOMATIC
+    - _ROUND_CORNERS
+    - _SKY_ENABLED_
+    - _SPECULAR_HIGHLIGHTS
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: df5380aa6ab293c4fafbb942ed5da93f, type: 3}
+    keywords:
+    - _ADDITIVE_ON
+    - _EDGE_SMOOTHING_AUTOMATIC
+    - _ROUND_CORNERS
+    - _SPECULAR_HIGHLIGHTS
+    - _UI_CLIP_RECT_ROUNDED
+    - _USE_WORLD_SCALE
+    - _VERTEX_COLORS
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: df5380aa6ab293c4fafbb942ed5da93f, type: 3}
+    keywords:
+    - _ALBEDOASSIGNEDATRUNTIME_ON
+    - _ALPHABLEND_ON
+    - _SPECULAR_HIGHLIGHTS
+    - _UI_CLIP_RECT_ROUNDED
+    - _USE_WORLD_SCALE
+    - _VERTEX_COLORS
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: df5380aa6ab293c4fafbb942ed5da93f, type: 3}
+    keywords:
+    - _ALPHABLEND_ON
+    - _DECAL_FRONT_ONLY__ON
+    - _EDGE_SMOOTHING_AUTOMATIC
+    - _GRADIENT_LINEAR
+    - _ROUND_CORNERS
+    - _SKY_ENABLED_
+    - _SPECULAR_HIGHLIGHTS
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: c5f3f59b19556b3479f929a84f25f776, type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
+      type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+  - shader: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
+      type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 1
+  - shader: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
+      type: 3}
+    keywords:
+    - _DISABLE_SSR_TRANSPARENT
+    - _ENABLE_FOG_ON_TRANSPARENT
+    - _SURFACE_TYPE_TRANSPARENT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+  - shader: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
+      type: 3}
+    keywords:
+    - _DISABLE_SSR_TRANSPARENT
+    - _ENABLE_FOG_ON_TRANSPARENT
+    - _SURFACE_TYPE_TRANSPARENT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+  - shader: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
+      type: 3}
+    keywords:
+    - EMISSION
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+  - shader: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
+      type: 3}
+    keywords:
+    - EMISSION
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+  - shader: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
+      type: 3}
+    keywords:
+    - EMISSION
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+  - shader: {fileID: -6465566751694194690, guid: b9d29dfa1474148e792ac720cbd45122,
+      type: 3}
+    keywords:
+    - OCCLUSION
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+  - shader: {fileID: -6465566751694194690, guid: c87047c884d9843f5b0f4cce282aa760,
+      type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+  - shader: {fileID: -6465566751694194690, guid: ba82a1e9eaebe46ccafee44a63e33147,
+      type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: -6465566751694194690, guid: ba82a1e9eaebe46ccafee44a63e33147,
+      type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: -6465566751694194690, guid: ba82a1e9eaebe46ccafee44a63e33147,
+      type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+    - attribute: 13
+      format: 10
+      dimension: 1
+      stream: 2
+  - shader: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+    - attribute: 13
+      format: 10
+      dimension: 1
+      stream: 2
+  - shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
+    keywords:
+    - _EMISSION
+    - _SURFACE_TYPE_TRANSPARENT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 29b058829dc4dbf449bc59c038dfa631, type: 3}
+    keywords:
+    - _DECAL_FRONT_ONLY__ON
+    - _GRADIENT_DISABLED_
+    - _REFLECTED__ON
+    - _SKY_ENABLED_
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: 29b058829dc4dbf449bc59c038dfa631, type: 3}
+    keywords:
+    - _DECAL_FRONT_ONLY__ON
+    - _REFLECTED__ON
+    - _SKY_ENABLED_
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: df5380aa6ab293c4fafbb942ed5da93f, type: 3}
+    keywords:
+    - _ALPHABLEND_ON
+    - _EDGE_SMOOTHING_AUTOMATIC
+    - _GRADIENT_LINEAR
+    - _ROUND_CORNERS
+    - _SPECULAR_HIGHLIGHTS
+    - _UI_CLIP_RECT_ROUNDED
+    - _VERTEX_COLORS
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: df5380aa6ab293c4fafbb942ed5da93f, type: 3}
+    keywords:
+    - _ALPHABLEND_ON
+    - _SPECULAR_HIGHLIGHTS
+    - _USE_WORLD_SCALE
+    - _VERTEX_COLORS
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: c5f3f59b19556b3479f929a84f25f776, type: 3}
+    keywords:
+    - _UI_CLIP_RECT_ROUNDED
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 109e1aab8c2f549d3855a94bf8a1885c, type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+  - shader: {fileID: 4800000, guid: fe393ace9b354375a9cb14cdbbc28be4, type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
+    keywords:
+    - UNITY_UI_CLIP_RECT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+  - shader: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
+    keywords:
+    - UNITY_UI_CLIP_RECT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    keywords:
+    - _ALPHAPREMULTIPLY_ON
+    - _EMISSION
+    - _ENVIRONMENTREFLECTIONS_OFF
+    - _RECEIVE_SHADOWS_OFF
+    - _SURFACE_TYPE_TRANSPARENT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+  - shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
+    keywords:
+    - _EMISSION
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 3
+      format: 2
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 5
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 6
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 7
+      format: 0
+      dimension: 4
+      stream: 0
+  - shader: {fileID: -6465566751694194690, guid: 0d881bb7b94954f71b297a4a1c949de1,
+      type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: -6465566751694194690, guid: 0d881bb7b94954f71b297a4a1c949de1,
+      type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+    - attribute: 12
+      format: 0
+      dimension: 2
+      stream: 2
+    - attribute: 13
+      format: 10
+      dimension: 2
+      stream: 2
+  - shader: {fileID: -6465566751694194690, guid: 0d881bb7b94954f71b297a4a1c949de1,
+      type: 3}
+    keywords: []
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 1
+      dimension: 4
+      stream: 0
+    - attribute: 2
+      format: 1
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    keywords:
+    - _ENVIRONMENTREFLECTIONS_OFF
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    keywords:
+    - _RECEIVE_SHADOWS_OFF
+    - _SPECULAR_SETUP
+    - _SURFACE_TYPE_TRANSPARENT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+    - attribute: 12
+      format: 0
+      dimension: 2
+      stream: 2
+    - attribute: 13
+      format: 10
+      dimension: 2
+      stream: 2
+  - shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    keywords:
+    - _SURFACE_TYPE_TRANSPARENT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+    keywords:
+    - _SURFACE_TYPE_TRANSPARENT
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 2
+      format: 0
+      dimension: 4
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 1
+    - attribute: 12
+      format: 0
+      dimension: 2
+      stream: 2
+    - attribute: 13
+      format: 10
+      dimension: 2
+      stream: 2
+  - shader: {fileID: 4800000, guid: c331f6c43a2ef0945864cb668f2653c9, type: 3}
+    keywords:
+    - _BORDER_LIGHT_USES_HOVER_COLOR
+    - _DIRECTIONAL_LIGHT
+    - _DISABLE_ALBEDO_MAP
+    - _LIGHTMAPPING_REALTIME
+    - _SPECULAR_HIGHLIGHTS
+    - _USE_WORLD_SCALE
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  - shader: {fileID: 4800000, guid: c331f6c43a2ef0945864cb668f2653c9, type: 3}
+    keywords:
+    - _BORDER_LIGHT_USES_HOVER_COLOR
+    - _DISABLE_ALBEDO_MAP
+    - _SPECULAR_HIGHLIGHTS
+    - _SPECULARHIGHLIGHTS_ON
+    - _USE_WORLD_SCALE
+    - _USEAMBIENT_ON
+    - _USEDIFFUSE_ON
+    - _USEMAINCOLOR_ON
+    vertexDescriptors:
+    - attribute: 0
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 1
+      format: 0
+      dimension: 3
+      stream: 0
+    - attribute: 4
+      format: 0
+      dimension: 2
+      stream: 0
+  _captureUsedShaders: 0

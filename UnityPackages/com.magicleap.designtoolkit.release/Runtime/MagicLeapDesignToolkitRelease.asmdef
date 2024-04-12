@@ -1,0 +1,31 @@
+{
+    "name": "MagicLeap.DesignToolkitRelease",
+    "rootNamespace": "",
+    "references": [
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:1fc69d160eafe774ab0a8e5191500311",
+        "GUID:28c5e819ece8a0746abb16dc5aa91f44",
+        "GUID:52c867deb3832554c84dc4202bd47258",
+        "GUID:f2d67d65fc4899a4089f85ebb7f8c2ff",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:1fbc052e3ea2ff24b8874f1cedb59b6c",
+        "GUID:fe685ec1767f73d42b749ea8045bfe43",
+        "GUID:56255bd5d851a6243b63cb370cfc40b1",
+        "GUID:eb8403d5bc34ae149b14825a03a7f9c3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.textmeshpro",
+            "expression": "2.1.0",
+            "define": "TMP_VERSION_2_1_0_OR_NEWER"
+        }
+    ],
+    "noEngineReferences": false
+}

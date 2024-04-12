@@ -26,13 +26,13 @@ namespace MagicLeap.LeapBrush
         private GameObject _fillGameObject;
 
         [SerializeField]
-        private GameObject _fillDimmerGameObject;
-
-        [SerializeField]
         private Material _opaqueFillMaterial;
 
         [SerializeField]
         private Material _transparentFillMaterial;
+
+        [SerializeField]
+        private Material _dimmerAlphaMaterial;
 
         [SerializeField]
         private AudioSource _drawPointSound;
@@ -40,12 +40,14 @@ namespace MagicLeap.LeapBrush
         private const float BrushHalfWidth = .01f;
 
         private bool _initialized;
+        private Color32 _strokeColor;
         private Color32 _fillColor;
         private float _fillDimmerAlpha;
-        private bool _fillMaterialIsOpaque = true;
+        private bool _materialsInitialized;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
+        private static readonly int AlphaId = Shader.PropertyToID("_Alpha");
 
         private void Awake()
         {
@@ -83,7 +85,8 @@ namespace MagicLeap.LeapBrush
         {
             EnsureInitialized();
 
-            if (receivedDrawing && startIndex >= _poses.Count)
+            if (receivedDrawing && startIndex >= _poses.Count &&
+                MarkAndCheckShouldPlayReceivedDrawingAudio())
             {
                 _drawPointSound.Play();
             }
@@ -115,38 +118,53 @@ namespace MagicLeap.LeapBrush
         public override void SetColors(Color32 strokeColor, Color32 fillColor,
             float fillDimmerAlpha)
         {
+            if (_materialsInitialized && (Color) _strokeColor == strokeColor &&
+                (Color) _fillColor == fillColor && _fillDimmerAlpha == fillDimmerAlpha)
+            {
+                return;
+            }
+
+            _strokeColor = strokeColor;
+            _fillColor = fillColor;
+            _fillDimmerAlpha = fillDimmerAlpha;
+            _materialsInitialized = true;
+
             Material strokeMaterial = GetComponent<MeshRenderer>().material;
             strokeMaterial.SetColor(BaseColorId, strokeColor);
             strokeMaterial.SetColor(EmissionColorId, (Color)(strokeColor) / 4.0f);
 
-            _fillColor = fillColor;
-            _fillDimmerAlpha = fillDimmerAlpha;
-
-            if (_fillGameObject != null)
+            if (_fillGameObject == null)
             {
-                _fillGameObject.SetActive(_fillColor != Color.clear);
-
-                bool newFillMaterialIsOpaque = _fillColor.a == Byte.MaxValue;
-                if (_fillMaterialIsOpaque != newFillMaterialIsOpaque)
-                {
-                    _fillMaterialIsOpaque = newFillMaterialIsOpaque;
-                    _fillGameObject.GetComponent<MeshRenderer>().material =
-                        _fillMaterialIsOpaque ? _opaqueFillMaterial : _transparentFillMaterial;
-                }
-
-                Material fillMaterial = _fillGameObject.GetComponent<MeshRenderer>().material;
-                fillMaterial.SetColor(BaseColorId, fillColor);
-                fillMaterial.SetColor(EmissionColorId, (Color) (fillColor) / 4.0f);
+                return;
             }
 
-            if (_fillDimmerGameObject != null)
+            bool needsFillColorMaterial = _fillColor != Color.clear;
+            bool needsFillDimmerMaterial = _fillDimmerAlpha != 0 || fillColor.a != 0;
+            _fillGameObject.SetActive(needsFillColorMaterial || needsFillDimmerMaterial);
+
+            if (!_fillGameObject.activeSelf)
             {
-                _fillDimmerGameObject.SetActive(_fillDimmerAlpha > 0);
-                _fillDimmerGameObject.GetComponent<MeshRenderer>().material
-                    .SetColor(BaseColorId, new Color(
-                        fillDimmerAlpha, fillDimmerAlpha, fillDimmerAlpha,
-                        fillDimmerAlpha));
+                return;
             }
+
+            List<Material> materials = new();
+            if (needsFillColorMaterial)
+            {
+                Material fillColorMaterial = new Material(_fillColor.a == Byte.MaxValue
+                    ? _opaqueFillMaterial : _transparentFillMaterial);
+                fillColorMaterial.SetColor(BaseColorId, fillColor);
+                fillColorMaterial.SetColor(EmissionColorId, (Color) (fillColor) / 4.0f);
+                materials.Add(fillColorMaterial);
+            }
+
+            if (needsFillDimmerMaterial)
+            {
+                Material fillDimmerMaterial = new Material(_dimmerAlphaMaterial);
+                fillDimmerMaterial.SetFloat(AlphaId, _fillDimmerAlpha);
+                materials.Add(fillDimmerMaterial);
+            }
+
+            _fillGameObject.GetComponent<MeshRenderer>().materials = materials.ToArray();
         }
 
         public void AddPose(Pose pose)
@@ -182,10 +200,6 @@ namespace MagicLeap.LeapBrush
                 {
                     _fillGameObject.SetActive(false);
                 }
-                if (_fillDimmerGameObject != null)
-                {
-                    _fillDimmerGameObject.SetActive(false);
-                }
                 return;
             }
 
@@ -219,10 +233,10 @@ namespace MagicLeap.LeapBrush
 
             // Update the fill mesh if there are enough poses and colors were selected.
 
-            if (_fillGameObject != null && _fillDimmerGameObject != null)
+            if (_fillGameObject != null)
             {
-                _fillGameObject.SetActive(poses.Count > 2 && _fillColor != Color.clear);
-                _fillDimmerGameObject.SetActive(poses.Count > 2 && _fillDimmerAlpha > 0);
+                _fillGameObject.SetActive(
+                    poses.Count > 2 && (_fillColor != Color.clear || _fillDimmerAlpha != 0));
                 if (poses.Count > 2)
                 {
                     RebuildFillMesh(poses);
@@ -259,8 +273,6 @@ namespace MagicLeap.LeapBrush
             mesh.triangles = triangles;
 
             mesh.RecalculateNormals();
-
-            _fillDimmerGameObject.GetComponent<MeshFilter>().mesh = mesh;
         }
     }
 }

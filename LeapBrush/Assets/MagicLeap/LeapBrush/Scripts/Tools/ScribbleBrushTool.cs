@@ -51,8 +51,6 @@ namespace MagicLeap.LeapBrush
         private void Update()
         {
             if (_drawing) {
-                transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-
                 Pose lastPose = _brush.Poses[^1];
                 Pose nextPose = new Pose(_brushControllerTransform.position,
                     _brushControllerTransform.rotation);
@@ -64,29 +62,21 @@ namespace MagicLeap.LeapBrush
                     OnPosesAdded?.Invoke(this);
                 }
             }
-            else if (_brushControllerTransform != null)
-            {
-                // The user is not drawing currently but this is the scribble brush tool visual
-                // -- move the brush to the expected transform.
-
-                transform.SetPositionAndRotation(_brushControllerTransform.position,
-                    _brushControllerTransform.rotation);
-            }
         }
 
         private void MaybeStartDrawing()
         {
-            if (!IsBrushControllerInFieldOfView())
+            if (_isHandControlled && !IsBrushControllerInFieldOfView())
             {
                 return;
             }
 
             _drawing = true;
-
-            Vector3 endCapStartPoint = transform.TransformPoint(
-                new Vector3(-BrushEndCapLength, 0, 0));
-
+            transform.SetParent(null);
             transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+
+            Vector3 endCapStartPoint = _brushControllerTransform.TransformPoint(
+                new Vector3(-BrushEndCapLength, 0, 0));
 
             _brush.SetPosesAndTruncate(0, new Pose[]
             {
@@ -102,6 +92,9 @@ namespace MagicLeap.LeapBrush
         private void StopDrawing()
         {
             _drawing = false;
+            transform.SetParent(_brushControllerTransform);
+            transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+
             DispatchOnDrawingCompleted();
 
             ApplyDrawingTipPoses();

@@ -203,16 +203,16 @@ namespace MagicLeap.LeapBrush
             }
         }
 
-        public void SetSpaceInfo(AnchorsApi.LocalizationInfo localizationInfo,
+        public void SetSpaceInfo(LocalizationMapManager.LocalizationMapInfo localizationInfo,
             bool isUsingImportedAnchors, AnchorsApi.Anchor[] anchors)
         {
             lock (_lock)
             {
-                _spaceInfo.SpaceId = localizationInfo.SpaceId ?? "";
-                _spaceInfo.SpaceName = localizationInfo.SpaceName ?? "";
-                _spaceInfo.MappingMode = ProtoUtils.ToProto(localizationInfo.MappingMode);
+                _spaceInfo.SpaceId = localizationInfo.MapUUID ?? "";
+                _spaceInfo.SpaceName = localizationInfo.MapName ?? "";
+                _spaceInfo.MappingMode = ProtoUtils.ToProto(localizationInfo.MapType);
                 _spaceInfo.TargetSpaceOrigin = ProtoUtils.ToProto(
-                    localizationInfo.TargetSpaceOriginPose, _spaceInfo.TargetSpaceOrigin);
+                    localizationInfo.OriginPose, _spaceInfo.TargetSpaceOrigin);
                 _spaceInfo.UsingImportedAnchors = isUsingImportedAnchors;
 
                 if (_spaceInfo.Anchor.Count > anchors.Length)

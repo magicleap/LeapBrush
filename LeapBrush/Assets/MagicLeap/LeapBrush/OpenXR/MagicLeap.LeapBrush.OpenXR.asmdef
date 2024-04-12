@@ -1,0 +1,17 @@
+{
+    "name": "MagicLeap.LeapBrush.OpenXR",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4847341ff46394e83bb78fbd0652937e",
+        "GUID:1fc69d160eafe774ab0a8e5191500311"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -11,6 +11,9 @@ namespace MagicLeap.LeapBrush
         [SerializeField, Tooltip("The transform to use for new brush poses while drawing.")]
         protected Transform _brushControllerTransform;
 
+        [SerializeField, Tooltip("Whether this tool is being controlled by a user's hand")]
+        protected bool _isHandControlled;
+
         /// <summary>
         /// The prefab to use for this brush
         /// </summary>

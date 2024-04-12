@@ -1,5 +1,5 @@
+using MagicLeap.OpenXR.Features.LocalizationMaps;
 using UnityEngine;
-using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap.LeapBrush
 {
@@ -8,7 +8,7 @@ namespace MagicLeap.LeapBrush
         [Header("External Dependencies")]
 
         [SerializeField]
-        private SpaceLocalizationManager _localizationManager;
+        private LocalizationMapManager _localizationManager;
 
         [SerializeField]
         private LeapBrushPreferences _preferences;
@@ -36,7 +36,8 @@ namespace MagicLeap.LeapBrush
             _preferences.ShowOrigins.OnChanged -= OnShowOriginsPreferenceChanged;
         }
 
-        private void OnLocalizationInfoChanged(AnchorsApi.LocalizationInfo localizationInfo)
+        private void OnLocalizationInfoChanged(
+            LocalizationMapManager.LocalizationMapInfo localizationInfo)
         {
             UpdateSpaceOriginAxisVisibility();
         }
@@ -51,8 +52,8 @@ namespace MagicLeap.LeapBrush
         {
             _spaceOriginAxis.SetActive(
                 _preferences.ShowOrigins.Value
-                && _localizationManager.LocalizationInfo.LocalizationStatus
-                == MLAnchors.LocalizationStatus.Localized);
+                && _localizationManager.LocalizationInfo.MapState
+                == LocalizationMapState.Localized);
         }
     }
 }

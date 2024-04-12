@@ -92,7 +92,8 @@ namespace MagicLeap.LeapBrush
             _lastPoseChangeTime = DateTimeOffset.Now;
 
             if (receivedDrawing &&
-                (startIndex == 0 || timeSpanSincePoseChanged > DrawingPausedSoundTimeout))
+                (startIndex == 0 || timeSpanSincePoseChanged > DrawingPausedSoundTimeout) &&
+                MarkAndCheckShouldPlayReceivedDrawingAudio())
             {
                 _drawStartSound.Play();
                 _playEndSoundAfterTimeout = true;

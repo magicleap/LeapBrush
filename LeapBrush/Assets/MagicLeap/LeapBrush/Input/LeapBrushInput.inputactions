@@ -9,10 +9,19 @@
                     "name": "Toggle Menu",
                     "type": "Button",
                     "id": "e0b7131d-4e6b-45a5-94fe-adea98c8bf4b",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ControllerTrackpad",
+                    "type": "Value",
+                    "id": "e66682a7-ea1d-4c75-84b1-aded5267d6b7",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -46,6 +55,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Toggle Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "be3381ee-0e54-4ff0-a671-8c08a43a4615",
+                    "path": "<XRController>{LeftHand}/menuButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "95e98f49-27e1-41ee-a947-ef543dd35d4d",
+                    "path": "<MagicLeapController>{RightHand}/trackpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ControllerTrackpad",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "10ece7ce-8b5a-4d6c-8e96-c025d198cf5c",
+                    "path": "<MagicLeapController>{LeftHand}/trackpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ControllerTrackpad",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

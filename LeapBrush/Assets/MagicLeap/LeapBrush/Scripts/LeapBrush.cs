@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using MagicLeap.OpenXR.Features;
+using MagicLeap.OpenXR.Features.LocalizationMaps;
+using MagicLeap.Spectator;
 using MixedReality.Toolkit.Input;
 using MixedReality.Toolkit.Input.Simulation;
 using TMPro;
@@ -11,12 +14,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.MagicLeap;
+using UnityEngine.XR.OpenXR;
+using UnityEngine.XR.OpenXR.NativeTypes;
 using TransformExtensions = Unity.XR.CoreUtils.TransformExtensions;
-
-#if !UNITY_EDITOR
-using System.IO;
-#endif
 
 namespace MagicLeap.LeapBrush
 {
@@ -114,12 +114,15 @@ namespace MagicLeap.LeapBrush
         [SerializeField]
         private ControlInstructions _controlInstructions;
 
+        [SerializeField]
+        private MLSpectator _phoneSpectator;
+
         private System.Random _random = new();
         private UploadThread _uploadThread;
         private DownloadThread _downloadThread;
         private IEnumerator _updateStatusTextCoroutine;
         private IEnumerator _updateBatteryStatusCoroutine;
-        private SpaceLocalizationManager _localizationManager;
+        private LocalizationMapManager _localizationManager;
         private AnchorsManager _anchorsManager;
         private SpaceMeshManager _spaceMeshManager;
         private External3DModelManager _external3dModelManager;
@@ -133,6 +136,7 @@ namespace MagicLeap.LeapBrush
         private Dictionary<string, External3DModel> _externalModelMap = new();
         private IEnumerator _maybeCreateAnchorAfterLocalizationWithDelayCoroutine;
         private ServerInfoProto _serverInfo;
+        private LinkedList<ServerStateResponse> _pendingServerStateResponses = new();
         private bool _appTooOld;
         private bool _serverTooOld;
         private string _userName;
@@ -141,8 +145,8 @@ namespace MagicLeap.LeapBrush
         private string _appVersion;
         private LeapBrushApiBase.LeapBrushClient _leapBrushClient;
         private bool _drawSolo;
-        private int _errorsLogged = 0;
-        private int _exceptionsOrAssertsLogged = 0;
+        private int _errorsLogged;
+        private int _exceptionsOrAssertsLogged;
         private bool _continuedPastStartPanel;
         private Camera _camera;
         private string _cameraFollowUserName;
@@ -172,7 +176,7 @@ namespace MagicLeap.LeapBrush
         {
             Application.logMessageReceived += OnLogMessageReceived;
 
-            _localizationManager = GetComponent<SpaceLocalizationManager>();
+            _localizationManager = GetComponent<LocalizationMapManager>();
             _anchorsManager = GetComponent<AnchorsManager>();
             _spaceMeshManager = GetComponent<SpaceMeshManager>();
             _external3dModelManager = GetComponent<External3DModelManager>();
@@ -183,6 +187,14 @@ namespace MagicLeap.LeapBrush
             _delayedButtonHandler = gameObject.AddComponent<DelayedButtonHandler>();
 
             SanityCheckValidAppExecution();
+
+            // TODO(ghazen): Use a server-provided session identifier.
+            _userName = "U" + _random.Next(1, 1000000);
+            _userDisplayName = "User " +  _random.Next(1, 10000);
+            _appVersion = Application.version;
+
+            _serverConnectionManager.OnServerUrlChanged += OnServerUrlChanged;
+            _serverConnectionManager.LoadServerUrl();
         }
 
         /// <summary>
@@ -190,16 +202,14 @@ namespace MagicLeap.LeapBrush
         /// </summary>
         private void Start()
         {
-#if UNITY_ANDROID
-            MLSegmentedDimmer.Activate();
-#endif
+            MagicLeapRenderingExtensionsFeature renderFeature =
+                OpenXRSettings.Instance.GetFeature<MagicLeapRenderingExtensionsFeature>();
+            if (renderFeature != null)
+            {
+                renderFeature.BlendMode = XrEnvironmentBlendMode.AlphaBlend;
+            }
 
             _camera = Camera.main;
-
-            // TODO(ghazen): Use a server-provided session identifier.
-            _userName = "U" + _random.Next(1, 1000000);
-            _userDisplayName = "User " +  _random.Next(1, 10000);
-            _appVersion = Application.version;
 
             _updateStatusTextCoroutine = UpdateStatusTextPeriodically();
             StartCoroutine(_updateStatusTextCoroutine);
@@ -218,6 +228,7 @@ namespace MagicLeap.LeapBrush
                 OnShowOtherHandsAndControlsPreferenceChanged;
             _preferences.ShowFloorGrid.OnChanged += OnShowFloorGridPreferenceChanged;
             _preferences.GazePinchEnabled.OnChanged += OnGazePinchPreferenceChanged;
+            _preferences.PhoneSpecatorEnabled.OnChanged += OnPhoneSpectatorPreferenceChanged;
 
             _settingsPanel.OnClearAllContentSelected += OnClearAllContentSelected;
             _settingsPanel.OnSettingsPanelHidden += OnSettingsPanelHidden;
@@ -257,12 +268,10 @@ namespace MagicLeap.LeapBrush
             OnShowOtherHandsAndControlsPreferenceChanged();
             OnShowFloorGridPreferenceChanged();
             OnGazePinchPreferenceChanged();
+            OnPhoneSpectatorPreferenceChanged();
             HandleActiveToolOrMenuVisibilityChanged();
 
             LoadUserDisplayName();
-
-            _serverConnectionManager.OnServerUrlChanged += OnServerUrlChanged;
-            _serverConnectionManager.LoadServerUrl();
         }
 
         /// <summary>
@@ -273,6 +282,7 @@ namespace MagicLeap.LeapBrush
             UpdateCameraFollow();
 
             UpdateUploadThread();
+            ProcessReceivedServerStates();
             UpdatePanelVisibility();
 
             MaybeExpireOtherUsers();
@@ -433,10 +443,9 @@ namespace MagicLeap.LeapBrush
         {
             if (!_startupPerformanceDelayCompleted)
             {
-                // Keep the main menu hidden until a startup frame delta goal has been achieved,
-                // or a timeout has been hit.
+                // Keep the main menu hidden until a startup frame delta goal has been achieved.
                 _startupPerformanceDelayCompleted =
-                    (Time.frameCount > 10 && Time.deltaTime < 1.5f / 60f) || Time.frameCount > 120;
+                    Time.frameCount > 10 && Time.deltaTime < 1.5f / 60f;
                 _mainMenu.SetActive(_startupPerformanceDelayCompleted);
                 return;
             }
@@ -477,10 +486,12 @@ namespace MagicLeap.LeapBrush
                 _settingsPanel.Hide();
             }
 #if UNITY_ANDROID && !UNITY_EDITOR
-            else if (_localizationManager.LocalizationInfo.LocalizationStatus == MLAnchors.LocalizationStatus.NotLocalized ||
-                       _localizationManager.LocalizationInfo.LocalizationStatus == MLAnchors.LocalizationStatus.LocalizationPending ||
-                       (string.IsNullOrEmpty(_localizationManager.LocalizationInfo.SpaceName) &&
-                        string.IsNullOrEmpty(_localizationManager.LocalizationInfo.SpaceId)))
+            else if (_localizationManager.LocalizationInfo.MapState
+                     == LocalizationMapState.NotLocalized ||
+                       _localizationManager.LocalizationInfo.MapState
+                       == LocalizationMapState.LocalizationPending ||
+                       (string.IsNullOrEmpty(_localizationManager.LocalizationInfo.MapName) &&
+                        string.IsNullOrEmpty(_localizationManager.LocalizationInfo.MapUUID)))
             {
                 // The ML2 client doesn't appear to have localized to a space yet. Show the not
                 // localized panel which helps them open the Spaces tool to select or create a
@@ -627,6 +638,7 @@ namespace MagicLeap.LeapBrush
                 OnShowOtherHandsAndControlsPreferenceChanged;
             _preferences.ShowFloorGrid.OnChanged -= OnShowFloorGridPreferenceChanged;
             _preferences.GazePinchEnabled.OnChanged -= OnGazePinchPreferenceChanged;
+            _preferences.PhoneSpecatorEnabled.OnChanged -= OnPhoneSpectatorPreferenceChanged;
 
             _toolManager.OnActiveToolChanged -= OnActiveToolChanged;
             foreach (InteractorToolManager toolContainer in _toolManager.InteractorToolManagers)
@@ -651,12 +663,12 @@ namespace MagicLeap.LeapBrush
 
             ThreadDispatcher.ScheduleWork(() =>
             {
-                string userNamePath = Path.Join(
+                string userNamePath = System.IO.Path.Join(
                     persistentDataPath, "userName.txt");
 
                 try
                 {
-                    using (StreamReader reader = new StreamReader(userNamePath))
+                    using (System.IO.StreamReader reader = new(userNamePath))
                     {
                         string userDisplayName = reader.ReadToEnd().Trim();
                         ThreadDispatcher.ScheduleMain(() =>
@@ -665,9 +677,8 @@ namespace MagicLeap.LeapBrush
                         });
                     }
                 }
-                catch (IOException e)
+                catch (System.IO.IOException e)
                 {
-
                 }
             });
 #endif
@@ -684,17 +695,17 @@ namespace MagicLeap.LeapBrush
 
             ThreadDispatcher.ScheduleWork(() =>
             {
-                string userNamePath = Path.Join(
+                string userNamePath = System.IO.Path.Join(
                     persistentDataPath, "userName.txt");
 
                 try
                 {
-                    using (StreamWriter writer = new StreamWriter(userNamePath))
+                    using (System.IO.StreamWriter writer = new(userNamePath))
                     {
                         writer.Write(userDisplayName);
                     }
                 }
-                catch (IOException e)
+                catch (System.IO.IOException e)
                 {
                 }
             });
@@ -750,9 +761,9 @@ namespace MagicLeap.LeapBrush
         /// Handler for map localization changes. The user may have lost or regained localization.
         /// </summary>
         /// <param name="info">The updated localization info.</param>
-        private void OnLocalizationInfoChanged(AnchorsApi.LocalizationInfo info)
+        private void OnLocalizationInfoChanged(LocalizationMapManager.LocalizationMapInfo info)
         {
-            if (info.LocalizationStatus == MLAnchors.LocalizationStatus.Localized)
+            if (info.MapState == LocalizationMapState.Localized)
             {
                 if (_maybeCreateAnchorAfterLocalizationWithDelayCoroutine == null)
                 {
@@ -761,10 +772,9 @@ namespace MagicLeap.LeapBrush
                     StartCoroutine(_maybeCreateAnchorAfterLocalizationWithDelayCoroutine);
                 }
 
-                TransformExtensions.SetWorldPose(
-                    _spaceOriginAxis.transform, info.TargetSpaceOriginPose);
+                TransformExtensions.SetWorldPose(_spaceOriginAxis.transform, info.OriginPose);
 
-                _spaceMeshManager.UpdateSpaceMesh(info.SpaceId, info.TargetSpaceOriginPose);
+                _spaceMeshManager.UpdateSpaceMesh(info.MapUUID, info.OriginPose);
             }
             else if (_maybeCreateAnchorAfterLocalizationWithDelayCoroutine != null)
             {
@@ -1093,13 +1103,21 @@ namespace MagicLeap.LeapBrush
         private void OnGazePinchPreferenceChanged()
         {
             _gazeInteractor.gameObject.SetActive(_preferences.GazePinchEnabled.Value);
+        }
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-            if (_preferences.GazePinchEnabled.Value)
+        /// <summary>
+        /// Handler for the user toggling the phone spectator preference.
+        /// </summary>
+        private void OnPhoneSpectatorPreferenceChanged()
+        {
+            if (_preferences.PhoneSpecatorEnabled.Value)
             {
-                InputSubsystem.Extensions.MLEyes.StartTracking();
+                _phoneSpectator.Enable();
             }
-#endif
+            else
+            {
+                _phoneSpectator.Disable();
+            }
         }
 
         /// <summary>
@@ -1357,21 +1375,12 @@ namespace MagicLeap.LeapBrush
         {
             yield return new WaitForSeconds(1.0f);
 
-            if (_anchorsManager.Anchors.Length == 0 && _anchorsManager.LastQuerySuccessful)
+            if (_anchorsManager.Anchors.Length == 0 && _anchorsManager.QueryReceivedOk)
             {
-                AnchorsApi.Anchor anchor;
-                MLResult result = AnchorsApi.CreateAnchor(Pose.identity, 0, out anchor);
-                if (result.IsOk)
+                if (!AnchorsApi.CreateAnchor(
+                        new Pose(_camera.transform.position, Quaternion.identity)))
                 {
-                    result = anchor.Publish();
-                    if (!result.IsOk)
-                    {
-                        Debug.LogError("Failed to publish new anchor " + anchor.Id + ": " + result);
-                    }
-                }
-                else
-                {
-                    Debug.LogError("Failed to create new anchor: " + result);
+                    Debug.LogError("Failed to create new anchor.");
                 }
             }
 
@@ -1442,10 +1451,9 @@ namespace MagicLeap.LeapBrush
             {
                 _statusTextBuilder.Append("Map Localization: <i>");
 
-                if (_localizationManager.LocalizationInfo.LocalizationStatus
-                    == MLAnchors.LocalizationStatus.Localized &&
-                    _localizationManager.LocalizationInfo.MappingMode
-                    == MLAnchors.MappingMode.ARCloud)
+                if (_localizationManager.LocalizationInfo.MapState
+                    == LocalizationMapState.Localized &&
+                    _localizationManager.LocalizationInfo.MapType == LocalizationMapType.Cloud)
                 {
                     _statusTextBuilder.AppendFormat(
                         "<color=#00ff00>{0}</color>",
@@ -1461,18 +1469,25 @@ namespace MagicLeap.LeapBrush
                 _statusTextBuilder.Append("</i>\n");
             }
 
-            if (_exceptionsOrAssertsLogged > 0)
+            if (_exceptionsOrAssertsLogged > 0 || _errorsLogged > 0)
             {
-                _statusTextBuilder.AppendFormat(
-                    "<color=#ee0000><b>{0} errors and {1} exceptions logged</b></color>\n",
-                    _errorsLogged,
-                    _exceptionsOrAssertsLogged);
-            }
-            else if (_errorsLogged > 0)
-            {
-                _statusTextBuilder.AppendFormat(
-                    "<color=#dbfb76><b>{0} errors logged</b></color>\n",
-                    _errorsLogged);
+                if (_exceptionsOrAssertsLogged > 0)
+                {
+                    _statusTextBuilder.AppendFormat(
+                        "<color=#ee0000><b>{0} exceptions; ", _exceptionsOrAssertsLogged);
+                }
+                else
+                {
+                    _statusTextBuilder.Append("<color=#dbfb76><b>");
+                }
+
+                if (_errorsLogged > 0)
+                {
+                    _statusTextBuilder.AppendFormat("{0} errors; ", _errorsLogged);
+                }
+
+                _statusTextBuilder.Length -= 2;
+                _statusTextBuilder.Append("</b></color>\n");
             }
 
             _statusText.text = _statusTextBuilder.ToString();
@@ -1577,34 +1592,54 @@ namespace MagicLeap.LeapBrush
         /// <param name="resp">The server state response received from the server</param>
         private void HandleServerStateReceived(ServerStateResponse resp)
         {
-            if (!HandleServerInfo(resp.ServerInfo))
-            {
-                return;
-            }
+            _pendingServerStateResponses.AddLast(resp);
+        }
 
-            for (var i = 0; i < resp.UserState.Count; i++)
-            {
-                HandleOtherUserStateReceived(resp.UserState[i]);
-            }
+        private void ProcessReceivedServerStates()
+        {
+            int remainingBrushStrokesToAddThisFrame = 50;
 
-            for (var i = 0; i < resp.BrushStrokeAdd.Count; i++)
+            while (_pendingServerStateResponses.Count > 0)
             {
-                HandleBrushStrokeAddReceived(resp.BrushStrokeAdd[i]);
-            }
+                ServerStateResponse resp = _pendingServerStateResponses.First.Value;
+                _pendingServerStateResponses.RemoveFirst();
 
-            for (var i = 0; i < resp.BrushStrokeRemove.Count; i++)
-            {
-                HandleBrushStrokeRemoveReceived(resp.BrushStrokeRemove[i]);
-            }
+                if (!HandleServerInfo(resp.ServerInfo))
+                {
+                    return;
+                }
 
-            for (var i = 0; i < resp.ExternalModelAdd.Count; i++)
-            {
-                HandleExternalModelAddReceived(resp.ExternalModelAdd[i]);
-            }
+                for (var i = 0; i < resp.UserState.Count; i++)
+                {
+                    HandleOtherUserStateReceived(resp.UserState[i]);
+                }
 
-            for (var i = 0; i < resp.ExternalModelRemove.Count; i++)
-            {
-                HandlExternalModelRemoveReceived(resp.ExternalModelRemove[i]);
+                for (var i = 0; i < resp.BrushStrokeAdd.Count; i++)
+                {
+                    HandleBrushStrokeAddReceived(resp.BrushStrokeAdd[i]);
+                    remainingBrushStrokesToAddThisFrame--;
+                }
+
+                for (var i = 0; i < resp.BrushStrokeRemove.Count; i++)
+                {
+                    HandleBrushStrokeRemoveReceived(resp.BrushStrokeRemove[i]);
+                }
+
+                for (var i = 0; i < resp.ExternalModelAdd.Count; i++)
+                {
+                    HandleExternalModelAddReceived(resp.ExternalModelAdd[i]);
+                }
+
+                for (var i = 0; i < resp.ExternalModelRemove.Count; i++)
+                {
+                    HandleExternalModelRemoveReceived(resp.ExternalModelRemove[i]);
+                }
+
+                if (remainingBrushStrokesToAddThisFrame <= 0 || resp.ExternalModelAdd.Count > 0)
+                {
+                    // Defer additional processing until next frame
+                    return;
+                }
             }
         }
 
@@ -1707,6 +1742,11 @@ namespace MagicLeap.LeapBrush
                     .GetComponent<OtherUserVisual>();
                 otherUserVisual.SetShowHeadset(_preferences.ShowOtherHeadsets.Value);
                 otherUserVisual.ShowHandsAndControls(_preferences.ShowOtherHandsAndControls.Value);
+
+                if (otherUserState.UserName == _cameraFollowUserName)
+                {
+                    otherUserVisual.SetCameraFollowingUser(true);
+                }
 
                 _otherUsersMap[otherUserState.UserName] = otherUserVisual;
                 otherUserVisual.OnDestroyed += () =>
@@ -1882,7 +1922,7 @@ namespace MagicLeap.LeapBrush
         /// Handle a 3D model being removed from the server
         /// </summary>
         /// <param name="externalModelRemove">The 3D model to remove.</param>
-        private void HandlExternalModelRemoveReceived(
+        private void HandleExternalModelRemoveReceived(
             ExternalModelRemoveRequest externalModelRemove)
         {
             External3DModel externalModel;
@@ -1911,11 +1951,14 @@ namespace MagicLeap.LeapBrush
 #if UNITY_STANDALONE && !UNITY_EDITOR
                     if (condition.StartsWith("DllNotFoundException: MagicLeapXrProvider")
                         // TODO: Support compilation of the japaneseime_unity for standalone apps
-                        || condition.StartsWith("DllNotFoundException: japaneseime_unity"))
+                        || condition.StartsWith("DllNotFoundException: japaneseime_unity")
+                        // TODO: Remove condition once SDKUNITY-6770 is fixed
+                        || condition.StartsWith("Exception: Field currentActivity or type"))
                     {
                         break;
                     }
 #endif
+
                     _exceptionsOrAssertsLogged += 1;
                     break;
             }

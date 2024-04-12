@@ -3,10 +3,6 @@ using MixedReality.Toolkit;
 using MixedReality.Toolkit.UX;
 using UnityEngine;
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-using UnityEngine.XR.MagicLeap;
-#endif
-
 namespace MagicLeap.LeapBrush
 {
     /// <summary>
@@ -42,6 +38,12 @@ namespace MagicLeap.LeapBrush
         private PressableButton _inputTabButton;
 
         [SerializeField]
+        private PressableButton _advancedTabButton;
+
+        [SerializeField]
+        private GameObject _advancedSettingsSection;
+
+        [SerializeField]
         private PressableButton _showSpatialAnchorsToggle;
 
         [SerializeField]
@@ -67,6 +69,9 @@ namespace MagicLeap.LeapBrush
 
         [SerializeField]
         private PressableButton _gazePinchToggle;
+
+        [SerializeField]
+        private PressableButton _phoneSpectatorToggle;
 
         [SerializeField]
         private StatefulInteractable _joinSessionButton;
@@ -142,6 +147,9 @@ namespace MagicLeap.LeapBrush
             _gazePinchToggle.IsToggled.OnEntered.AddListener(OnToggleGazePinch);
             _gazePinchToggle.IsToggled.OnExited.AddListener(OnToggleGazePinch);
 
+            _phoneSpectatorToggle.IsToggled.OnEntered.AddListener(OnTogglePhoneSpectator);
+            _phoneSpectatorToggle.IsToggled.OnExited.AddListener(OnTogglePhoneSpectator);
+
             _settingsBackButton.OnClicked.AddListener(OnSettingsBackButtonClicked);
             _clearAllContentButton.OnClicked.AddListener(OnClearAllContentButtonClicked);
             _aboutButton.OnClicked.AddListener(OnAboutButtonClicked);
@@ -153,6 +161,12 @@ namespace MagicLeap.LeapBrush
 #if UNITY_ANDROID
             _showFloorGridToggle.gameObject.SetActive(false);
             _showSpaceMeshToggle.gameObject.SetActive(false);
+#endif
+
+#if !UNITY_ANDROID || UNITY_EDITOR
+            _advancedTabButton.gameObject.SetActive(false);
+            _advancedSettingsSection.gameObject.SetActive(false);
+            _phoneSpectatorToggle.gameObject.SetActive(false);
 #endif
 
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -177,6 +191,7 @@ namespace MagicLeap.LeapBrush
             _preferences.HandLasersEnabled.OnChanged += OnHandLasersPreferenceChanged;
             _preferences.HandToolsEnabled.OnChanged += OnHandToolsPreferenceChanged;
             _preferences.GazePinchEnabled.OnChanged += OnGazePinchPreferenceChanged;
+            _preferences.PhoneSpecatorEnabled.OnChanged += OnPhoneSpectatorPreferenceChanged;
 
             OnShowSpatialAnchorsPreferenceChanged();
             OnShowOriginsPreferenceChanged();
@@ -187,6 +202,7 @@ namespace MagicLeap.LeapBrush
             OnHandLasersPreferenceChanged();
             OnHandToolsPreferenceChanged();
             OnGazePinchPreferenceChanged();
+            OnPhoneSpectatorPreferenceChanged();
         }
 
         private void OnDisable()
@@ -203,6 +219,7 @@ namespace MagicLeap.LeapBrush
             _preferences.HandLasersEnabled.OnChanged -= OnHandLasersPreferenceChanged;
             _preferences.HandToolsEnabled.OnChanged -= OnHandToolsPreferenceChanged;
             _preferences.GazePinchEnabled.OnChanged -= OnGazePinchPreferenceChanged;
+            _preferences.PhoneSpecatorEnabled.OnChanged -= OnPhoneSpectatorPreferenceChanged;
         }
 
         private void OnPopupsShownChanged(bool popupsShown)
@@ -210,6 +227,7 @@ namespace MagicLeap.LeapBrush
             _settingsBackButton.enabled = !popupsShown;
             _displayTabButton.enabled = !popupsShown;
             _inputTabButton.enabled = !popupsShown;
+            _advancedTabButton.enabled = !popupsShown;
             _showSpatialAnchorsToggle.enabled = !popupsShown;
             _showOriginsToggle.enabled = !popupsShown;
             _showOtherHeadsetsToggle.enabled = !popupsShown;
@@ -272,6 +290,11 @@ namespace MagicLeap.LeapBrush
             _gazePinchToggle.ForceSetToggled(_preferences.GazePinchEnabled.Value, false);
         }
 
+        private void OnPhoneSpectatorPreferenceChanged()
+        {
+            _phoneSpectatorToggle.ForceSetToggled(_preferences.PhoneSpecatorEnabled.Value, false);
+        }
+
         public void OnToggleShowSpatialAnchors(float _)
         {
             _preferences.ShowSpatialAnchors.Value = _showSpatialAnchorsToggle.IsToggled;
@@ -317,22 +340,27 @@ namespace MagicLeap.LeapBrush
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             if (_gazePinchToggle.IsToggled
-                && !MLPermissions.CheckPermission(MLPermission.EyeTracking).IsOk)
+                && !Android.Permissions.CheckPermission(
+                    UnityEngine.XR.MagicLeap.MLPermission.EyeTracking))
             {
                 _gazePinchToggle.ForceSetToggled(false, false);
 
-                var callbacks = new MLPermissions.Callbacks();
-                callbacks.OnPermissionGranted += (_) =>
+                Android.Permissions.RequestPermission(
+                    UnityEngine.XR.MagicLeap.MLPermission.EyeTracking, _ =>
                 {
                     _gazePinchToggle.ForceSetToggled(true, false);
                     _preferences.GazePinchEnabled.Value = true;
-                };
-                MLPermissions.RequestPermission(MLPermission.EyeTracking, callbacks);
+                });
                 return;
             }
 #endif
 
             _preferences.GazePinchEnabled.Value = _gazePinchToggle.IsToggled;
+        }
+
+        private void OnTogglePhoneSpectator(float _)
+        {
+            _preferences.PhoneSpecatorEnabled.Value = _phoneSpectatorToggle.IsToggled;
         }
 
         private void OnSettingsBackButtonClicked()

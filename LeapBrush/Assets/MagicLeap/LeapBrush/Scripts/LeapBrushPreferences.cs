@@ -16,6 +16,8 @@ namespace MagicLeap.LeapBrush
         public BoolPref HandToolsEnabled = new(PrefKeyHandToolsEnabled, true);
         public BoolPref GazePinchEnabled = new(PrefKeyGazePinchEnabled, false);
 
+        public BoolPref PhoneSpecatorEnabled = new(PrefPhoneSpectatorEnabled, false);
+
         public interface IPref
         {
             public string Key { get; }
@@ -119,6 +121,7 @@ namespace MagicLeap.LeapBrush
         private const string PrefKeyGazePinchEnabled = "GazePinchEnabled";
         private const string PrefKeyHandLasersEnabled = "HandLasersEnabled";
         private const string PrefKeyHandToolsEnabled = "HandToolsEnabled";
+        private const string PrefPhoneSpectatorEnabled = "PhoneSpectatorEnabled";
 
 #if UNITY_ANDROID
         private const bool IsUnityAndroid = true;
@@ -150,7 +153,8 @@ namespace MagicLeap.LeapBrush
                     ShowSpaceMesh,
                     HandLasersEnabled,
                     HandToolsEnabled,
-                    GazePinchEnabled
+                    GazePinchEnabled,
+                    PhoneSpecatorEnabled
                 };
             }
 

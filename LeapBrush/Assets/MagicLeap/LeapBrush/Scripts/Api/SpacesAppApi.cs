@@ -1,6 +1,6 @@
 using System;
+using MagicLeap.OpenXR.Features.LocalizationMaps;
 using UnityEngine;
-using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap.LeapBrush
 {
@@ -36,8 +36,8 @@ namespace MagicLeap.LeapBrush
         /// Start the spaces app for the purpose of localizing into a particular space.
         /// </summary>
         /// <param name="spaceId">The id of the space to be localized to.</param>
-        /// <param name="mappingMode">The mapping mode of the space to be localized to.</param>
-        public static void StartAppToSelectSpace(string spaceId, MLAnchors.MappingMode mappingMode)
+        /// <param name="mapType">The map type of the space to be localized to.</param>
+        public static void StartAppToSelectSpace(string spaceId, LocalizationMapType mapType)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace MagicLeap.LeapBrush
                        spaceId);
                    intent.Call<AndroidJavaObject>(
                        "putExtra", "com.magicleap.intent.extra.MAPPING_MODE",
-                       mappingMode == MLAnchors.MappingMode.ARCloud ? 1 : 0);
+                       mapType == LocalizationMapType.Cloud ? 1 : 0);
                    activity.Call("startActivityForResult", intent, 0);
                 }
             }

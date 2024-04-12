@@ -35,6 +35,8 @@ namespace MagicLeap.LeapBrush
 
         private Dictionary<String, ModelCacheEntry> _modelCache = new();
 
+        private LinkedList<Action> _modelLoadQueue = new();
+
         public event Action OnModelsListUpdated;
 
         private ModelInfo[] _models = Array.Empty<ModelInfo>();
@@ -48,6 +50,15 @@ namespace MagicLeap.LeapBrush
         }
 
         public ModelInfo[] Models => _models;
+
+        private void Update()
+        {
+            if (_modelLoadQueue.Count > 0)
+            {
+                _modelLoadQueue.First.Value();
+                _modelLoadQueue.RemoveFirst();
+            }
+        }
 
         public void RefreshModelList()
         {
@@ -104,18 +115,15 @@ namespace MagicLeap.LeapBrush
                 .GetComponent<External3DModel>();
             externalModel.Initialize(fileName);
 
-            StartCoroutine(LoadGltfCoroutine(fileName, externalModel));
+            _modelLoadQueue.AddLast(() =>
+            {
+                if (externalModel != null)
+                {
+                    LoadGltfSafe(fileName, externalModel);
+                }
+            });
 
             return externalModel;
-        }
-
-        private IEnumerator LoadGltfCoroutine(string fileName, External3DModel externalModel)
-        {
-            // Load the model on a secondary frame to allow External3DModel to initialize
-            // correctly.
-            yield return new WaitForEndOfFrame();
-
-            LoadGltfSafe(fileName, externalModel);
         }
 
         private async Task LoadGltfSafe(string fileName, External3DModel external3DModel)

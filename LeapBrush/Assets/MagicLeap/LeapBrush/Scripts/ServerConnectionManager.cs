@@ -104,10 +104,7 @@ namespace MagicLeap.LeapBrush
                 _serverUrl = serverUrl;
             }
 
-            ThreadDispatcher.ScheduleMain(() =>
-            {
-                OnServerUrlChanged?.Invoke(serverUrl);
-            });
+            OnServerUrlChanged?.Invoke(serverUrl);
         }
 
         public void SetServerUrl(string serverUrl)

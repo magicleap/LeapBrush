@@ -1,128 +1,97 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using MagicLeap.OpenXR.Features.SpatialAnchors;
+using MagicLeap.OpenXR.Subsystems;
+using Unity.Profiling;
+using Unity.XR.CoreUtils;
 using UnityEngine;
-using UnityEngine.XR.MagicLeap;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
+using UnityEngine.XR.Management;
+using UnityEngine.XR.OpenXR;
 
 namespace MagicLeap.LeapBrush
 {
     /// <summary>
-    /// Wrapper for the MLAnchors api to support a few additional use cases, e.g. Anchor poses
-    /// being imported from another user.
+    /// Wrapper for the OpenXR Localization and Anchors api to support a few additional use cases,
+    /// e.g. Fake anchors provided in a unity editor session.
     /// </summary>
     public class AnchorsApi : MonoBehaviour
     {
+        [SerializeField]
+        private ARAnchorManager _anchorManager;
+
+        [SerializeField]
+        [Tooltip("Anchor to use when on a non-ML2 device or in the unity editor.")]
+        private ImportedAnchor _defaultAnchor =
+            new()
+            {
+                Id = "DEFAULT_ANCHOR_ID",
+                Pose = Pose.identity
+            };
+
+        /// <summary>
+        /// Whether the AnchorsApi is ready or not.
+        /// </summary>
+        public static bool IsReady => _instance._isReady;
+
+        /// <summary>
+        /// Query for anchor information within the current localized map.  The result will be returned
+        /// asynchronously in the <see cref="AnchorsApi.OnAnchorsUpdatedEvent"/> event.
+        /// </summary>
+        /// <returns>Returns <see langword="true"/> if the query call succeeded, otherwise <see langword="false"/>.</returns>
+        public static bool QueryAnchors() => _instance.QueryAnchorsImpl();
+
+        /// <summary>
+        /// Create an anchor to be published to storage within the current localized map.
+        /// </summary>
+        /// <param name="pose">The pose for the anchor.</param>
+        /// <returns>Returns <see langword="true"/> if the create call succeeded, otherwise <see langword="false"/>.</returns>
+        public static bool CreateAnchor(Pose pose) => _instance.CreateAnchorImpl(pose);
+
+        public static void SetImportedAnchors(Anchor[] importedAnchors) =>
+            _instance.SetImportedAnchorsImpl(importedAnchors);
+
+        public static void ClearImportedAnchors() => _instance.ClearImportedAnchorsImpl();
+
+        /// <summary>
+        /// The anchors updated event.
+        /// The first parameter is list list of anchors, the second is whether the anchors
+        /// were imported from another device
+        /// </summary>
+        public static event Action<Anchor[], bool> OnAnchorsUpdatedEvent;
+
         private static AnchorsApi _instance;
 
-        [SerializeField]
-        private ImportedAnchor _defaultAnchor;
+        private static readonly ProfilerMarker OnQueryAnchorsCompletePerfMarker =
+            new("AnchorsApi.OnQueryAnchorsComplete");
+        private static readonly ProfilerMarker OnAnchorManagerAnchorsChangedPerfMarker =
+            new ("AnchorsApi.OnAnchorManagerAnchorsChanged");
 
-        [SerializeField]
-        private LocalizationInfo _defaultLocalizationInfo;
+#if UNITY_ANDROID && !UNITY_EDITOR
+        private const bool IsUnityAndroidAndNotEditor = true;
+#else
+        private const bool IsUnityAndroidAndNotEditor = false;
+#endif
 
+        private bool _isReady;
+        private MLXrAnchorSubsystem _mlXrAnchorSubsystem;
+        private MagicLeapSpatialAnchorsFeature _spatialAnchorsFeature;
+        private MagicLeapSpatialAnchorsStorageFeature _spatialAnchorsStorageFeature;
+        private Dictionary<string, Anchor> _activeAnchors;
         private Anchor[] _importedAnchors;
-
-        [Serializable]
-        public struct LocalizationInfo : IEquatable<LocalizationInfo>
-        {
-            /// <summary>
-            /// The localization status at the time this structure was returned.
-            /// </summary>
-            public MLAnchors.LocalizationStatus LocalizationStatus;
-
-            /// <summary>
-            /// The current mapping mode.
-            /// </summary>
-            public MLAnchors.MappingMode MappingMode;
-
-            /// <summary>
-            /// If localized, this will contain the name of the current space.
-            /// </summary>
-            public string SpaceName;
-
-            /// <summary>
-            /// If localized, the identifier of the space.
-            /// </summary>
-            public string SpaceId;
-
-            /// <summary>
-            /// The space origin for the purposes of 3D mesh alignment, etc.
-            /// </summary>
-            public Pose TargetSpaceOriginPose;
-
-            public LocalizationInfo(MLAnchors.LocalizationStatus localizationStatus, MLAnchors.MappingMode mappingMode,
-                string spaceName, string spaceId, Pose targetSpaceOriginPose)
-            {
-                LocalizationStatus = localizationStatus;
-                MappingMode = mappingMode;
-                SpaceName = spaceName;
-                SpaceId = spaceId;
-                TargetSpaceOriginPose = targetSpaceOriginPose;
-            }
-
-            public LocalizationInfo Clone()
-            {
-                return new LocalizationInfo
-                {
-                    LocalizationStatus = LocalizationStatus,
-                    MappingMode = MappingMode,
-                    SpaceName = SpaceName,
-                    SpaceId = SpaceId,
-                    TargetSpaceOriginPose = TargetSpaceOriginPose
-                };
-            }
-
-            public override string ToString() => $"LocalizationStatus: {LocalizationStatus}, MappingMode: {MappingMode},\nSpaceName: {SpaceName}, SpaceId: {SpaceId}";
-
-            public bool Equals(LocalizationInfo other)
-            {
-                return LocalizationStatus == other.LocalizationStatus
-                       && MappingMode == other.MappingMode
-                       && SpaceName == other.SpaceName
-                       && SpaceId == other.SpaceId
-                       && TargetSpaceOriginPose.Equals(other.TargetSpaceOriginPose);
-            }
-
-            public override bool Equals(object obj)
-            {
-                return obj is LocalizationInfo other && Equals(other);
-            }
-
-            public override int GetHashCode()
-            {
-                return HashCode.Combine((int) LocalizationStatus,
-                    (int) MappingMode, SpaceName, SpaceId, TargetSpaceOriginPose);
-            }
-
-            public void CopyFrom(LocalizationInfo other)
-            {
-                LocalizationStatus = other.LocalizationStatus;
-                MappingMode = other.MappingMode;
-                SpaceName = other.SpaceName;
-                SpaceId = other.SpaceId;
-                TargetSpaceOriginPose = other.TargetSpaceOriginPose;
-            }
-
-            public void CopyFrom(MLAnchors.LocalizationInfo other)
-            {
-                LocalizationStatus = other.LocalizationStatus;
-                MappingMode = other.MappingMode;
-                SpaceName = other.SpaceName;
-                SpaceId = other.SpaceId;
-                TargetSpaceOriginPose = other.SpaceOrigin;
-            }
-        }
+        private Dictionary<string, AnchorImpl> _arSubsystemPublishedAnchors = new();
+        private YieldInstruction _waitForEndOfFrame = new WaitForEndOfFrame();
 
         public abstract class Anchor : IEquatable<Anchor>
         {
             /// <summary>
-            /// The anchor's unique ID.  This is a unique identifier for a single Spatial Anchor that is generated and managed by the
-            /// Spatial Anchor system.  The ID is created when MLSpatialAnchorCreateSpatialAnchor is called.
+            /// The anchor's unique ID. This is a unique identifier for a single Spatial Anchor
+            /// that is generated and managed by the Spatial Anchor system.
             /// </summary>
             public string Id;
-
-            /// <summary>
-            /// The ID of the space that this anchor belongs to. This is only relevant if IsPersisted is true.
-            /// </summary>
-            public string SpaceId;
 
             /// <summary>
             /// Pose.
@@ -130,21 +99,10 @@ namespace MagicLeap.LeapBrush
             public Pose Pose;
 
             /// <summary>
-            /// The suggested expiration time for this anchor represented in seconds since the Unix epoch.  This is implemented as an
-            /// expiration timestamp in the future after which the associated anchor should be considered no longer valid and may be
-            /// removed by the Spatial Anchor system.
-            /// </summary>
-            public ulong ExpirationTimeStamp;
-
-            /// <summary>
-            /// Indicates whether or not the anchor has been persisted via a call to #MLSpatialAnchorPublish.
+            /// Indicates whether or not the anchor has been persisted via a call to
+            /// PublishSpatialAnchorsToStorage.
             /// </summary>
             public bool IsPersisted;
-
-            /// <summary>
-            /// Publish this anchor so it persists across sessions.
-            /// </summary>
-            public abstract MLResult Publish();
 
             public abstract Anchor Clone();
 
@@ -168,11 +126,8 @@ namespace MagicLeap.LeapBrush
 
             public bool Equals(Anchor other)
             {
-                if (ReferenceEquals(null, other)) return false;
-                if (ReferenceEquals(this, other)) return true;
-                return Id == other.Id && SpaceId == other.SpaceId && Pose.Equals(other.Pose)
-                       && ExpirationTimeStamp == other.ExpirationTimeStamp
-                       && IsPersisted == other.IsPersisted;
+                return Id == other.Id && Pose.Equals(other.Pose)
+                                      && IsPersisted == other.IsPersisted;
             }
 
             public override bool Equals(object obj)
@@ -185,7 +140,30 @@ namespace MagicLeap.LeapBrush
 
             public override int GetHashCode()
             {
-                return HashCode.Combine(Id, SpaceId, Pose, ExpirationTimeStamp, IsPersisted);
+                return HashCode.Combine(Id, Pose, IsPersisted);
+            }
+        }
+
+        public class AnchorImpl : Anchor
+        {
+            /// <summary>
+            /// The associated ARAnchor component representing this anchor in the XR Anchor
+            /// Subsystem. Used when creating and publishing an anchor. Can be null if this anchor
+            /// already existed and was created from storage.
+            /// </summary>
+            public ARAnchor ArAnchor;
+
+            public AnchorImpl(string id, Pose pose, bool isPersisted, ARAnchor arAnchor)
+            {
+                Id = id;
+                Pose = pose;
+                IsPersisted = isPersisted;
+                ArAnchor = arAnchor;
+            }
+
+            public override Anchor Clone()
+            {
+                return new AnchorImpl(Id, Pose, IsPersisted, ArAnchor);
             }
         }
 
@@ -195,81 +173,14 @@ namespace MagicLeap.LeapBrush
         [Serializable]
         public class ImportedAnchor : Anchor
         {
-            public ImportedAnchor()
-            {
-                ExpirationTimeStamp = (ulong)
-                    DateTimeOffset.Now.AddYears(1).ToUnixTimeMilliseconds();
-            }
-
-            public override MLResult Publish()
-            {
-                return MLResult.Create(MLResult.Code.NotImplemented);
-            }
-
             public override Anchor Clone()
             {
                 return new ImportedAnchor
                 {
                     Id = Id,
-                    SpaceId = SpaceId,
                     Pose = Pose,
-                    ExpirationTimeStamp = ExpirationTimeStamp,
                     IsPersisted = IsPersisted
                 };
-            }
-
-            public void CopyFrom(ImportedAnchor other)
-            {
-                Id = other.Id;
-                SpaceId = other.SpaceId;
-                Pose = other.Pose;
-                ExpirationTimeStamp = other.ExpirationTimeStamp;
-                IsPersisted = other.IsPersisted;
-            }
-        }
-
-        public static MLResult GetLocalizationInfo(ref LocalizationInfo info) =>
-            _instance.GetLocalizationInfoImpl(ref info);
-
-        public static MLResult QueryAnchors(ref Anchor[] anchors, out bool isUsingImportedAnchors)
-            => _instance.QueryAnchorsImpl(ref anchors, out isUsingImportedAnchors);
-
-        public static MLResult CreateAnchor(Pose pose, ulong expirationTimeStamp,
-            out Anchor anchor) =>
-            _instance.CreateAnchorImpl(pose, expirationTimeStamp, out anchor);
-
-        public static void SetImportedAnchors(Anchor[] importedAnchors) =>
-            _instance.SetImportedAnchorsImpl(importedAnchors);
-
-        public static void ClearImportedAnchors() => _instance.ClearImportedAnchorsImpl();
-
-        private class AnchorImpl : Anchor
-        {
-            private MLAnchors.Anchor _mlAnchor;
-
-            public AnchorImpl(MLAnchors.Anchor mlAnchor)
-            {
-                CopyFrom(mlAnchor);
-            }
-
-            public override MLResult Publish()
-            {
-                return _mlAnchor.Publish();
-            }
-
-            public override Anchor Clone()
-            {
-                return new AnchorImpl(_mlAnchor);
-            }
-
-            public void CopyFrom(MLAnchors.Anchor other)
-            {
-                _mlAnchor = other;
-                Id = other.Id;
-                SpaceId = other.SpaceId;
-                Pose = other.Pose;
-                ExpirationTimeStamp = other.ExpirationTimeStamp;
-                IsPersisted = other.IsPersisted;
             }
         }
 
@@ -278,103 +189,268 @@ namespace MagicLeap.LeapBrush
             _instance = this;
         }
 
-        private MLResult GetLocalizationInfoImpl(ref LocalizationInfo info)
+        private IEnumerator Start()
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            MLAnchors.LocalizationInfo mlInfo;
-            MLResult result = MLAnchors.GetLocalizationInfo(out mlInfo);
-            if (result.IsOk)
+            if (IsUnityAndroidAndNotEditor)
             {
-                info.CopyFrom(mlInfo);
+                yield return new WaitUntil(AreOpenXRSubsystemsLoaded);
+                yield return new WaitUntil(AreOpenXRFeaturesEnabled);
+
+                _spatialAnchorsStorageFeature.OnQueryComplete += OnQueryAnchorsComplete;
+                _anchorManager.anchorsChanged += OnAnchorManagerAnchorsChanged;
             }
-            return result;
-#else
-            info.CopyFrom(_defaultLocalizationInfo);
-            return MLResult.Create(MLResult.Code.Ok);
-#endif
+
+            _isReady = true;
         }
 
-        private MLResult QueryAnchorsImpl(ref Anchor[] anchors, out bool isUsingImportedAnchors)
+        private bool AreOpenXRSubsystemsLoaded()
         {
-            lock (this)
+            if (XRGeneralSettings.Instance == null ||
+                XRGeneralSettings.Instance.Manager == null ||
+                XRGeneralSettings.Instance.Manager.activeLoader == null)
             {
-                if (_importedAnchors != null)
-                {
-                    anchors = _importedAnchors;
-                    isUsingImportedAnchors = true;
-                    return MLResult.Create(MLResult.Code.Ok);
-                }
+                return false;
             }
+            _mlXrAnchorSubsystem = XRGeneralSettings.Instance.Manager.activeLoader
+                .GetLoadedSubsystem<XRAnchorSubsystem>() as MLXrAnchorSubsystem;
+            return _mlXrAnchorSubsystem != null;
+        }
 
-            isUsingImportedAnchors = false;
+        private bool AreOpenXRFeaturesEnabled()
+        {
+            _spatialAnchorsFeature = OpenXRSettings.Instance.GetFeature<MagicLeapSpatialAnchorsFeature>();
+            _spatialAnchorsStorageFeature = OpenXRSettings.Instance.GetFeature<MagicLeapSpatialAnchorsStorageFeature>();
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-            MLAnchors.Request request = new MLAnchors.Request();
-            MLAnchors.Request.Params queryParams = new MLAnchors.Request.Params();
-            MLResult result = request.Start(queryParams);
-            if (!result.IsOk)
+            if (_spatialAnchorsFeature == null || !_spatialAnchorsFeature.enabled ||
+                _spatialAnchorsStorageFeature == null || !_spatialAnchorsStorageFeature.enabled)
             {
-                anchors = Array.Empty<Anchor>();
-                return result;
+                Debug.LogError("The OpenXR localization and/or spatial anchor features are not enabled.");
+                return false;
             }
+            return true;
+        }
 
-            MLAnchors.Request.Result resultData;
-            result = request.TryGetResult(out resultData);
-            if (result.IsOk)
+        private void OnDestroy()
+        {
+            if (IsUnityAndroidAndNotEditor && _isReady)
             {
-                if (anchors.Length != resultData.anchors.Length)
+                _spatialAnchorsStorageFeature.OnQueryComplete -= OnQueryAnchorsComplete;
+                _anchorManager.anchorsChanged -= OnAnchorManagerAnchorsChanged;
+            }
+        }
+
+        private void OnAnchorManagerAnchorsChanged(ARAnchorsChangedEventArgs eventArgs)
+        {
+            using (OnAnchorManagerAnchorsChangedPerfMarker.Auto())
+            {
+                List<ARAnchor> arAnchorsToPublish = null;
+
+                // Check for newly added or updated anchors
+                foreach (ARAnchor arAnchor in eventArgs.added.Concat(eventArgs.updated))
                 {
-                    anchors = new Anchor[resultData.anchors.Length];
-                }
-                for (int i = 0; i < anchors.Length; ++i)
-                {
-                    if (anchors[i] is AnchorImpl existingAnchor)
+                    if (_mlXrAnchorSubsystem.IsStoredAnchor(arAnchor))
                     {
-                        existingAnchor.CopyFrom(resultData.anchors[i]);
+                        string anchorMapPositionId =
+                            _mlXrAnchorSubsystem.GetAnchorMapPositionId(arAnchor);
+                        if (!_arSubsystemPublishedAnchors.ContainsKey(anchorMapPositionId))
+                        {
+                            AnchorImpl anchor = new(anchorMapPositionId,
+                                _mlXrAnchorSubsystem.GetAnchorPose(arAnchor), true, arAnchor);
+                            _arSubsystemPublishedAnchors[anchor.Id] = anchor;
+                        }
                     }
                     else
                     {
-                        anchors[i] = new AnchorImpl(resultData.anchors[i]);
+                        if (arAnchorsToPublish == null)
+                        {
+                            arAnchorsToPublish = new();
+                        }
+
+                        arAnchorsToPublish.Add(arAnchor);
+                    }
+                }
+
+                // Publish any non-published anchors
+                if (_spatialAnchorsStorageFeature != null && arAnchorsToPublish != null)
+                {
+                    if (!_spatialAnchorsStorageFeature.PublishSpatialAnchorsToStorage(
+                            arAnchorsToPublish, 0))
+                    {
+                        Debug.LogError("Failed to publish spatial anchors to storage");
+                    }
+                }
+
+                // Check for newly removed Anchors.
+                foreach (ARAnchor arAnchor in eventArgs.removed)
+                {
+                    string anchorIdToRemove = null;
+                    foreach (var entry in _arSubsystemPublishedAnchors)
+                    {
+                        if (entry.Value.ArAnchor == arAnchor)
+                        {
+                            anchorIdToRemove = entry.Key;
+                        }
+                    }
+
+                    if (anchorIdToRemove != null)
+                    {
+                        _arSubsystemPublishedAnchors.Remove(anchorIdToRemove);
                     }
                 }
             }
-            return result;
-#else
-            // Return a default anchor for non-ML2 applications.
-            if (anchors.Length != 1)
-            {
-                anchors = new Anchor[1];
-            }
-
-            if (anchors[0] is ImportedAnchor existingAnchor)
-            {
-                existingAnchor.CopyFrom(_defaultAnchor);
-            }
-            else
-            {
-                anchors[0] = _defaultAnchor.Clone();
-            }
-            return MLResult.Create(MLResult.Code.Ok);
-#endif
         }
 
-        private MLResult CreateAnchorImpl(Pose pose, ulong expirationTimeStamp, out Anchor anchor)
+        private void OnQueryAnchorsComplete(List<string> anchorMapPositionIds)
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            MLAnchors.Anchor mlAnchor;
-            MLResult result = MLAnchors.Anchor.Create(pose, (long) expirationTimeStamp, out mlAnchor);
-            if (!result.IsOk)
+            using (OnQueryAnchorsCompletePerfMarker.Auto())
             {
-                anchor = null;
-                return result;
+                List<string> trackedAnchorMapPositionIds = new();
+                List<string> deletedAnchorIds = new();
+
+                // Process current anchors: update poses, look for expired anchors.
+                foreach (AnchorImpl anchor in _arSubsystemPublishedAnchors.Values)
+                {
+                    if (anchor.ArAnchor == null)
+                    {
+                        deletedAnchorIds.Add(anchor.Id);
+                        continue;
+                    }
+
+                    // Store the anchorMapPositionId to check for new anchors below.
+                    trackedAnchorMapPositionIds.Add(anchor.Id);
+
+                    if (anchorMapPositionIds.Contains(anchor.Id))
+                    {
+                        anchor.Pose = _mlXrAnchorSubsystem.GetAnchorPose(anchor.ArAnchor);
+                        anchor.ArAnchor.transform.SetWorldPose(anchor.Pose);
+                    }
+                    else
+                    {
+                        Destroy(anchor.ArAnchor.gameObject);
+                    }
+                }
+
+                // Remove anchors that were deleted
+                foreach (string anchorId in deletedAnchorIds)
+                {
+                    _arSubsystemPublishedAnchors.Remove(anchorId);
+                }
+
+                // Check for new stored anchors
+                IEnumerable<string> newAnchors = anchorMapPositionIds.Except(
+                    trackedAnchorMapPositionIds);
+
+                if (newAnchors.Any())
+                {
+                    if (!_spatialAnchorsStorageFeature.CreateSpatialAnchorsFromStorage(
+                            newAnchors.ToList()))
+                    {
+                        Debug.LogError("Failed to create new anchors from query.");
+                    }
+                }
+                else
+                {
+                    if (MaybeUpdateActiveAnchors(_arSubsystemPublishedAnchors.Values))
+                    {
+                        StartCoroutine(CallActionAtEndOfFrame(() =>
+                            OnAnchorsUpdatedEvent?.Invoke(_activeAnchors.Values.ToArray(), false)));
+                    }
+                }
+            }
+        }
+
+        private bool QueryAnchorsImpl()
+        {
+            if (_importedAnchors != null)
+            {
+                if (MaybeUpdateActiveAnchors(_importedAnchors))
+                {
+                    StartCoroutine(CallActionAtEndOfFrame(() =>
+                        OnAnchorsUpdatedEvent?.Invoke(_activeAnchors.Values.ToArray(), true)));
+                }
+                return true;
             }
 
-            anchor = new AnchorImpl(mlAnchor);
-            return result;
-#else
-            anchor = null;
-            return MLResult.Create(MLResult.Code.NotImplemented);
-#endif
+            if (!IsUnityAndroidAndNotEditor)
+            {
+                // Return a default anchor for non-ML2 applications.
+                if (MaybeUpdateActiveAnchors(new [] { _defaultAnchor }))
+                {
+                    StartCoroutine(CallActionAtEndOfFrame(() =>
+                        OnAnchorsUpdatedEvent?.Invoke(_activeAnchors.Values.ToArray(), false)));
+                }
+                return true;
+            }
+
+            if (!_isReady)
+            {
+                return false;
+            }
+
+            return _spatialAnchorsStorageFeature.QueryStoredSpatialAnchors(
+                Camera.main.transform.position, 0f);
+        }
+
+        private bool MaybeUpdateActiveAnchors(IEnumerable<Anchor> newAnchors)
+        {
+            bool anchorsChanged = false;
+
+            if (_activeAnchors == null)
+            {
+                _activeAnchors = new();
+                anchorsChanged = true;
+            }
+
+            HashSet<string> newAnchorIds = new();
+            foreach (Anchor newAnchor in newAnchors)
+            {
+                var anchorId = newAnchor.Id;
+                newAnchorIds.Add(anchorId);
+                _activeAnchors.TryGetValue(anchorId, out Anchor anchor);
+                if (!System.Object.Equals(newAnchor, anchor))
+                {
+                    _activeAnchors[anchorId] = newAnchor.Clone();
+                    anchorsChanged = true;
+                }
+            }
+
+            foreach (var anchorId in _activeAnchors.Keys.ToArray())
+            {
+                if (!newAnchorIds.Contains(anchorId))
+                {
+                    _activeAnchors.Remove(anchorId);
+                    anchorsChanged = true;
+                }
+            }
+
+            return anchorsChanged;
+        }
+
+        private bool CreateAnchorImpl(Pose pose)
+        {
+            if (!IsUnityAndroidAndNotEditor)
+            {
+                return false;
+            }
+
+            if (_spatialAnchorsStorageFeature != null)
+            {
+                var pendingAnchorObject = new GameObject("Pending Anchor");
+                pendingAnchorObject.transform.SetParent(transform);
+                // The object transform must be set to the desired pose before adding ARAnchor
+                pendingAnchorObject.transform.SetPositionAndRotation(pose.position, pose.rotation);
+                ARAnchor arAnchor = pendingAnchorObject.AddComponent<ARAnchor>();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private IEnumerator CallActionAtEndOfFrame(Action action)
+        {
+            yield return _waitForEndOfFrame;
+            action();
         }
 
         private void SetImportedAnchorsImpl(Anchor[] importedAnchors)
