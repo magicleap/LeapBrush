@@ -881,6 +881,18 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1926070599476774283}
   m_SourcePrefab: {fileID: 100100000, guid: 823b5dfa790c346f8bc1013d686c5cae, type: 3}
+--- !u!114 &873293368453284650 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8366121823105010990, guid: 823b5dfa790c346f8bc1013d686c5cae,
+    type: 3}
+  m_PrefabInstance: {fileID: 8648284342219279876}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1628703343043229145 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7971003855663578077, guid: 823b5dfa790c346f8bc1013d686c5cae,
@@ -905,7 +917,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a5a384e35b64d638ec4edba6ff3e9c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _titleText: {fileID: 873293368453284650}
   _drawSoloAreYouSurePopup: {fileID: 0}
+  _serverConnectionManager: {fileID: 0}
+  _keyboard: {fileID: 0}
   _chooseServerButton: {fileID: 3697566135199704586}
   _drawSoloButton: {fileID: 1417158729908695408}
   _notConnectedDescriptionText: {fileID: 6000567839426137994}

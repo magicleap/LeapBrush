@@ -1,5 +1,6 @@
 using System;
 using MixedReality.Toolkit;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace MagicLeap.LeapBrush
@@ -8,7 +9,7 @@ namespace MagicLeap.LeapBrush
     /// The main UI panel. Users can pick from the various brush options, settings, import model,
     /// and color palette.
     /// </summary>
-    public class MainPanel : MonoBehaviour
+    public class MainPanel : BasePanel
     {
         public event Action OnSettingsSelected;
         public event Action OnToolSelected;
@@ -54,6 +55,11 @@ namespace MagicLeap.LeapBrush
         {
             _delayedButtonHandler = gameObject.AddComponent<DelayedButtonHandler>();
             _popupTracker = gameObject.AddComponent<PopupTracker>();
+        }
+
+        private void Start()
+        {
+            base.Start();
         }
 
         private void OnEnable()

@@ -27,6 +27,10 @@ MonoBehaviour:
     m_Key: Panel_NotConnected_Description
     m_Metadata:
       m_Items: []
+  - m_Id: 211181138363801600
+    m_Key: Panel_Base_TitleAndTagline
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

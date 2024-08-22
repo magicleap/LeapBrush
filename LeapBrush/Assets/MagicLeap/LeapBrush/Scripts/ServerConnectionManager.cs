@@ -45,7 +45,7 @@ namespace MagicLeap.LeapBrush
 
         private void Awake()
         {
-            _persistentDataPath = Application.persistentDataPath;
+            EnsurePersistentDataPathInitialized();
         }
 
         public LeapBrushApiBase.LeapBrushClient Connect(bool drawSolo)
@@ -68,6 +68,8 @@ namespace MagicLeap.LeapBrush
             {
                 return;
             }
+
+            EnsurePersistentDataPathInitialized();
 
 #if !UNITY_EDITOR
             string serverHostPortPrefPath = Path.Join(_persistentDataPath, "serverHostPort.txt");
@@ -142,6 +144,11 @@ namespace MagicLeap.LeapBrush
 #endif
 
             OnServerUrlChanged?.Invoke(serverUrl);
+        }
+
+        private void EnsurePersistentDataPathInitialized()
+        {
+            _persistentDataPath = Application.persistentDataPath;
         }
     }
 }

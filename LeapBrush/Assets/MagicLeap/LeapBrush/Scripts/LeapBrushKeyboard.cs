@@ -24,21 +24,7 @@ namespace MagicLeap.LeapBrush
 
         public void Show(string text)
         {
-            if (_sceneLoadOperation == null)
-            {
-                _sceneLoadOperation = SceneManager.LoadSceneAsync(KeyboardSceneName,
-                    LoadSceneMode.Additive);
-                _sceneLoadOperation.completed += (_) =>
-                {
-                    Scene scene = SceneManager.GetSceneByName(KeyboardSceneName);
-                    if (!scene.IsValid())
-                    {
-                        Debug.LogError("Failed to find keyboard scene");
-                    }
-
-                    _keyboardManager = scene.GetRootGameObjects()[0].GetComponent<KeyboardManager>();
-                };
-            }
+            Preload();
 
             if (!_showRequested)
             {
@@ -59,6 +45,25 @@ namespace MagicLeap.LeapBrush
                     ShowInternal(text);
                 }
             };
+        }
+
+        public void Preload()
+        {
+            if (_sceneLoadOperation == null)
+            {
+                _sceneLoadOperation = SceneManager.LoadSceneAsync(KeyboardSceneName,
+                    LoadSceneMode.Additive);
+                _sceneLoadOperation.completed += (_) =>
+                {
+                    Scene scene = SceneManager.GetSceneByName(KeyboardSceneName);
+                    if (!scene.IsValid())
+                    {
+                        Debug.LogError("Failed to find keyboard scene");
+                    }
+
+                    _keyboardManager = scene.GetRootGameObjects()[0].GetComponent<KeyboardManager>();
+                };
+            }
         }
 
         private void ShowInternal(string text)

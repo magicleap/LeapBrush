@@ -44,10 +44,22 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 4282061478414254105
+  - m_Id: 211181138363801600
+    m_Localized: '{AppName}:
+
+      Collaborative drawing'
+    m_Metadata:
+      m_Items:
+      - rid: 4282061478414254105
   references:
     version: 2
     RefIds:
     - rid: 4282061478414254105
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 00e02f2e0b00000000e02ff71f00000000e0eff63b5e0200
+        m_Entries: 
+        m_SharedEntries:
+        - id: 48019529728
+        - id: 137291096064
+        - id: 666561592418304
+        - id: 211181138363801600

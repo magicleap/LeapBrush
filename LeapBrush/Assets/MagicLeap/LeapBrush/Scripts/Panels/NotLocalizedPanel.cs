@@ -10,8 +10,10 @@ namespace MagicLeap.LeapBrush
     /// The user is provided the opportunity to open the Spaces tool to create or localize
     /// to a space before continuing.
     /// </remarks>
-    public class NotLocalizedPanel : MonoBehaviour
+    public class NotLocalizedPanel : BasePanel
     {
+        [Header("Internal Dependencies")]
+
         [SerializeField]
         private StatefulInteractable _openSpacesAppButton;
 
@@ -24,6 +26,8 @@ namespace MagicLeap.LeapBrush
 
         private void Start()
         {
+            base.Start();
+
             _openSpacesAppButton.OnClicked.AddListener(OnStartSpacesAppButtonClicked);
         }
 

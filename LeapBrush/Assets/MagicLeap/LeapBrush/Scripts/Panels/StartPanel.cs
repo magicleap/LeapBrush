@@ -10,7 +10,7 @@ namespace MagicLeap.LeapBrush
     /// UI Panel allowing the user to select their name and confirm the space to use before
     /// continuing on to drawing.
     /// </summary>
-    public class StartPanel : MonoBehaviour
+    public class StartPanel : BasePanel
     {
         public event Action OnContinueSelected;
         public event Action<string> OnSetUserDisplayName;
@@ -94,6 +94,8 @@ namespace MagicLeap.LeapBrush
 
         private void Start()
         {
+            base.Start();
+
             _startContinueButton.OnClicked.AddListener(OnContinueButtonClicked);
             _changeSpaceButton.OnClicked.AddListener(OnChangeSpaceButtonClicked);
             _changeUserNameButton.OnClicked.AddListener(OnChangeUserNameButtonClicked);

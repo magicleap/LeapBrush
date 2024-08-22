@@ -279,15 +279,36 @@ namespace MagicLeap.LeapBrush
         /// </summary>
         private void Update()
         {
+            CheckStartupPerformanceDelay();
             UpdateCameraFollow();
-
             UpdateUploadThread();
             ProcessReceivedServerStates();
             UpdatePanelVisibility();
-
             MaybeExpireOtherUsers();
 
             ThreadDispatcher.DispatchAll();
+        }
+
+        /// <summary>
+        /// Monitor for a rendering performance goal at app startup. Once completed,
+        /// allow the main menu to be shown and start preloading the keyboard.
+        /// </summary>
+        private void CheckStartupPerformanceDelay()
+        {
+            if (_startupPerformanceDelayCompleted)
+            {
+                return;
+            }
+
+            _startupPerformanceDelayCompleted =
+                Time.frameCount > 10 && Time.deltaTime < 1.5f / 60f;
+
+            _mainMenu.SetActive(_startupPerformanceDelayCompleted);
+
+            if (_startupPerformanceDelayCompleted)
+            {
+                _keyboard.Preload();
+            }
         }
 
         /// <summary>
@@ -443,10 +464,6 @@ namespace MagicLeap.LeapBrush
         {
             if (!_startupPerformanceDelayCompleted)
             {
-                // Keep the main menu hidden until a startup frame delta goal has been achieved.
-                _startupPerformanceDelayCompleted =
-                    Time.frameCount > 10 && Time.deltaTime < 1.5f / 60f;
-                _mainMenu.SetActive(_startupPerformanceDelayCompleted);
                 return;
             }
 
@@ -1415,7 +1432,8 @@ namespace MagicLeap.LeapBrush
             _statusTextBuilder.Length = 0;
 
             _statusTextBuilder.AppendFormat(
-                "<color=#dbfb76><b>Leap Brush v{0}</b></color>\n", Application.version);
+                "<color=#dbfb76><b>{0} v{1}</b></color>\n", Application.productName,
+                Application.version);
             _statusTextBuilder.AppendFormat("UserName: {0}\n", _userDisplayName);
 
             {

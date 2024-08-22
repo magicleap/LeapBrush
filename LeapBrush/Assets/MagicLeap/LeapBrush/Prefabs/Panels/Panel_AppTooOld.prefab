@@ -222,3 +222,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8de2d1f8a94fd8b466fd2a86015f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _titleText: {fileID: 4669476399653244337}
+--- !u!114 &4669476399653244337 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8366121823105010990, guid: 823b5dfa790c346f8bc1013d686c5cae,
+    type: 3}
+  m_PrefabInstance: {fileID: 3807581774691139743}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

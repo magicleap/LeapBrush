@@ -10,7 +10,7 @@ namespace MagicLeap.LeapBrush
     /// <summary>
     /// Panel displayed when the currently selected server cannot be connected to.
     /// </summary>
-    public class NotConnectedPanel : MonoBehaviour
+    public class NotConnectedPanel : BasePanel
     {
         public event Action OnDrawSoloSelected;
 
@@ -47,6 +47,8 @@ namespace MagicLeap.LeapBrush
 
         private void Start()
         {
+            base.Start();
+
             _chooseServerButton.OnClicked.AddListener(OnChooseServerButtonClicked);
             _drawSoloButton.OnClicked.AddListener(OnDrawSoloButtonClicked);
             _drawSoloAreYouSurePopup.OnConfirmSelected += OnDrawSoloConfirmButtonSelected;
