@@ -75,6 +75,16 @@ namespace MagicLeap.LeapBrush
         public abstract void SetPosesAndTruncate(int startIndex, IList<Pose> poses,
             bool receivedDrawing);
 
+        public Vector3 GetStartPosition()
+        {
+            return transform.TransformPoint(_poses[0].position);
+        }
+
+        public Vector3 GetEndPosition()
+        {
+            return transform.TransformPoint(_poses[^1].position);
+        }
+
         protected bool MarkAndCheckShouldPlayReceivedDrawingAudio()
         {
             if (_lastReceivedAudioPlayFrame == Time.frameCount)

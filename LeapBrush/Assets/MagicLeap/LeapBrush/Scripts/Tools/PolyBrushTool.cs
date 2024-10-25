@@ -224,10 +224,12 @@ namespace MagicLeap.LeapBrush
                     _brushControllerTransform.rotation));
                 _movedAwayFromPreviousSnap = false;
 
+                _drawPointSound.transform.position = _brush.GetEndPosition();
                 _drawPointSound.Play();
             }
             else
             {
+                _drawEndSound.transform.position = _brush.GetEndPosition();
                 _drawEndSound.Play();
             }
         }

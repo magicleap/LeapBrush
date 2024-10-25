@@ -24,6 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 930424238358415018}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,7 +32,6 @@ Transform:
   m_Children:
   - {fileID: 2517402048049516709}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &550542572964801706
 MonoBehaviour:
@@ -46,9 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _brushControllerTransform: {fileID: 0}
+  _isHandControlled: 0
   Prefab: {fileID: 930424238358415018, guid: 753873366eb5840cfb25824d65382348, type: 3}
-  _drawStartSound: {fileID: 4703906059343971244}
-  _drawEndSound: {fileID: 1961637373446523330}
+  _drawStartSound: {fileID: 8791729612393456575}
+  _drawEndSound: {fileID: 2115668190266154944}
   _brush: {fileID: 5025142649436892710}
 --- !u!1001 &3263023941357631205
 PrefabInstance:
@@ -62,11 +63,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ScribbleBrush
-      objectReference: {fileID: 0}
-    - target: {fileID: 1127884730027632192, guid: 753873366eb5840cfb25824d65382348,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1127884730027632192, guid: 753873366eb5840cfb25824d65382348,
         type: 3}
@@ -123,21 +119,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 753873366eb5840cfb25824d65382348, type: 3}
---- !u!82 &1961637373446523330 stripped
+--- !u!82 &2115668190266154944 stripped
 AudioSource:
-  m_CorrespondingSourceObject: {fileID: 3923114871895260967, guid: 753873366eb5840cfb25824d65382348,
+  m_CorrespondingSourceObject: {fileID: 3464618309320648997, guid: 753873366eb5840cfb25824d65382348,
     type: 3}
   m_PrefabInstance: {fileID: 3263023941357631205}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &2517402048049516709 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1127884730027632192, guid: 753873366eb5840cfb25824d65382348,
-    type: 3}
-  m_PrefabInstance: {fileID: 3263023941357631205}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &4703906059343971244 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 7786503166106154313, guid: 753873366eb5840cfb25824d65382348,
     type: 3}
   m_PrefabInstance: {fileID: 3263023941357631205}
   m_PrefabAsset: {fileID: 0}
@@ -153,3 +143,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7daa9bbf470b4c51a1719f58f328b55c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!82 &8791729612393456575 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 6290096552619398490, guid: 753873366eb5840cfb25824d65382348,
+    type: 3}
+  m_PrefabInstance: {fileID: 3263023941357631205}
+  m_PrefabAsset: {fileID: 0}

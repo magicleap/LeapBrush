@@ -8,7 +8,7 @@ namespace MagicLeap.LeapBrush
     /// </summary>
     public class EraserTool : MonoBehaviour
     {
-        public event Action<Collider> OnTriggerEnterEvent;
+        public event Action<EraserTool, Collider> OnTriggerEnterEvent;
 
         /// <summary>
         /// Unity event handler for a collision trigger.
@@ -16,7 +16,7 @@ namespace MagicLeap.LeapBrush
         /// <param name="other">The collider triggering the collision.</param>
         private void OnTriggerEnter(Collider other)
         {
-            OnTriggerEnterEvent?.Invoke(other);
+            OnTriggerEnterEvent?.Invoke(this, other);
         }
     }
 }

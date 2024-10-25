@@ -78,6 +78,7 @@ namespace MagicLeap.LeapBrush
             if (_playEndSoundAfterTimeout && DateTimeOffset.Now
                 > _lastPoseChangeTime + DrawingPausedSoundTimeout)
             {
+                _drawEndSound.transform.position = GetEndPosition();
                 _drawEndSound.Play();
                 _playEndSoundAfterTimeout = false;
             }
@@ -91,14 +92,6 @@ namespace MagicLeap.LeapBrush
             var timeSpanSincePoseChanged = DateTimeOffset.Now - _lastPoseChangeTime;
             _lastPoseChangeTime = DateTimeOffset.Now;
 
-            if (receivedDrawing &&
-                (startIndex == 0 || timeSpanSincePoseChanged > DrawingPausedSoundTimeout) &&
-                MarkAndCheckShouldPlayReceivedDrawingAudio())
-            {
-                _drawStartSound.Play();
-                _playEndSoundAfterTimeout = true;
-            }
-
             if (startIndex < _poses.Count)
             {
                 _poses.RemoveRange(startIndex, _poses.Count - startIndex);
@@ -110,6 +103,16 @@ namespace MagicLeap.LeapBrush
             var meshCollider = GetComponent<MeshCollider>();
             meshCollider.sharedMesh = null;
             meshCollider.sharedMesh = GetComponent<MeshFilter>().mesh;
+
+            if (receivedDrawing &&
+                (startIndex == 0 || timeSpanSincePoseChanged > DrawingPausedSoundTimeout) &&
+                MarkAndCheckShouldPlayReceivedDrawingAudio())
+            {
+                _drawStartSound.transform.position = GetEndPosition();
+                _drawStartSound.Play();
+                _playEndSoundAfterTimeout = true;
+            }
+
         }
 
         public override void SetColors(Color32 strokeColor, Color32 fillColor,

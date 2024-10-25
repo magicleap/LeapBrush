@@ -86,11 +86,15 @@ namespace MagicLeap.LeapBrush
 
             OnPosesAdded?.Invoke(this);
 
+            _drawStartSound.transform.position = _brush.GetStartPosition();
             _drawStartSound.Play();
         }
 
         private void StopDrawing()
         {
+            _drawEndSound.transform.position = _brush.GetEndPosition();
+            _drawEndSound.Play();
+
             _drawing = false;
             transform.SetParent(_brushControllerTransform);
             transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
@@ -98,8 +102,6 @@ namespace MagicLeap.LeapBrush
             DispatchOnDrawingCompleted();
 
             ApplyDrawingTipPoses();
-
-            _drawEndSound.Play();
         }
 
         public override void OnSelectStarted()

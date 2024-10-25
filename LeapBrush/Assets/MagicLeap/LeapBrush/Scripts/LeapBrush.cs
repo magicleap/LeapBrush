@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading;
 using MagicLeap.OpenXR.Features;
 using MagicLeap.OpenXR.Features.LocalizationMaps;
-using MagicLeap.Spectator;
 using MixedReality.Toolkit.Input;
 using MixedReality.Toolkit.Input.Simulation;
 using TMPro;
@@ -17,6 +16,10 @@ using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.OpenXR;
 using UnityEngine.XR.OpenXR.NativeTypes;
 using TransformExtensions = Unity.XR.CoreUtils.TransformExtensions;
+
+#if UNITY_ANDROID
+using MagicLeap.Spectator;
+#endif
 
 namespace MagicLeap.LeapBrush
 {
@@ -114,8 +117,10 @@ namespace MagicLeap.LeapBrush
         [SerializeField]
         private ControlInstructions _controlInstructions;
 
+#if UNITY_ANDROID
         [SerializeField]
         private MLSpectator _phoneSpectator;
+#endif
 
         private System.Random _random = new();
         private UploadThread _uploadThread;
@@ -732,16 +737,16 @@ namespace MagicLeap.LeapBrush
         /// <summary>
         /// Handler for a collision between the eraser 3D model and another scene object.
         /// </summary>
+        /// <param name="eraserTool">The eraser tool that collided</param>
         /// <param name="collider">The collider that intersected with the eraser.</param>
-        private void OnEraserCollisionTrigger(Collider collider)
+        private void OnEraserCollisionTrigger(EraserTool eraserTool, Collider collider)
         {
             var collidedBrush = collider.GetComponentInParent<BrushBase>();
             if (collidedBrush != null && !string.IsNullOrEmpty(collidedBrush.Id))
             {
                 Debug.Log("Erasing brush stroke " + collidedBrush.Id + " from anchor "
                           + collidedBrush.AnchorId);
-                PlayOneoffSpatialSound(_eraseAudioPrefab,
-                    collider.gameObject.transform.position);
+                PlayOneoffSpatialSound(_eraseAudioPrefab, eraserTool.transform.position);
                 Destroy(collidedBrush.gameObject);
 
                 _uploadThread.RemoveBrushStroke(collidedBrush.Id, collidedBrush.AnchorId);
@@ -753,8 +758,7 @@ namespace MagicLeap.LeapBrush
             {
                 Debug.Log("Erasing external model " + externalModel.Id + " from anchor "
                           + externalModel.AnchorId);
-                PlayOneoffSpatialSound(_eraseAudioPrefab,
-                    collider.gameObject.transform.position);
+                PlayOneoffSpatialSound(_eraseAudioPrefab, eraserTool.transform.position);
                 Destroy(externalModel.gameObject);
 
                 _uploadThread.RemoveExternalModel(externalModel.Id, externalModel.AnchorId);
@@ -1127,6 +1131,7 @@ namespace MagicLeap.LeapBrush
         /// </summary>
         private void OnPhoneSpectatorPreferenceChanged()
         {
+#if UNITY_ANDROID
             if (_preferences.PhoneSpecatorEnabled.Value)
             {
                 _phoneSpectator.Enable();
@@ -1135,6 +1140,7 @@ namespace MagicLeap.LeapBrush
             {
                 _phoneSpectator.Disable();
             }
+#endif
         }
 
         /// <summary>
@@ -1891,7 +1897,7 @@ namespace MagicLeap.LeapBrush
                 Debug.Log("Deleting brush stroke " + brushRemove.Id + " from anchor "
                           + brushRemove.AnchorId);
                 PlayOneoffSpatialSound(_eraseAudioPrefab,
-                    brushStroke.gameObject.transform.position);
+                    (brushStroke.GetStartPosition() + brushStroke.GetEndPosition()) / 2);
                 Destroy(brushStroke.gameObject);
             }
         }

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: -289650375, guid: 853897668d49743fd89d8e7fb2ebea29, type: 3}
   m_Name: MSAGlobalScriptableObject
   m_EditorClassIdentifier: 
-  MSAPackageVersionFromSO: 3.4.6-240418.125575.a7b4d14
+  MSAPackageVersionFromSO: 3.4.9-240906.127306.upstrea
   IsMLSDKPresent: 1
   autoCreateMLListener: 1

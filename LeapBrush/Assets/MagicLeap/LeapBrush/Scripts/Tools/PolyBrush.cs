@@ -44,10 +44,13 @@ namespace MagicLeap.LeapBrush
         private Color32 _fillColor;
         private float _fillDimmerAlpha;
         private bool _materialsInitialized;
+        private DateTimeOffset _lastPoseChangeTime = DateTimeOffset.MinValue;
+        private bool _playEndSoundAfterTimeout;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
         private static readonly int AlphaId = Shader.PropertyToID("_Alpha");
+        private static readonly TimeSpan DrawingEndedSoundTimeout = TimeSpan.FromSeconds(0.25f);
 
         private void Awake()
         {
@@ -80,16 +83,25 @@ namespace MagicLeap.LeapBrush
             RebuildMesh(_poses);
         }
 
+        private void Update()
+        {
+            if (_playEndSoundAfterTimeout && DateTimeOffset.Now
+                > _lastPoseChangeTime + DrawingEndedSoundTimeout)
+            {
+                _drawPointSound.transform.position = GetEndPosition();
+                _drawPointSound.Play();
+                _playEndSoundAfterTimeout = false;
+            }
+        }
+
         public override void SetPosesAndTruncate(int startIndex, IList<Pose> poses,
             bool receivedDrawing)
         {
             EnsureInitialized();
 
-            if (receivedDrawing && startIndex >= _poses.Count &&
-                MarkAndCheckShouldPlayReceivedDrawingAudio())
-            {
-                _drawPointSound.Play();
-            }
+            _lastPoseChangeTime = DateTimeOffset.Now;
+
+            bool isNewPoint = startIndex + poses.Count > _poses.Count;
 
             if (startIndex < _poses.Count)
             {
@@ -112,6 +124,14 @@ namespace MagicLeap.LeapBrush
                 var fillMeshCollider = _fillGameObject.GetComponent<MeshCollider>();
                 fillMeshCollider.sharedMesh = null;
                 fillMeshCollider.sharedMesh = _fillGameObject.GetComponent<MeshFilter>().mesh;
+            }
+
+            if (receivedDrawing && isNewPoint &&
+                MarkAndCheckShouldPlayReceivedDrawingAudio())
+            {
+                _drawPointSound.transform.position = GetEndPosition();
+                _drawPointSound.Play();
+                _playEndSoundAfterTimeout = true;
             }
         }
 
